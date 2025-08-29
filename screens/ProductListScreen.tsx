@@ -5,11 +5,8 @@ import ProductCard from '../components/ProductCard';
 import Tab from '../components/Tab';
 import { useGetCategoriesQuery, useGetProductsQuery } from '../generated/graphql';
 
-const PAGE_SIZE = 10;
-
 const ProductListScreen: React.FC = () => {
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [offset, setOffset] = useState(0);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>("recommended");
   const [refreshing, setRefreshing] = useState(false);
   const [search, setSearch] = useState('');
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -20,19 +17,25 @@ const ProductListScreen: React.FC = () => {
   
   // 构建查询变量
   const buildQueryVariables = () => {
-    const variables: any = {
-      limit: PAGE_SIZE,
-      offset,
-    };
+    const variables: any = {};
     
     // 构建动态 filter 对象
     const filters: any[] = [];
     
-    // 添加分类过滤器
-    if (selectedCategory) {
-      filters.push({
-        category_id: { id: { _eq: parseInt(selectedCategory) } }
-      });
+    // 处理推荐商品分类（获取最新上架的5个商品）
+    if (selectedCategory === "recommended") {
+      variables.limit = 5;
+      variables.sort = ["-created_at"]; // 按创建时间倒序排列
+    } else {
+      // 普通分类显示所有商品
+      variables.limit = 1000; // 设置一个足够大的数字来获取所有商品
+      
+      // 添加分类过滤器
+      if (selectedCategory) {
+        filters.push({
+          category_id: { id: { _eq: parseInt(selectedCategory) } }
+        });
+      }
     }
     
     // 添加搜索过滤器
@@ -58,7 +61,7 @@ const ProductListScreen: React.FC = () => {
     return variables;
   };
   
-  const { data: productData, loading: productLoading, error: productError, fetchMore, refetch } = useGetProductsQuery({
+  const { data: productData, loading: productLoading, error: productError, refetch } = useGetProductsQuery({
     variables: buildQueryVariables(),
   });
 
@@ -74,10 +77,8 @@ const ProductListScreen: React.FC = () => {
 
   const handleRefresh = async () => {
     setRefreshing(true);
-    setOffset(0);
     setCurrentIndex(0);
     const refreshVariables = buildQueryVariables();
-    refreshVariables.offset = 0;
     await refetch(refreshVariables);
     setRefreshing(false);
   };
@@ -87,21 +88,6 @@ const ProductListScreen: React.FC = () => {
     const itemWidth = 160 + 12; // ProductCard width + separator
     const index = Math.round(contentOffset / itemWidth);
     setCurrentIndex(index);
-  };
-
-  const handleLoadMore = () => {
-    if (productData?.products?.length === PAGE_SIZE) {
-      const newOffset = offset + PAGE_SIZE;
-      setOffset(newOffset);
-      fetchMore({
-        variables: {
-          categoryFilter: selectedCategory ? { id: { _eq: selectedCategory } } : undefined,
-          limit: PAGE_SIZE,
-          offset: newOffset,
-          search,
-        },
-      });
-    }
   };
 
   return (
@@ -143,7 +129,10 @@ const ProductListScreen: React.FC = () => {
         ) : (
           <FlatList
             horizontal
-            data={categoryData?.categories || []}
+            data={[
+              { id: "recommended", name: "推荐商品" },
+              ...(categoryData?.categories || [])
+            ]}
             keyExtractor={(cat) => cat.id}
             renderItem={({ item: cat }) => (
               <Tab
@@ -151,7 +140,7 @@ const ProductListScreen: React.FC = () => {
                 selected={selectedCategory === cat.id}
                 onPress={() => {
                   setSelectedCategory(cat.id);
-                  setOffset(0);
+                  setCurrentIndex(0);
                 }}
               />
             )}
@@ -165,12 +154,12 @@ const ProductListScreen: React.FC = () => {
       {/* 商品列表 */}
       <View style={styles.productSection}>
         <View style={styles.sectionHeader}>
-          <Text style={styles.sectionTitle}>推荐商品</Text>
-          {selectedCategory && (
-            <Text style={styles.sectionSubtitle}>
-              {categoryData?.categories?.find(cat => cat.id === selectedCategory)?.name}
-            </Text>
-          )}
+          <Text style={styles.sectionTitle}>
+            {selectedCategory === "recommended" 
+              ? "推荐商品" 
+              : categoryData?.categories?.find(cat => cat.id === selectedCategory)?.name || "全部商品"
+            }
+          </Text>
           {productData?.products && productData.products.length > 0 && (
             <View style={styles.progressContainer}>
               <Text style={styles.progressText}>
@@ -195,16 +184,6 @@ const ProductListScreen: React.FC = () => {
               <Text style={styles.emptyText}>暂无商品</Text>
             </View>
           )}
-          ListFooterComponent={() => (
-            <TouchableOpacity style={styles.moreButton} activeOpacity={0.7}>
-              <View style={styles.moreContent}>
-                <Text style={styles.moreText}>查看更多</Text>
-                <Ionicons name="chevron-forward" size={16} color="#ff6b35" />
-              </View>
-            </TouchableOpacity>
-          )}
-          onEndReached={handleLoadMore}
-          onEndReachedThreshold={0.5}
           onScroll={handleScroll}
           scrollEventThrottle={16}
           refreshControl={
@@ -367,27 +346,6 @@ const styles = StyleSheet.create({
   },
   itemSeparator: {
     width: 12,
-  },
-  moreButton: {
-    width: 100,
-    height: 200,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    marginLeft: 12,
-    borderWidth: 2,
-    borderColor: '#ff6b35',
-    borderStyle: 'dashed',
-  },
-  moreContent: {
-    alignItems: 'center',
-  },
-  moreText: {
-    fontSize: 14,
-    color: '#ff6b35',
-    fontWeight: '600',
-    marginBottom: 4,
   },
 });
 

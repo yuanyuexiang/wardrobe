@@ -3118,6 +3118,7 @@ export type GetProductsQueryVariables = Exact<{
   filter?: InputMaybe<Products_Filter>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>> | InputMaybe<Scalars['String']['input']>>;
 }>;
 
 
@@ -3194,8 +3195,8 @@ export type GetCategoriesLazyQueryHookResult = ReturnType<typeof useGetCategorie
 export type GetCategoriesSuspenseQueryHookResult = ReturnType<typeof useGetCategoriesSuspenseQuery>;
 export type GetCategoriesQueryResult = ApolloReactCommon.QueryResult<GetCategoriesQuery, GetCategoriesQueryVariables>;
 export const GetProductsDocument = gql`
-    query GetProducts($filter: products_filter, $limit: Int, $offset: Int) {
-  products(filter: $filter, limit: $limit, offset: $offset) {
+    query GetProducts($filter: products_filter, $limit: Int, $offset: Int, $sort: [String]) {
+  products(filter: $filter, limit: $limit, offset: $offset, sort: $sort) {
     id
     name
     subtitle
@@ -3227,6 +3228,7 @@ export const GetProductsDocument = gql`
  *      filter: // value for 'filter'
  *      limit: // value for 'limit'
  *      offset: // value for 'offset'
+ *      sort: // value for 'sort'
  *   },
  * });
  */
