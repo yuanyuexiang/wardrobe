@@ -3,23 +3,27 @@ import { setContext } from '@apollo/client/link/context';
 import { onError } from '@apollo/client/link/error';
 import React from 'react';
 
-// 检测环境
-const isDev = process.env.NODE_ENV === 'development' || process.env.NODE_ENV !== 'production';
-const isWeb = typeof window !== 'undefined' && typeof document !== 'undefined';
-
 // 选择API端点
 const getApiUri = () => {
+  // 重新检测环境，确保在运行时检测
+  const isDev = process.env.NODE_ENV === 'development' || process.env.NODE_ENV !== 'production';
+  const isRealWeb = typeof window !== 'undefined' && 
+                    typeof document !== 'undefined' && 
+                    typeof window.location !== 'undefined' &&
+                    typeof window.addEventListener === 'function';
+
   console.log('环境检测:', { 
     NODE_ENV: process.env.NODE_ENV, 
     isDev, 
-    isWeb,
+    isWeb: isRealWeb,
     window: typeof window,
     document: typeof document,
+    addEventListener: typeof window !== 'undefined' ? typeof window.addEventListener : 'undefined',
     __DEV__: typeof __DEV__ !== 'undefined' ? __DEV__ : 'undefined'
   });
   
-  // 在客户端且是开发环境时使用代理
-  if (typeof window !== 'undefined' && isDev) {
+  // 只有真正的Web环境才使用代理
+  if (isRealWeb && isDev) {
     // Web平台，使用本地代理
     const proxyUri = 'http://localhost:3001/api/graphql';
     console.log('🔄 Web环境使用代理:', proxyUri);
@@ -81,7 +85,7 @@ const client = new ApolloClient({
   },
   // 使用新的 devtools 配置
   devtools: {
-    enabled: isDev,
+    enabled: process.env.NODE_ENV === 'development',
   },
 });
 

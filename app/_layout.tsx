@@ -16,7 +16,7 @@ export default function RootLayout() {
 
   // 处理MetaMask相关错误
   useEffect(() => {
-    if (typeof window !== 'undefined') {
+    if (typeof window !== 'undefined' && typeof window.addEventListener === 'function') {
       // 全局错误处理
       const handleError = (event: ErrorEvent) => {
         if (event.message.includes('MetaMask') || 

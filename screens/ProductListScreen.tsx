@@ -1,9 +1,16 @@
 import { Ionicons } from '@expo/vector-icons';
 import React, { useRef, useState } from 'react';
-import { ActivityIndicator, FlatList, RefreshControl, SafeAreaView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Dimensions, FlatList, RefreshControl, SafeAreaView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import ProductCard from '../components/ProductCard';
 import Tab from '../components/Tab';
 import { useGetCategoriesQuery, useGetProductsQuery } from '../generated/graphql';
+
+// 计算卡片宽度 - 与ProductCard中的计算保持一致
+const { width: screenWidth } = Dimensions.get('window');
+const HORIZONTAL_PADDING = 32; // 左右各16px padding
+const ITEM_SEPARATOR = 12; // 卡片间距
+const VISIBLE_CARDS = 2.2; // 显示2.2个卡片，创造滑动效果
+const cardWidth = (screenWidth - HORIZONTAL_PADDING - ITEM_SEPARATOR * (VISIBLE_CARDS - 1)) / VISIBLE_CARDS;
 
 const ProductListScreen: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>("recommended");
@@ -85,7 +92,7 @@ const ProductListScreen: React.FC = () => {
 
   const handleScroll = (event: any) => {
     const contentOffset = event.nativeEvent.contentOffset.x;
-    const itemWidth = 160 + 12; // ProductCard width + separator
+    const itemWidth = cardWidth + ITEM_SEPARATOR; // 使用动态计算的卡片宽度
     const index = Math.round(contentOffset / itemWidth);
     setCurrentIndex(index);
   };
@@ -101,7 +108,7 @@ const ProductListScreen: React.FC = () => {
             <Text style={styles.logoText}>衣橱</Text>
           </View>
           <View style={styles.brandInfo}>
-            <Text style={styles.brandName}>酷耶旗舰店</Text>
+            <Text style={styles.brandName}>朱老板服装旗舰店</Text>
             <View style={styles.ratingSection}>
               <View style={styles.stars}>
                 {[1, 2, 3, 4, 5].map((star) => (
@@ -322,11 +329,13 @@ const styles = StyleSheet.create({
   },
   productList: {
     flex: 1,
+    paddingVertical: 8, // 添加上下内边距
   },
   productContainer: {
     paddingHorizontal: 16,
     paddingBottom: 16,
-    alignItems: 'flex-start',
+    alignItems: 'stretch', // 允许项目填充可用高度
+    minHeight: '100%', // 确保容器充满可用空间
   },
   loadingContainer: {
     flex: 1,
