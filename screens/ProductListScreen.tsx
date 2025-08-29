@@ -124,7 +124,7 @@ const ProductListScreen: React.FC = () => {
             <Ionicons name="search" size={20} color="#666" />
           </TouchableOpacity>
           <TouchableOpacity style={styles.couponButton}>
-            <Text style={styles.couponText}>+ 领券</Text>
+            <Text style={styles.couponText}>轮播</Text>
           </TouchableOpacity>
         </View>
       </View>
