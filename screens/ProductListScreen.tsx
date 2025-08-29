@@ -3,28 +3,18 @@ import React, { useState } from 'react';
 import { ActivityIndicator, FlatList, RefreshControl, SafeAreaView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import ProductCard from '../components/ProductCard';
 import Tab from '../components/Tab';
-import { useGetProductsQuery } from '../generated/graphql';
+import { useGetCategoriesQuery, useGetProductsQuery } from '../generated/graphql';
 
 const PAGE_SIZE = 10;
 
-// Mock分类数据，后续替换为真实API
-const mockCategories = [
-  { id: '1', name: '热卖爆款', description: '热门商品' },
-  { id: '2', name: '按CPU分类', description: 'CPU分类' },
-  { id: '3', name: '按代数分类', description: '代数分类' },
-  { id: '4', name: '按性能分类', description: '性能分类' },
-  { id: '5', name: '按尺寸分类', description: '尺寸分类' },
-  { id: '6', name: '配件专区', description: '配件商品' },
-];
-
 const ProductListScreen: React.FC = () => {
-  const [selectedCategory, setSelectedCategory] = useState<string | null>('1');
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [offset, setOffset] = useState(0);
   const [refreshing, setRefreshing] = useState(false);
   const [search, setSearch] = useState('');
   
-  // 使用codegen生成的hooks（暂时使用mock分类数据）
-  // const { data: categoryData, loading: categoryLoading } = useGetCategoriesQuery();
+  // 使用真实的API
+  const { data: categoryData, loading: categoryLoading } = useGetCategoriesQuery();
   const { data: productData, loading: productLoading, fetchMore, refetch } = useGetProductsQuery({
     variables: {
       categoryFilter: selectedCategory ? { id: { _eq: selectedCategory } } : undefined,
@@ -95,24 +85,28 @@ const ProductListScreen: React.FC = () => {
 
       {/* 分类导航 */}
       <View style={styles.categorySection}>
-        <FlatList
-          horizontal
-          data={mockCategories}
-          keyExtractor={(cat) => cat.id}
-          renderItem={({ item: cat }) => (
-            <Tab
-              label={cat.name}
-              selected={selectedCategory === cat.id}
-              onPress={() => {
-                setSelectedCategory(cat.id);
-                setOffset(0);
-              }}
-            />
-          )}
-          style={styles.tabBar}
-          contentContainerStyle={styles.tabContainer}
-          showsHorizontalScrollIndicator={false}
-        />
+        {categoryLoading ? (
+          <ActivityIndicator size="small" color="#ff6b35" />
+        ) : (
+          <FlatList
+            horizontal
+            data={categoryData?.categories || []}
+            keyExtractor={(cat) => cat.id}
+            renderItem={({ item: cat }) => (
+              <Tab
+                label={cat.name}
+                selected={selectedCategory === cat.id}
+                onPress={() => {
+                  setSelectedCategory(cat.id);
+                  setOffset(0);
+                }}
+              />
+            )}
+            style={styles.tabBar}
+            contentContainerStyle={styles.tabContainer}
+            showsHorizontalScrollIndicator={false}
+          />
+        )}
       </View>
 
       {/* 商品列表 */}

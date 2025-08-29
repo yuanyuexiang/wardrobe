@@ -6,7 +6,7 @@ import { useGetProductsQuery } from '../generated/graphql';
 const ProductDetailScreen: React.FC = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
   // 复用 GetProductsQuery，实际项目建议单独写详情 query
-  const { data, loading } = useGetProductsQuery({ variables: { search: '', categoryId: undefined, limit: 1, offset: 0 } });
+  const { data, loading } = useGetProductsQuery({ variables: { search: '', categoryFilter: undefined, limit: 1, offset: 0 } });
   const product = data?.products.find(p => p.id === id);
 
   if (loading) return <ActivityIndicator />;

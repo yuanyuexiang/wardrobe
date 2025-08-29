@@ -5,7 +5,6 @@ import { Platform } from 'react-native';
 import { HapticTab } from '@/components/HapticTab';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import TabBarBackground from '@/components/ui/TabBarBackground';
-import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 
 export default function TabLayout() {
@@ -14,30 +13,30 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+        tabBarActiveTintColor: '#ff6b35', // 使用我们的品牌橙色
         headerShown: false,
         tabBarButton: HapticTab,
         tabBarBackground: TabBarBackground,
-        tabBarStyle: Platform.select({
-          ios: {
-            // Use a transparent background on iOS to show the blur effect
-            position: 'absolute',
-          },
-          default: {},
-        }),
+        tabBarStyle: {
+          backgroundColor: '#fff',
+          borderTopWidth: 1,
+          borderTopColor: '#f0f0f0',
+          paddingBottom: Platform.OS === 'ios' ? 20 : 10,
+          height: Platform.OS === 'ios' ? 85 : 65,
+        },
       }}>
       <Tabs.Screen
-        name="ProductListScreen"
+        name="index"
         options={{
           title: '商品',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="cart.fill" color={color} />,
+          tabBarIcon: ({ color }) => <IconSymbol size={24} name="cart.fill" color={color} />,
         }}
       />
       <Tabs.Screen
-        name="UserInfoScreen"
+        name="profile"
         options={{
           title: '我的',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="person.crop.circle" color={color} />,
+          tabBarIcon: ({ color }) => <IconSymbol size={24} name="person.crop.circle" color={color} />,
         }}
       />
     </Tabs>
