@@ -3115,10 +3115,9 @@ export type GetCategoriesQueryVariables = Exact<{ [key: string]: never; }>;
 export type GetCategoriesQuery = { __typename?: 'Query', categories: Array<{ __typename?: 'categories', id: string, name: string, description?: string | null }> };
 
 export type GetProductsQueryVariables = Exact<{
-  categoryFilter?: InputMaybe<Categories_Filter>;
+  filter?: InputMaybe<Products_Filter>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  search?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -3195,12 +3194,8 @@ export type GetCategoriesLazyQueryHookResult = ReturnType<typeof useGetCategorie
 export type GetCategoriesSuspenseQueryHookResult = ReturnType<typeof useGetCategoriesSuspenseQuery>;
 export type GetCategoriesQueryResult = ApolloReactCommon.QueryResult<GetCategoriesQuery, GetCategoriesQueryVariables>;
 export const GetProductsDocument = gql`
-    query GetProducts($categoryFilter: categories_filter, $limit: Int, $offset: Int, $search: String) {
-  products(
-    filter: {category_id: $categoryFilter, _or: [{name: {_contains: $search}}, {subtitle: {_contains: $search}}, {description: {_contains: $search}}]}
-    limit: $limit
-    offset: $offset
-  ) {
+    query GetProducts($filter: products_filter, $limit: Int, $offset: Int) {
+  products(filter: $filter, limit: $limit, offset: $offset) {
     id
     name
     subtitle
@@ -3229,10 +3224,9 @@ export const GetProductsDocument = gql`
  * @example
  * const { data, loading, error } = useGetProductsQuery({
  *   variables: {
- *      categoryFilter: // value for 'categoryFilter'
+ *      filter: // value for 'filter'
  *      limit: // value for 'limit'
  *      offset: // value for 'offset'
- *      search: // value for 'search'
  *   },
  * });
  */

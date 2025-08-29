@@ -6,16 +6,9 @@ query GetCategories {
   }
 }
 
-query GetProducts($categoryFilter: categories_filter, $limit: Int, $offset: Int, $search: String) {
+query GetProducts($filter: products_filter, $limit: Int, $offset: Int) {
   products(
-    filter: {
-      category_id: $categoryFilter
-      _or: [
-        { name: { _contains: $search } },
-        { subtitle: { _contains: $search } },
-        { description: { _contains: $search } }
-      ]
-    }
+    filter: $filter
     limit: $limit
     offset: $offset
   ) {
@@ -26,7 +19,11 @@ query GetProducts($categoryFilter: categories_filter, $limit: Int, $offset: Int,
     price
     main_image
     images
-    category_id { id name description }
+    category_id {
+      id
+      name
+      description
+    }
   }
 }
 

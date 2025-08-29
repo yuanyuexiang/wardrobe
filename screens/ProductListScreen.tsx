@@ -15,13 +15,49 @@ const ProductListScreen: React.FC = () => {
   
   // 使用真实的API
   const { data: categoryData, loading: categoryLoading, error: categoryError } = useGetCategoriesQuery();
-  const { data: productData, loading: productLoading, error: productError, fetchMore, refetch } = useGetProductsQuery({
-    variables: {
-      categoryFilter: selectedCategory ? { id: { _eq: parseInt(selectedCategory) } } : undefined,
+  
+  // 构建查询变量
+  const buildQueryVariables = () => {
+    const variables: any = {
       limit: PAGE_SIZE,
       offset,
-      search,
-    },
+    };
+    
+    // 构建动态 filter 对象
+    const filters: any[] = [];
+    
+    // 添加分类过滤器
+    if (selectedCategory) {
+      filters.push({
+        category_id: { id: { _eq: parseInt(selectedCategory) } }
+      });
+    }
+    
+    // 添加搜索过滤器
+    if (search && search.trim()) {
+      filters.push({
+        _or: [
+          { name: { _contains: search.trim() } },
+          { subtitle: { _contains: search.trim() } },
+          { description: { _contains: search.trim() } }
+        ]
+      });
+    }
+    
+    // 如果有过滤条件，使用 _and 组合
+    if (filters.length > 0) {
+      if (filters.length === 1) {
+        variables.filter = filters[0];
+      } else {
+        variables.filter = { _and: filters };
+      }
+    }
+    
+    return variables;
+  };
+  
+  const { data: productData, loading: productLoading, error: productError, fetchMore, refetch } = useGetProductsQuery({
+    variables: buildQueryVariables(),
   });
 
   // 调试信息
@@ -37,12 +73,9 @@ const ProductListScreen: React.FC = () => {
   const handleRefresh = async () => {
     setRefreshing(true);
     setOffset(0);
-    await refetch({ 
-      categoryFilter: selectedCategory ? { id: { _eq: selectedCategory } } : undefined, 
-      limit: PAGE_SIZE, 
-      offset: 0, 
-      search 
-    });
+    const refreshVariables = buildQueryVariables();
+    refreshVariables.offset = 0;
+    await refetch(refreshVariables);
     setRefreshing(false);
   };
 
