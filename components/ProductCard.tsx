@@ -37,13 +37,17 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         >
           <View style={styles.overlay}>
             <View style={styles.contentOverlay}>
-              <Text style={styles.name} numberOfLines={2}>{product.name}</Text>
+              <Text style={styles.name} numberOfLines={2}>
+                {product.name || '商品名称'}
+              </Text>
               {product.subtitle && (
-                <Text style={styles.desc} numberOfLines={1}>{product.subtitle}</Text>
+                <Text style={styles.desc} numberOfLines={1}>
+                  {product.subtitle}
+                </Text>
               )}
-              {product.price !== undefined && (
-                <Text style={styles.price}>￥{product.price}</Text>
-              )}
+              <Text style={styles.price}>
+                ￥{product.price !== undefined ? product.price : '价格'}
+              </Text>
             </View>
           </View>
         </ImageBackground>
@@ -51,13 +55,17 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         <View style={styles.placeholderCard}>
           <Text style={styles.placeholderText}>暂无图片</Text>
           <View style={styles.contentOverlay}>
-            <Text style={styles.name} numberOfLines={2}>{product.name}</Text>
+            <Text style={[styles.name, { color: '#333', textShadowColor: 'transparent' }]} numberOfLines={2}>
+              {product.name || '商品名称'}
+            </Text>
             {product.subtitle && (
-              <Text style={styles.desc} numberOfLines={1}>{product.subtitle}</Text>
+              <Text style={[styles.desc, { color: '#666', textShadowColor: 'transparent' }]} numberOfLines={1}>
+                {product.subtitle}
+              </Text>
             )}
-            {product.price !== undefined && (
-              <Text style={styles.price}>￥{product.price}</Text>
-            )}
+            <Text style={[styles.price, { color: '#ff6b35', textShadowColor: 'transparent' }]}>
+              ￥{product.price !== undefined ? product.price : '价格'}
+            </Text>
           </View>
         </View>
       )}
@@ -82,12 +90,17 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     justifyContent: 'flex-end', // 内容放在底部
+    position: 'relative',
   },
   overlay: {
-    backgroundColor: 'rgba(0, 0, 0, 0.4)', // 半透明黑色遮罩
-    padding: 12,
+    backgroundColor: 'rgba(0, 0, 0, 0.6)', // 增加遮罩不透明度，确保文字清晰可见
+    padding: 16, // 从12增加到16，给文字更多空间
     justifyContent: 'flex-end',
-    minHeight: '40%', // 至少占40%高度
+    minHeight: '45%', // 从40%增加到45%，确保文字有足够空间
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
   },
   contentOverlay: {
     justifyContent: 'flex-end',
@@ -96,42 +109,47 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     backgroundColor: '#f0f0f0',
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: 'flex-end', // 改为底部对齐，与背景图片保持一致
+    alignItems: 'stretch',
     position: 'relative',
+    padding: 16,
   },
   placeholderText: {
-    fontSize: 14,
+    fontSize: 16, // 从14增加到16，与标题保持一致
     color: '#999',
     textAlign: 'center',
-    marginBottom: 8,
+    marginBottom: 16,
+    position: 'absolute',
+    top: '40%',
+    left: 0,
+    right: 0,
   },
   name: {
-    fontSize: 16,
+    fontSize: 18, // 从16增加到18，让标题更突出
     fontWeight: 'bold',
     color: '#ffffff', // 白色文字在图片背景上更清晰
-    lineHeight: 20,
-    marginBottom: 4,
-    textShadowColor: 'rgba(0, 0, 0, 0.8)',
+    lineHeight: 22, // 相应增加行高
+    marginBottom: 6, // 增加底部间距
+    textShadowColor: 'rgba(0, 0, 0, 1)',
     textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 2,
+    textShadowRadius: 3,
   },
   desc: {
-    fontSize: 12,
+    fontSize: 14, // 从12增加到14，提高可读性
     color: '#f0f0f0', // 浅灰白色
-    lineHeight: 16,
-    marginBottom: 6,
-    textShadowColor: 'rgba(0, 0, 0, 0.8)',
+    lineHeight: 18, // 相应增加行高
+    marginBottom: 8, // 增加底部间距
+    textShadowColor: 'rgba(0, 0, 0, 1)',
     textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 2,
+    textShadowRadius: 3,
   },
   price: {
-    fontSize: 18,
+    fontSize: 22, // 从18增加到22，让价格更醒目
     color: '#FFD700', // 金色价格更突出
     fontWeight: 'bold',
-    textShadowColor: 'rgba(0, 0, 0, 0.8)',
+    textShadowColor: 'rgba(0, 0, 0, 1)',
     textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 2,
+    textShadowRadius: 3,
   },
 });
 

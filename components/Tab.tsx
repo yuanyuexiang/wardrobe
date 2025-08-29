@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
     borderColor: '#ff6b35',
   },
   tabText: {
-    fontSize: 14,
+    fontSize: 15, // 增加标签文字大小，提高可读性
     color: '#666',
     fontWeight: '500',
   },

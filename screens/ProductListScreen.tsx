@@ -245,7 +245,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   brandName: {
-    fontSize: 18,
+    fontSize: 20, // 增加品牌名称字体大小，让品牌更突出
     fontWeight: 'bold',
     color: '#333',
     marginBottom: 4,
@@ -259,7 +259,7 @@ const styles = StyleSheet.create({
     marginRight: 6,
   },
   ratingText: {
-    fontSize: 12,
+    fontSize: 13, // 增加评分文字大小，提高可读性
     color: '#666',
   },
   headerRight: {
@@ -278,7 +278,7 @@ const styles = StyleSheet.create({
   },
   couponText: {
     color: '#fff',
-    fontSize: 12,
+    fontSize: 13, // 增加优惠券按钮文字大小
     fontWeight: 'bold',
   },
   // 分类导航区域
@@ -307,23 +307,23 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   sectionTitle: {
-    fontSize: 18,
+    fontSize: 20, // 从18增加到20，让标题更突出
     fontWeight: 'bold',
     color: '#333',
     marginBottom: 4,
   },
   sectionSubtitle: {
-    fontSize: 14,
+    fontSize: 16, // 从14增加到16，提高可读性
     color: '#666',
   },
   progressContainer: {
     backgroundColor: '#f0f0f0',
     borderRadius: 12,
-    paddingHorizontal: 8,
-    paddingVertical: 4,
+    paddingHorizontal: 10, // 从8增加到10，给文字更多空间
+    paddingVertical: 6, // 从4增加到6
   },
   progressText: {
-    fontSize: 12,
+    fontSize: 13, // 从12增加到13，提高可读性
     color: '#666',
     fontWeight: '500',
   },
@@ -350,7 +350,7 @@ const styles = StyleSheet.create({
     minHeight: 200,
   },
   emptyText: {
-    fontSize: 16,
+    fontSize: 17, // 增加空状态文字大小
     color: '#999',
   },
   itemSeparator: {
