@@ -1,5 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { ActivityIndicator, FlatList, RefreshControl, SafeAreaView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import ProductCard from '../components/ProductCard';
 import Tab from '../components/Tab';
@@ -12,6 +12,8 @@ const ProductListScreen: React.FC = () => {
   const [offset, setOffset] = useState(0);
   const [refreshing, setRefreshing] = useState(false);
   const [search, setSearch] = useState('');
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const flatListRef = useRef<FlatList>(null);
   
   // 使用真实的API
   const { data: categoryData, loading: categoryLoading, error: categoryError } = useGetCategoriesQuery();
@@ -73,10 +75,18 @@ const ProductListScreen: React.FC = () => {
   const handleRefresh = async () => {
     setRefreshing(true);
     setOffset(0);
+    setCurrentIndex(0);
     const refreshVariables = buildQueryVariables();
     refreshVariables.offset = 0;
     await refetch(refreshVariables);
     setRefreshing(false);
+  };
+
+  const handleScroll = (event: any) => {
+    const contentOffset = event.nativeEvent.contentOffset.x;
+    const itemWidth = 160 + 12; // ProductCard width + separator
+    const index = Math.round(contentOffset / itemWidth);
+    setCurrentIndex(index);
   };
 
   const handleLoadMore = () => {
@@ -153,21 +163,60 @@ const ProductListScreen: React.FC = () => {
       </View>
 
       {/* 商品列表 */}
-      <FlatList
-        data={productData?.products || []}
-        keyExtractor={(prod) => prod.id}
-        renderItem={({ item }) => <ProductCard product={item} />}
-        style={styles.productList}
-        contentContainerStyle={styles.productContainer}
-        ListEmptyComponent={productLoading ? <ActivityIndicator size="large" color="#ff6b35" /> : null}
-        onEndReached={handleLoadMore}
-        onEndReachedThreshold={0.5}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
-        }
-        numColumns={2}
-        columnWrapperStyle={styles.row}
-      />
+      <View style={styles.productSection}>
+        <View style={styles.sectionHeader}>
+          <Text style={styles.sectionTitle}>推荐商品</Text>
+          {selectedCategory && (
+            <Text style={styles.sectionSubtitle}>
+              {categoryData?.categories?.find(cat => cat.id === selectedCategory)?.name}
+            </Text>
+          )}
+          {productData?.products && productData.products.length > 0 && (
+            <View style={styles.progressContainer}>
+              <Text style={styles.progressText}>
+                {currentIndex + 1} / {productData.products.length}
+              </Text>
+            </View>
+          )}
+        </View>
+        <FlatList
+          ref={flatListRef}
+          data={productData?.products || []}
+          keyExtractor={(prod) => prod.id}
+          renderItem={({ item }) => <ProductCard product={item} />}
+          style={styles.productList}
+          contentContainerStyle={styles.productContainer}
+          ListEmptyComponent={productLoading ? (
+            <View style={styles.loadingContainer}>
+              <ActivityIndicator size="large" color="#ff6b35" />
+            </View>
+          ) : (
+            <View style={styles.emptyContainer}>
+              <Text style={styles.emptyText}>暂无商品</Text>
+            </View>
+          )}
+          ListFooterComponent={() => (
+            <TouchableOpacity style={styles.moreButton} activeOpacity={0.7}>
+              <View style={styles.moreContent}>
+                <Text style={styles.moreText}>查看更多</Text>
+                <Ionicons name="chevron-forward" size={16} color="#ff6b35" />
+              </View>
+            </TouchableOpacity>
+          )}
+          onEndReached={handleLoadMore}
+          onEndReachedThreshold={0.5}
+          onScroll={handleScroll}
+          scrollEventThrottle={16}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
+          }
+          horizontal={true}
+          showsHorizontalScrollIndicator={false}
+          ItemSeparatorComponent={() => <View style={styles.itemSeparator} />}
+          snapToAlignment="start"
+          decelerationRate="fast"
+        />
+      </View>
     </SafeAreaView>
   );
 };
@@ -259,17 +308,86 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   // 商品列表区域
-  productList: {
+  productSection: {
     flex: 1,
     backgroundColor: '#f8f8f8',
   },
-  productContainer: {
-    paddingHorizontal: 8,
-    paddingTop: 8,
-  },
-  row: {
+  sectionHeader: {
+    paddingHorizontal: 16,
+    paddingTop: 20,
+    paddingBottom: 12,
+    flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 12,
+    alignItems: 'center',
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#333',
+    marginBottom: 4,
+  },
+  sectionSubtitle: {
+    fontSize: 14,
+    color: '#666',
+  },
+  progressContainer: {
+    backgroundColor: '#f0f0f0',
+    borderRadius: 12,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+  },
+  progressText: {
+    fontSize: 12,
+    color: '#666',
+    fontWeight: '500',
+  },
+  productList: {
+    flex: 1,
+  },
+  productContainer: {
+    paddingHorizontal: 16,
+    paddingBottom: 16,
+    alignItems: 'flex-start',
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    minHeight: 200,
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    minHeight: 200,
+  },
+  emptyText: {
+    fontSize: 16,
+    color: '#999',
+  },
+  itemSeparator: {
+    width: 12,
+  },
+  moreButton: {
+    width: 100,
+    height: 200,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    marginLeft: 12,
+    borderWidth: 2,
+    borderColor: '#ff6b35',
+    borderStyle: 'dashed',
+  },
+  moreContent: {
+    alignItems: 'center',
+  },
+  moreText: {
+    fontSize: 14,
+    color: '#ff6b35',
+    fontWeight: '600',
+    marginBottom: 4,
   },
 });
 
