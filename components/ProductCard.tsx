@@ -2,6 +2,7 @@ import { useRouter } from 'expo-router';
 import React from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { GetProductsQuery } from '../generated/graphql';
+import { getDirectusThumbnailUrl } from '../utils/directus';
 
 export type Product = GetProductsQuery['products'][0];
 
@@ -16,13 +17,18 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     router.push({ pathname: '/ProductDetail', params: { id: product.id } });
   };
 
+  // 获取优化后的图片 URL
+  const imageUrl = product.main_image ? getDirectusThumbnailUrl(product.main_image, 320) : null;
+
   return (
     <TouchableOpacity style={styles.card} onPress={handlePress} activeOpacity={0.85}>
       <View style={styles.imageWrap}>
-        {product.main_image ? (
-          <Image source={{ uri: product.main_image }} style={styles.image} resizeMode="cover" />
+        {imageUrl ? (
+          <Image source={{ uri: imageUrl }} style={styles.image} resizeMode="cover" />
         ) : (
-          <View style={styles.imagePlaceholder} />
+          <View style={styles.imagePlaceholder}>
+            <Text style={styles.placeholderText}>暂无图片</Text>
+          </View>
         )}
       </View>
       <Text style={styles.name} numberOfLines={2}>{product.name}</Text>
@@ -67,6 +73,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#e0e0e0',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  placeholderText: {
+    fontSize: 12,
+    color: '#999',
+    textAlign: 'center',
   },
   name: {
     fontSize: 14,
