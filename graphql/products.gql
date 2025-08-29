@@ -1,0 +1,47 @@
+query GetCategories {
+  categories {
+    id
+    name
+    description
+  }
+}
+
+query GetProducts($categoryFilter: categories_filter, $limit: Int, $offset: Int, $search: String) {
+  products(
+    filter: {
+      category_id: $categoryFilter
+      _or: [
+        { name: { _contains: $search } },
+        { subtitle: { _contains: $search } },
+        { description: { _contains: $search } }
+      ]
+    }
+    limit: $limit
+    offset: $offset
+  ) {
+    id
+    name
+    subtitle
+    description
+    price
+    main_image
+    images
+    category_id { id name description }
+  }
+}
+
+query GetProductDetail($id: ID!) {
+  products_by_id(id: $id) {
+    id
+    name
+    subtitle
+    description
+    price
+    market_price
+    stock
+    main_image
+    images
+    brand
+    category_id { id name description }
+  }
+}

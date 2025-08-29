@@ -3,5 +3,7 @@
     "source.fixAll": "explicit",
     "source.organizeImports": "explicit",
     "source.sortMembers": "explicit"
-  }
+  },
+  "yaml.validate": false,
+  "graphql-codegen.shouldLintCodegenFiles": false
 }
