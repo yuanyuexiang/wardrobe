@@ -33,6 +33,13 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
+        name="debug"
+        options={{
+          title: '调试',
+          tabBarIcon: ({ color }) => <IconSymbol size={24} name="wrench.adjustable" color={color} />,
+        }}
+      />
+      <Tabs.Screen
         name="profile"
         options={{
           title: '我的',

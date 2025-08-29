@@ -10,7 +10,7 @@
 - 认证：提供 token 来访问后端资源
 
 ## 3. 后端地址
-- URL:https://directus.matrix-net.tech/graphql
+- URL:https://forge.matrix-net.tech/graphql
 - token:CCZnVSanwCwzS6edoC8-2ImbzJiZLeAD
 
 ### 商品模块

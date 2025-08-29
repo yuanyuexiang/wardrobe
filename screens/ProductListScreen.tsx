@@ -14,15 +14,25 @@ const ProductListScreen: React.FC = () => {
   const [search, setSearch] = useState('');
   
   // 使用真实的API
-  const { data: categoryData, loading: categoryLoading } = useGetCategoriesQuery();
-  const { data: productData, loading: productLoading, fetchMore, refetch } = useGetProductsQuery({
+  const { data: categoryData, loading: categoryLoading, error: categoryError } = useGetCategoriesQuery();
+  const { data: productData, loading: productLoading, error: productError, fetchMore, refetch } = useGetProductsQuery({
     variables: {
-      categoryFilter: selectedCategory ? { id: { _eq: selectedCategory } } : undefined,
+      categoryFilter: selectedCategory ? { id: { _eq: parseInt(selectedCategory) } } : undefined,
       limit: PAGE_SIZE,
       offset,
       search,
     },
   });
+
+  // 调试信息
+  React.useEffect(() => {
+    if (categoryError) {
+      console.log('分类加载错误:', categoryError);
+    }
+    if (productError) {
+      console.log('商品加载错误:', productError);
+    }
+  }, [categoryError, productError]);
 
   const handleRefresh = async () => {
     setRefreshing(true);

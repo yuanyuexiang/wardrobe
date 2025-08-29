@@ -5,7 +5,7 @@
 基于你的开发指导文档，我已经完成了真实后端的集成：
 
 ### ✅ 配置信息
-- **后端URL**: `https://directus.matrix-net.tech/graphql`
+- **后端URL**: `https://forge.matrix-net.tech/graphql`
 - **认证Token**: `CCZnVSanwCwzS6edoC8-2ImbzJiZLeAD`
 
 ### ✅ 已完成的集成工作
