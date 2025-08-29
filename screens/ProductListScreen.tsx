@@ -1,6 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import React, { useRef, useState } from 'react';
-import { ActivityIndicator, Dimensions, FlatList, RefreshControl, SafeAreaView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Dimensions, FlatList, Platform, RefreshControl, SafeAreaView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import ProductCard from '../components/ProductCard';
 import Tab from '../components/Tab';
 import { useGetCategoriesQuery, useGetProductsQuery } from '../generated/graphql';
@@ -11,6 +11,14 @@ const HORIZONTAL_PADDING = 32; // 左右各16px padding
 const ITEM_SEPARATOR = 12; // 卡片间距
 const VISIBLE_CARDS = 2.2; // 显示2.2个卡片，创造滑动效果
 const cardWidth = (screenWidth - HORIZONTAL_PADDING - ITEM_SEPARATOR * (VISIBLE_CARDS - 1)) / VISIBLE_CARDS;
+
+// 计算底部安全距离，避开底部选项卡
+const TAB_BAR_HEIGHT = Platform.select({
+  ios: 83, // iOS底部选项卡高度 + 安全区域
+  android: 70, // Android底部选项卡高度
+  default: 70,
+});
+const BOTTOM_PADDING = TAB_BAR_HEIGHT + 16; // 选项卡高度 + 额外间距
 
 const ProductListScreen: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>("recommended");
@@ -160,21 +168,6 @@ const ProductListScreen: React.FC = () => {
 
       {/* 商品列表 */}
       <View style={styles.productSection}>
-        <View style={styles.sectionHeader}>
-          <Text style={styles.sectionTitle}>
-            {selectedCategory === "recommended" 
-              ? "推荐商品" 
-              : categoryData?.categories?.find(cat => cat.id === selectedCategory)?.name || "全部商品"
-            }
-          </Text>
-          {productData?.products && productData.products.length > 0 && (
-            <View style={styles.progressContainer}>
-              <Text style={styles.progressText}>
-                {currentIndex + 1} / {productData.products.length}
-              </Text>
-            </View>
-          )}
-        </View>
         <FlatList
           ref={flatListRef}
           data={productData?.products || []}
@@ -298,42 +291,13 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#f8f8f8',
   },
-  sectionHeader: {
-    paddingHorizontal: 16,
-    paddingTop: 20,
-    paddingBottom: 12,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  sectionTitle: {
-    fontSize: 20, // 从18增加到20，让标题更突出
-    fontWeight: 'bold',
-    color: '#333',
-    marginBottom: 4,
-  },
-  sectionSubtitle: {
-    fontSize: 16, // 从14增加到16，提高可读性
-    color: '#666',
-  },
-  progressContainer: {
-    backgroundColor: '#f0f0f0',
-    borderRadius: 12,
-    paddingHorizontal: 10, // 从8增加到10，给文字更多空间
-    paddingVertical: 6, // 从4增加到6
-  },
-  progressText: {
-    fontSize: 13, // 从12增加到13，提高可读性
-    color: '#666',
-    fontWeight: '500',
-  },
   productList: {
     flex: 1,
     paddingVertical: 8, // 添加上下内边距
   },
   productContainer: {
     paddingHorizontal: 16,
-    paddingBottom: 16,
+    paddingBottom: BOTTOM_PADDING, // 使用动态计算的底部内边距
     alignItems: 'stretch', // 允许项目填充可用高度
     minHeight: '100%', // 确保容器充满可用空间
   },

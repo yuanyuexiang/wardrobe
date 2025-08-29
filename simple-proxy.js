@@ -5,7 +5,7 @@ const https = require('https');
 const url = require('url');
 
 const PORT = 3001;
-const TARGET_HOST = 'directus.matrix-net.tech';
+const TARGET_HOST = 'forge.matrix-net.tech';
 const TARGET_PORT = 443;
 
 const server = http.createServer((req, res) => {
