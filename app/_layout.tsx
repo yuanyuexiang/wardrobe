@@ -14,38 +14,34 @@ export default function RootLayout() {
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
   });
 
-  // 处理MetaMask相关错误
+  // 忽略浏览器扩展错误
   useEffect(() => {
-    if (typeof window !== 'undefined' && typeof window.addEventListener === 'function') {
+    if (typeof window !== 'undefined') {
+      const originalError = console.error;
+      console.error = (...args) => {
+        const message = args[0]?.toString() || '';
+        if (message.includes('MetaMask') || 
+            message.includes('chrome-extension://') ||
+            message.includes('Failed to connect to MetaMask')) {
+          return; // 忽略扩展错误
+        }
+        originalError.apply(console, args);
+      };
+
       // 全局错误处理
       const handleError = (event: ErrorEvent) => {
-        if (event.message.includes('MetaMask') || 
-            event.message.includes('ethereum') || 
-            event.message.includes('connect') ||
-            event.filename?.includes('nkbihfbeogaeaoehlefnkodbefgpgknn')) {
-          console.warn('🦊 MetaMask相关错误已被忽略:', event.message);
+        if (event.message?.includes('MetaMask') || 
+            event.filename?.includes('chrome-extension://')) {
           event.preventDefault();
           return false;
         }
       };
 
-      // 处理未捕获的Promise拒绝
-      const handleUnhandledRejection = (event: PromiseRejectionEvent) => {
-        const reason = event.reason?.toString() || '';
-        if (reason.includes('MetaMask') || 
-            reason.includes('ethereum') || 
-            reason.includes('connect')) {
-          console.warn('🦊 MetaMask Promise错误已被忽略:', reason);
-          event.preventDefault();
-        }
-      };
-
       window.addEventListener('error', handleError);
-      window.addEventListener('unhandledrejection', handleUnhandledRejection);
-
+      
       return () => {
+        console.error = originalError;
         window.removeEventListener('error', handleError);
-        window.removeEventListener('unhandledrejection', handleUnhandledRejection);
       };
     }
   }, []);
