@@ -1,6 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import React, { useRef, useState } from 'react';
 import { ActivityIndicator, Dimensions, FlatList, Platform, RefreshControl, SafeAreaView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import CarouselModal from '../components/CarouselModal';
 import ProductCard from '../components/ProductCard';
 import Tab from '../components/Tab';
 import { useGetCategoriesQuery, useGetProductsQuery } from '../generated/graphql';
@@ -25,6 +26,7 @@ const ProductListScreen: React.FC = () => {
   const [refreshing, setRefreshing] = useState(false);
   const [search, setSearch] = useState('');
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [carouselVisible, setCarouselVisible] = useState(false);
   const flatListRef = useRef<FlatList>(null);
   
   // 使用真实的API
@@ -80,6 +82,14 @@ const ProductListScreen: React.FC = () => {
     variables: buildQueryVariables(),
   });
 
+  // 获取所有商品用于轮播
+  const { data: allProductsData } = useGetProductsQuery({
+    variables: {
+      limit: 1000, // 获取所有商品
+      sort: ["-created_at"] // 按创建时间排序
+    },
+  });
+
   // 调试信息
   React.useEffect(() => {
     if (categoryError) {
@@ -131,7 +141,10 @@ const ProductListScreen: React.FC = () => {
           <TouchableOpacity style={styles.searchIcon}>
             <Ionicons name="search" size={20} color="#666" />
           </TouchableOpacity>
-          <TouchableOpacity style={styles.couponButton}>
+          <TouchableOpacity 
+            style={styles.couponButton}
+            onPress={() => setCarouselVisible(true)}
+          >
             <Text style={styles.couponText}>轮播</Text>
           </TouchableOpacity>
         </View>
@@ -196,6 +209,13 @@ const ProductListScreen: React.FC = () => {
           decelerationRate="fast"
         />
       </View>
+
+      {/* 轮播模态框 */}
+      <CarouselModal
+        visible={carouselVisible}
+        onClose={() => setCarouselVisible(false)}
+        products={allProductsData?.products || []}
+      />
     </SafeAreaView>
   );
 };

@@ -4,6 +4,7 @@ import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import React, { useEffect } from 'react';
 import 'react-native-reanimated';
+import FullscreenConfig from '../components/FullscreenConfig';
 import WardrobeApolloProvider from '../components/WardrobeApolloProvider';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
@@ -14,9 +15,9 @@ export default function RootLayout() {
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
   });
 
-  // 忽略浏览器扩展错误
+  // 忽略浏览器扩展错误（仅在 Web 环境中）
   useEffect(() => {
-    if (typeof window !== 'undefined') {
+    if (typeof window !== 'undefined' && typeof window.addEventListener === 'function') {
       const originalError = console.error;
       console.error = (...args) => {
         const message = args[0]?.toString() || '';
@@ -53,6 +54,7 @@ export default function RootLayout() {
 
   return (
       <WardrobeApolloProvider>
+        <FullscreenConfig />
         <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
           <Stack>
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
@@ -66,7 +68,7 @@ export default function RootLayout() {
             />
             <Stack.Screen name="+not-found" />
           </Stack>
-          <StatusBar style="auto" />
+          <StatusBar style="auto" hidden={true} />
         </ThemeProvider>
       </WardrobeApolloProvider>
   );

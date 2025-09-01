@@ -118,7 +118,7 @@ const styles = StyleSheet.create({
   },
   textArea: {
     flex: 2, // 增加到2，给文字更多空间
-    backgroundColor: 'rgba(0, 0, 0, 0.9)', // 增加不透明度
+    backgroundColor: 'rgba(0, 0, 0, 0.3)', // 增加不透明度
     padding: 16,
     justifyContent: 'flex-start', // 改为从顶部开始排列
     minHeight: 100, // 添加最小高度确保可见
