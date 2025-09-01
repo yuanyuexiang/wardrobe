@@ -8,6 +8,7 @@ import {
     StyleSheet,
     Text,
     TouchableOpacity,
+    TouchableWithoutFeedback,
     View,
 } from 'react-native';
 import { getDirectusImageUrl } from '../utils/directus';
@@ -23,7 +24,9 @@ const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 const CarouselModal: React.FC<CarouselModalProps> = ({ visible, onClose, products }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(true);
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const [controlsVisible, setControlsVisible] = useState(true);
+  const intervalRef = useRef<number | null>(null);
+  const hideControlsTimeoutRef = useRef<number | null>(null);
 
   // 过滤出有主图的商品
   const validProducts = products.filter(product => product.main_image);
@@ -47,8 +50,43 @@ const CarouselModal: React.FC<CarouselModalProps> = ({ visible, onClose, product
     if (visible) {
       setCurrentIndex(0);
       setLoading(true);
+      setControlsVisible(true);
     }
   }, [visible]);
+
+  // 控制按钮自动隐藏逻辑
+  useEffect(() => {
+    if (visible) {
+      // 清除之前的定时器
+      if (hideControlsTimeoutRef.current) {
+        clearTimeout(hideControlsTimeoutRef.current);
+      }
+      
+      // 设置5秒后隐藏控制按钮
+      hideControlsTimeoutRef.current = setTimeout(() => {
+        setControlsVisible(false);
+      }, 5000);
+    }
+
+    return () => {
+      if (hideControlsTimeoutRef.current) {
+        clearTimeout(hideControlsTimeoutRef.current);
+      }
+    };
+  }, [visible]);
+
+  // 重置隐藏定时器的函数
+  const resetHideTimer = () => {
+    setControlsVisible(true);
+    
+    if (hideControlsTimeoutRef.current) {
+      clearTimeout(hideControlsTimeoutRef.current);
+    }
+    
+    hideControlsTimeoutRef.current = setTimeout(() => {
+      setControlsVisible(false);
+    }, 5000);
+  };
 
   const handleImageLoad = () => {
     setLoading(false);
@@ -98,18 +136,23 @@ const CarouselModal: React.FC<CarouselModalProps> = ({ visible, onClose, product
       statusBarTranslucent
       onRequestClose={onClose}
     >
-      <View style={styles.modalContainer}>
-        {/* 关闭按钮 */}
-        <TouchableOpacity style={styles.closeButton} onPress={onClose}>
-          <Ionicons name="close" size={30} color="white" />
-        </TouchableOpacity>
+      <TouchableWithoutFeedback onPress={resetHideTimer}>
+        <View style={styles.modalContainer}>
+          {/* 关闭按钮 */}
+          {controlsVisible && (
+            <TouchableOpacity style={styles.closeButton} onPress={onClose}>
+              <Ionicons name="close" size={30} color="white" />
+            </TouchableOpacity>
+          )}
 
-        {/* 图片计数器 */}
-        <View style={styles.counter}>
-          <Text style={styles.counterText}>
-            {currentIndex + 1} / {validProducts.length}
-          </Text>
-        </View>
+          {/* 图片计数器 */}
+          {controlsVisible && (
+            <View style={styles.counter}>
+              <Text style={styles.counterText}>
+                {currentIndex + 1} / {validProducts.length}
+              </Text>
+            </View>
+          )}
 
         {/* 主图片区域 - 填充整个屏幕 */}
         <View style={styles.imageContainer}>
@@ -134,45 +177,56 @@ const CarouselModal: React.FC<CarouselModalProps> = ({ visible, onClose, product
           )}
 
           {/* 左右切换按钮 */}
-          <TouchableOpacity style={styles.prevButton} onPress={goToPrevious}>
-            <Ionicons name="chevron-back" size={40} color="white" />
-          </TouchableOpacity>
+          {controlsVisible && (
+            <>
+              <TouchableOpacity style={styles.prevButton} onPress={goToPrevious}>
+                <Ionicons name="chevron-back" size={40} color="white" />
+              </TouchableOpacity>
 
-          <TouchableOpacity style={styles.nextButton} onPress={goToNext}>
-            <Ionicons name="chevron-forward" size={40} color="white" />
-          </TouchableOpacity>
+              <TouchableOpacity style={styles.nextButton} onPress={goToNext}>
+                <Ionicons name="chevron-forward" size={40} color="white" />
+              </TouchableOpacity>
+            </>
+          )}
 
           {/* 商品信息覆盖层 - 在图片底部 */}
-          <View style={styles.overlayInfo}>
-            <Text style={styles.overlayProductName} numberOfLines={2}>
-              {currentProduct.name || '商品名称'}
-            </Text>
-            <Text style={styles.overlayProductPrice}>
-              ¥{currentProduct.price || '0.00'}
-            </Text>
-          </View>
+          {controlsVisible && (
+            <View style={styles.overlayInfo}>
+              <Text style={styles.overlayProductName} numberOfLines={2}>
+                {currentProduct.name || '商品名称'}
+              </Text>
+              <Text style={styles.overlayProductPrice}>
+                ¥{currentProduct.price || '0.00'}
+              </Text>
+            </View>
+          )}
         </View>
 
         {/* 底部指示器 */}
-        <View style={styles.indicators}>
-          {validProducts.map((_, index) => (
-            <TouchableOpacity
-              key={index}
-              style={[
-                styles.indicator,
-                { backgroundColor: index === currentIndex ? 'white' : 'rgba(255,255,255,0.3)' }
-              ]}
-              onPress={() => setCurrentIndex(index)}
-            />
-          ))}
-        </View>
+        {controlsVisible && (
+          <View style={styles.indicators}>
+            {validProducts.map((_, index) => (
+              <TouchableOpacity
+                key={index}
+                style={[
+                  styles.indicator,
+                  { backgroundColor: index === currentIndex ? 'white' : 'rgba(255,255,255,0.3)' }
+                ]}
+                onPress={() => setCurrentIndex(index)}
+              />
+            ))}
+          </View>
+        )}
 
         {/* 自动播放状态 */}
-        <View style={styles.autoPlayIndicator}>
-          <Ionicons name="play" size={16} color="white" />
-          <Text style={styles.autoPlayText}>自动播放中</Text>
+        {controlsVisible && (
+          <View style={styles.autoPlayIndicator}>
+            <Ionicons name="play" size={16} color="white" />
+            <Text style={styles.autoPlayText}>自动播放中</Text>
+          </View>
+        )}
         </View>
-      </View>
+      </TouchableWithoutFeedback>
     </Modal>
   );
 };
