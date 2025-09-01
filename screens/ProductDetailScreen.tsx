@@ -1,4 +1,3 @@
-import { Image } from 'expo-image';
 import { useLocalSearchParams } from 'expo-router';
 import React, { useRef, useState } from 'react';
 import {
@@ -14,7 +13,6 @@ import {
   View
 } from 'react-native';
 import { useGetProductDetailQuery } from '../generated/graphql';
-import { getDirectusImageUrl } from '../utils/directus';
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
@@ -53,6 +51,15 @@ const ProductDetailScreen: React.FC = () => {
       });
     }
     
+    // 调试信息
+    console.log('商品图片调试:', {
+      productId: product?.id,
+      mainImage: product?.main_image,
+      rawImages: product?.images,
+      processedImages: imageList,
+      imageCount: imageList.length
+    });
+    
     return imageList;
   }, [product]);
 
@@ -81,26 +88,56 @@ const ProductDetailScreen: React.FC = () => {
     setIsImageModalVisible(false);
   };
 
-  const renderImageItem = ({ item, index }: { item: string; index: number }) => (
-    <TouchableOpacity 
-      style={styles.imageContainer} 
-      onPress={() => handleImagePress(index)}
-      activeOpacity={0.9}
-    >
-      <Image
-        source={{ uri: getDirectusImageUrl(item, screenWidth, screenHeight * 0.35) }}
-        style={styles.image}
-        contentFit="cover"
-        transition={200}
-      />
-      {/* 图片信息覆盖层 */}
-      <View style={styles.imageOverlay}>
-        <Text style={styles.imageCounter}>
-          {index + 1} / {images.length}
-        </Text>
-      </View>
-    </TouchableOpacity>
-  );
+  const renderImageItem = ({ item, index }: { item: string; index: number }) => {
+    // 使用不带参数的简单URL
+    const simpleUrl = `https://forge.matrix-net.tech/assets/${item}`;
+    
+    // 调试信息
+    console.log('图片渲染调试:', {
+      index,
+      fileId: item,
+      simpleUrl
+    });
+    
+    return (
+      <TouchableOpacity 
+        style={styles.imageContainer} 
+        onPress={() => handleImagePress(index)}
+        activeOpacity={0.9}
+      >
+        <img
+          src={simpleUrl}
+          style={{
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover' as any
+          }}
+          onError={(error: any) => {
+            console.log('HTML img 加载错误:', {
+              index,
+              fileId: item,
+              simpleUrl,
+              error
+            });
+          }}
+          onLoad={() => {
+            console.log('HTML img 加载成功:', {
+              index,
+              fileId: item,
+              url: simpleUrl
+            });
+          }}
+          alt={`商品图片 ${index + 1}`}
+        />
+        {/* 图片信息覆盖层 */}
+        <View style={styles.imageOverlay}>
+          <Text style={styles.imageCounter}>
+            {index + 1} / {images.length}
+          </Text>
+        </View>
+      </TouchableOpacity>
+    );
+  };
 
   const renderPreviewImageItem = ({ item, index }: { item: string; index: number }) => (
     <TouchableOpacity 
@@ -108,11 +145,14 @@ const ProductDetailScreen: React.FC = () => {
       onPress={closeImageModal}
       activeOpacity={1}
     >
-      <Image
-        source={{ uri: getDirectusImageUrl(item, screenWidth, screenHeight) }}
-        style={styles.previewImage}
-        contentFit="contain"
-        transition={200}
+      <img
+        src={`https://forge.matrix-net.tech/assets/${item}`}
+        style={{
+          width: '100%',
+          height: '80%',
+          objectFit: 'contain' as any
+        }}
+        alt={`预览图片 ${index + 1}`}
       />
     </TouchableOpacity>
   );
@@ -143,11 +183,21 @@ const ProductDetailScreen: React.FC = () => {
   }
 
   if (error || !product) {
+    // 添加调试信息
+    console.log('产品加载调试:', {
+      error: error?.message,
+      product,
+      data,
+      loading,
+      id
+    });
+    
     return (
       <View style={styles.errorContainer}>
         <Text style={styles.errorText}>
-          {error ? '加载失败，请重试' : '未找到商品'}
+          {error ? `加载失败：${error.message}` : '未找到商品'}
         </Text>
+        <Text style={styles.debugText}>ID: {id}</Text>
       </View>
     );
   }
@@ -337,9 +387,30 @@ const styles = StyleSheet.create({
     color: '#333',
     fontSize: 18,
     textAlign: 'center',
+    marginBottom: 10,
+  },
+  debugText: {
+    color: '#666',
+    fontSize: 14,
+    textAlign: 'center',
+  },
+  debugImageContainer: {
+    position: 'absolute',
+    top: 10,
+    left: 10,
+    zIndex: 10,
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    padding: 10,
+    borderRadius: 8,
+    maxWidth: 200,
+  },
+  debugImage: {
+    width: 100,
+    height: 75,
+    marginVertical: 5,
   },
   imageSection: {
-    height: screenHeight * 0.60, // 减小高度，占屏幕35%
+    height: screenHeight * 0.60, // 减小高度，占屏幕60%
     position: 'relative',
     backgroundColor: '#000',
   },
