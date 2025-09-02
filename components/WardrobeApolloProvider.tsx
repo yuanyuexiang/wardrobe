@@ -9,14 +9,15 @@ import { logger } from '../utils/logger';
 const getApiUri = () => {
   // 重新检测环境，确保在运行时检测
   const isDev = process.env.NODE_ENV === 'development' || process.env.NODE_ENV !== 'production';
-  const isRealWeb = typeof window !== 'undefined' && 
-                    typeof document !== 'undefined' && 
-                    typeof window.location !== 'undefined' &&
-                    typeof window.addEventListener === 'function';
+  const isWebEnvironment = typeof window !== 'undefined';
+  const currentHost = typeof window !== 'undefined' ? window.location?.hostname : '';
+  const isLocalhost = currentHost === 'localhost' || currentHost === '127.0.0.1';
 
   // 环境检测和日志记录
-  logger.info('WardrobeApolloProvider', `环境检测 - isDev: ${isDev}, isRealWeb: ${isRealWeb}`);  // 只有真正的Web环境才使用代理
-  if (isRealWeb && isDev) {
+  logger.info('WardrobeApolloProvider', `环境检测 - isDev: ${isDev}, isWeb: ${isWebEnvironment}, host: ${currentHost}, isLocalhost: ${isLocalhost}`);
+  
+  // 在Web环境且为开发模式时使用代理
+  if (isWebEnvironment && isDev && isLocalhost) {
     // Web平台，使用本地代理
     const proxyUri = 'http://localhost:3001/api/graphql';
     logger.info('WardrobeApolloProvider', `Web环境使用代理: ${proxyUri}`);

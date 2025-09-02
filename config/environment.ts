@@ -1,6 +1,6 @@
 /**
  * 环境配置管理
- * 安全地管理敏感信息和环境变量
+ * 统一从 .env 文件读取环境变量
  */
 
 interface Environment {
@@ -8,17 +8,15 @@ interface Environment {
   API_BASE_URL: string;
   SYSTEM_API_BASE_URL: string;
   ASSETS_BASE_URL: string;
-  // 注意：生产环境中应该从安全的环境变量中读取
-  AUTH_TOKEN?: string;
+  AUTH_TOKEN: string;
   PROXY_HOST: string;
   PROXY_PORT: number;
+  APP_NAME: string;
+  APP_VERSION: string;
 }
 
-// 环境检测函数
+// 环境配置函数 - 从 .env 文件读取
 const getEnvironment = (): Environment => {
-  const isDev = process.env.NODE_ENV === 'development' || process.env.NODE_ENV !== 'production';
-  
-  // 基础API地址 - 生产环境应该从环境变量读取
   const baseUrl = process.env.EXPO_PUBLIC_API_BASE_URL || 'https://forge.matrix-net.tech';
   
   return {
@@ -26,13 +24,11 @@ const getEnvironment = (): Environment => {
     API_BASE_URL: baseUrl,
     SYSTEM_API_BASE_URL: `${baseUrl}/graphql/system`,
     ASSETS_BASE_URL: `${baseUrl}/assets`,
-    
-    // ⚠️ 警告：这个token应该在生产环境中通过安全的方式管理
-    // 建议使用：process.env.EXPO_PUBLIC_AUTH_TOKEN
-    AUTH_TOKEN: isDev ? 'CCZnVSanwCwzS6edoC8-2ImbzJiZLeAD' : process.env.EXPO_PUBLIC_AUTH_TOKEN,
-    
-    PROXY_HOST: 'localhost',
-    PROXY_PORT: 3001,
+    AUTH_TOKEN: process.env.EXPO_PUBLIC_AUTH_TOKEN || 'CCZnVSanwCwzS6edoC8-2ImbzJiZLeAD',
+    PROXY_HOST: process.env.EXPO_PUBLIC_PROXY_HOST || 'localhost',
+    PROXY_PORT: parseInt(process.env.EXPO_PUBLIC_PROXY_PORT || '3001'),
+    APP_NAME: process.env.EXPO_PUBLIC_APP_NAME || 'Wardrobe',
+    APP_VERSION: process.env.EXPO_PUBLIC_APP_VERSION || '1.0.1',
   };
 };
 
@@ -64,3 +60,19 @@ export const buildProxyUrl = (endpoint: 'graphql' | 'system'): string => {
   const path = endpoint === 'system' ? '/api/graphql/system' : '/api/graphql';
   return `http://${ENV.PROXY_HOST}:${ENV.PROXY_PORT}${path}`;
 };
+
+// 开发环境配置检查
+if (isDevelopment()) {
+  console.log('🔧 环境配置:', {
+    nodeEnv: ENV.NODE_ENV,
+    apiUrl: ENV.API_BASE_URL,
+    proxyUrl: `http://${ENV.PROXY_HOST}:${ENV.PROXY_PORT}`,
+    appInfo: `${ENV.APP_NAME} v${ENV.APP_VERSION}`,
+  });
+  
+  if (ENV.AUTH_TOKEN === 'CCZnVSanwCwzS6edoC8-2ImbzJiZLeAD') {
+    console.warn('⚠️  使用默认AUTH_TOKEN，生产环境请更换！');
+  }
+}
+
+export default ENV;

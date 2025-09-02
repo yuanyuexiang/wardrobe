@@ -4,16 +4,20 @@ const http = require('http');
 const https = require('https');
 const url = require('url');
 
-// 配置设置
+// 从环境变量读取配置（需要安装 dotenv：npm install dotenv）
+require('dotenv').config();
+
+// 配置设置 - 从环境变量读取
 const config = {
-  PORT: 3001,
-  BASE_URL: 'https://forge.matrix-net.tech',
-  CORS_ORIGIN: 'exp://192.168.3.142:8081',
+  PORT: parseInt(process.env.EXPO_PUBLIC_PROXY_PORT) || 3001,
+  BASE_URL: process.env.EXPO_PUBLIC_API_BASE_URL || 'https://forge.matrix-net.tech',
+  TARGET_HOST: process.env.EXPO_PUBLIC_PROXY_TARGET_HOST || 'forge.matrix-net.tech',
+  TARGET_PORT: parseInt(process.env.EXPO_PUBLIC_PROXY_TARGET_PORT) || 443,
 };
 
 const PORT = config.PORT;
-const TARGET_HOST = 'forge.matrix-net.tech';
-const TARGET_PORT = 443;
+const TARGET_HOST = config.TARGET_HOST;
+const TARGET_PORT = config.TARGET_PORT;
 
 const server = http.createServer((req, res) => {
   // 设置CORS头
