@@ -1,0 +1,14 @@
+query GetMyBoutique($userId: ID!) {
+  boutiques(filter: { user: { id: { _eq: $userId } } }) {
+    id
+    name
+    address
+    main_image
+    images
+    status
+    stars
+    sort
+    date_created
+    date_updated
+  }
+}

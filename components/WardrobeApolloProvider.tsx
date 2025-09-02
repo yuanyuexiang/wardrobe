@@ -2,6 +2,7 @@ import { ApolloClient, ApolloProvider, createHttpLink, from, InMemoryCache } fro
 import { setContext } from '@apollo/client/link/context';
 import { onError } from '@apollo/client/link/error';
 import React from 'react';
+import { API_CONFIG } from '../config/api';
 
 // 选择API端点
 const getApiUri = () => {
@@ -30,7 +31,7 @@ const getApiUri = () => {
     return proxyUri;
   } else {
     // 服务器端渲染或移动端，直接连接
-    const directUri = 'https://forge.matrix-net.tech/graphql';
+    const directUri = API_CONFIG.GRAPHQL_ENDPOINT;
     console.log('📱 直接连接API:', directUri);
     return directUri;
   }

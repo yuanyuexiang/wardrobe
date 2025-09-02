@@ -138,9 +138,6 @@ const ProductListScreen: React.FC = () => {
           </View>
         </View>
         <View style={styles.headerRight}>
-          <TouchableOpacity style={styles.searchIcon}>
-            <Ionicons name="search" size={20} color="#666" />
-          </TouchableOpacity>
           <TouchableOpacity 
             style={styles.couponButton}
             onPress={() => setCarouselVisible(true)}

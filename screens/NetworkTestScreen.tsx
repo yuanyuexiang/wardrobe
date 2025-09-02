@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Button, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useGetCategoriesQuery, useGetProductsQuery } from '../generated/graphql';
+import { API_CONFIG } from '../config/api';
 
 const NetworkTestScreen = () => {
   const [testResults, setTestResults] = useState<string[]>([]);
@@ -60,14 +61,21 @@ const NetworkTestScreen = () => {
     // 测试直接连接（用于对比）
     try {
       addTestResult('🔄 测试直接API连接（对比）...');
-      const response = await fetch('https://forge.matrix-net.tech/graphql', {
+      
+      const response = await fetch(`${API_CONFIG.BASE_URL}/graphql`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer CCZnVSanwCwzS6edoC8-2ImbzJiZLeAD',
         },
         body: JSON.stringify({
-          query: '{ categories { id name } }'
+          query: `
+            query GetCategories {
+              categories {
+                id
+                name
+              }
+            }
+          `,
         }),
       });
 

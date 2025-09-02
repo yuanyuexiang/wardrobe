@@ -15,6 +15,7 @@ import {
   View
 } from 'react-native';
 import { useGetProductDetailQuery } from '../generated/graphql';
+import { getAssetUrl } from '../config/api';
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
@@ -80,7 +81,7 @@ const ProductDetailScreen: React.FC = () => {
   };
 
   const renderImageItem = ({ item, index }: { item: string; index: number }) => {
-    const simpleUrl = `https://forge.matrix-net.tech/assets/${item}`;
+    const simpleUrl = getAssetUrl(item);
     
     return (
       <TouchableOpacity 
@@ -122,7 +123,7 @@ const ProductDetailScreen: React.FC = () => {
     >
       {Platform.OS === 'web' ? (
         <img
-          src={`https://forge.matrix-net.tech/assets/${item}`}
+          src={getAssetUrl(item)}
           style={{
             width: '100%',
             height: '80%',
@@ -132,7 +133,7 @@ const ProductDetailScreen: React.FC = () => {
         />
       ) : (
         <Image
-          source={{ uri: `https://forge.matrix-net.tech/assets/${item}` }}
+          source={{ uri: getAssetUrl(item) }}
           style={styles.previewImage}
           resizeMode="contain"
         />
