@@ -2,11 +2,6 @@
  * Directus 工具函数
  */
 
-// Directus 基础 URL
-import { Directus } from '@directus/sdk';
-import { Client, fetchExchange } from 'urql';
-import { DocumentNode } from 'graphql/language/ast';
-import { Variables } from 'urql';
 import { API_CONFIG } from '../config/api';
 
 const DIRECTUS_BASE_URL = API_CONFIG.BASE_URL;
