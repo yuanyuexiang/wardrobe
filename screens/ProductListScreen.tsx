@@ -1,10 +1,12 @@
 import { Ionicons } from '@expo/vector-icons';
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { ActivityIndicator, Dimensions, FlatList, Platform, RefreshControl, SafeAreaView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import CarouselModal from '../components/CarouselModal';
 import ProductCard from '../components/ProductCard';
 import Tab from '../components/Tab';
-import { useGetCategoriesQuery, useGetProductsQuery } from '../generated/graphql';
+import { useGetCategoriesQuery, useGetProductsQuery, useGetMyBoutiqueQuery } from '../generated/graphql';
+import { systemApolloClient } from '../utils/systemApolloClient';
+import { gql } from '@apollo/client';
 
 // 计算卡片宽度 - 与ProductCard中的计算保持一致
 const { width: screenWidth } = Dimensions.get('window');
@@ -29,8 +31,57 @@ const ProductListScreen: React.FC = () => {
   const [carouselVisible, setCarouselVisible] = useState(false);
   const flatListRef = useRef<FlatList>(null);
   
+  // 用户信息状态
+  const [currentUser, setCurrentUser] = useState<any>(null);
+  const [userError, setUserError] = useState<string | null>(null);
+  
+  // 获取当前用户信息
+  useEffect(() => {
+    const fetchCurrentUser = async () => {
+      try {
+        const GET_CURRENT_USER = gql`
+          query GetCurrentUser {
+            users_me {
+              id
+              first_name
+              last_name
+              email
+              status
+              role {
+                id
+                name
+              }
+              last_access
+            }
+          }
+        `;
+        
+        const result = await systemApolloClient.query({
+          query: GET_CURRENT_USER,
+          fetchPolicy: 'no-cache'
+        });
+        
+        setCurrentUser(result.data.users_me);
+        setUserError(null);
+      } catch (err) {
+        setUserError(err instanceof Error ? err.message : '获取用户信息失败');
+      }
+    };
+
+    fetchCurrentUser();
+  }, []);
+  
   // 使用真实的API
   const { data: categoryData, loading: categoryLoading, error: categoryError } = useGetCategoriesQuery();
+  
+  // 获取店铺信息 - 使用主端点和真实的用户ID
+  const { data: boutiqueData, loading: boutiqueLoading, error: boutiqueError } = useGetMyBoutiqueQuery({
+    variables: { userId: currentUser?.id || "" },
+    skip: !currentUser?.id,
+    // 不指定client，使用默认的主GraphQL端点
+  });
+  
+  const boutique = boutiqueData?.boutiques?.[0]; // 假设一个用户只有一个商家
   
   // 构建查询变量
   const buildQueryVariables = () => {
@@ -98,7 +149,13 @@ const ProductListScreen: React.FC = () => {
     if (productError) {
       console.log('商品加载错误:', productError);
     }
-  }, [categoryError, productError]);
+    if (boutiqueError) {
+      console.log('店铺信息加载错误:', boutiqueError);
+    }
+    if (boutique) {
+      console.log('店铺信息加载成功:', boutique);
+    }
+  }, [categoryError, productError, boutiqueError, boutique]);
 
   const handleRefresh = async () => {
     setRefreshing(true);
@@ -126,14 +183,18 @@ const ProductListScreen: React.FC = () => {
             <Text style={styles.logoText}>衣橱</Text>
           </View>
           <View style={styles.brandInfo}>
-            <Text style={styles.brandName}>朱老板服装旗舰店</Text>
+            <Text style={styles.brandName}>
+              {boutiqueLoading ? '加载中...' : (boutique?.name || '朱老板服装旗舰店')}
+            </Text>
             <View style={styles.ratingSection}>
               <View style={styles.stars}>
                 {[1, 2, 3, 4, 5].map((star) => (
                   <Ionicons key={star} name="star" size={12} color="#ff6b35" />
                 ))}
               </View>
-              <Text style={styles.ratingText}>11.5高分</Text>
+              <Text style={styles.ratingText}>
+                {boutique?.stars ? `${boutique.stars}分` : '11.5高分'}
+              </Text>
             </View>
           </View>
         </View>
