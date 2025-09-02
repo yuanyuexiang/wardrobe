@@ -53,19 +53,8 @@ const ProductDetailScreen: React.FC = () => {
       });
     }
     
-    // 调试信息
-    console.log('商品图片调试:', {
-      productId: product?.id,
-      mainImage: product?.main_image,
-      rawImages: product?.images,
-      processedImages: imageList,
-      imageCount: imageList.length
-    });
-    
     return imageList;
-  }, [product]);
-
-  const onViewableItemsChanged = useRef(({ viewableItems }: any) => {
+  }, [product]);  const onViewableItemsChanged = useRef(({ viewableItems }: any) => {
     if (viewableItems.length > 0) {
       setCurrentImageIndex(viewableItems[0].index || 0);
     }
@@ -91,15 +80,7 @@ const ProductDetailScreen: React.FC = () => {
   };
 
   const renderImageItem = ({ item, index }: { item: string; index: number }) => {
-    // 使用不带参数的简单URL
     const simpleUrl = `https://forge.matrix-net.tech/assets/${item}`;
-    
-    // 调试信息
-    console.log('图片渲染调试:', {
-      index,
-      fileId: item,
-      simpleUrl
-    });
     
     return (
       <TouchableOpacity 
@@ -115,46 +96,15 @@ const ProductDetailScreen: React.FC = () => {
               height: '100%',
               objectFit: 'cover' as any
             }}
-            onError={(error: any) => {
-              console.log('HTML img 加载错误:', {
-                index,
-                fileId: item,
-                simpleUrl,
-                error
-              });
-            }}
-            onLoad={() => {
-              console.log('HTML img 加载成功:', {
-                index,
-                fileId: item,
-                url: simpleUrl
-              });
-            }}
             alt={`商品图片 ${index + 1}`}
           />
         ) : (
           <Image
             source={{ uri: simpleUrl }}
             style={styles.productImage}
-            onError={(error: any) => {
-              console.log('React Native Image 加载错误:', {
-                index,
-                fileId: item,
-                simpleUrl,
-                error
-              });
-            }}
-            onLoad={() => {
-              console.log('React Native Image 加载成功:', {
-                index,
-                fileId: item,
-                url: simpleUrl
-              });
-            }}
             resizeMode="cover"
           />
         )}
-        {/* 图片信息覆盖层 */}
         <View style={styles.imageOverlay}>
           <Text style={styles.imageCounter}>
             {index + 1} / {images.length}
@@ -216,21 +166,11 @@ const ProductDetailScreen: React.FC = () => {
   }
 
   if (error || !product) {
-    // 添加调试信息
-    console.log('产品加载调试:', {
-      error: error?.message,
-      product,
-      data,
-      loading,
-      id
-    });
-    
     return (
       <View style={styles.errorContainer}>
         <Text style={styles.errorText}>
           {error ? `加载失败：${error.message}` : '未找到商品'}
         </Text>
-        <Text style={styles.debugText}>ID: {id}</Text>
       </View>
     );
   }
@@ -238,7 +178,6 @@ const ProductDetailScreen: React.FC = () => {
   return (
     <>
       <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-        {/* 图片轮播区域 */}
         <View style={styles.imageSection}>
           {images.length > 0 ? (
             <>
@@ -273,7 +212,6 @@ const ProductDetailScreen: React.FC = () => {
           )}
         </View>
 
-        {/* 商品信息区域 */}
         <View style={styles.infoSection}>
           <View style={styles.productInfo}>
             <Text style={styles.productName}>{product.name}</Text>
@@ -422,28 +360,8 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 10,
   },
-  debugText: {
-    color: '#666',
-    fontSize: 14,
-    textAlign: 'center',
-  },
-  debugImageContainer: {
-    position: 'absolute',
-    top: 10,
-    left: 10,
-    zIndex: 10,
-    backgroundColor: 'rgba(255, 255, 255, 0.9)',
-    padding: 10,
-    borderRadius: 8,
-    maxWidth: 200,
-  },
-  debugImage: {
-    width: 100,
-    height: 75,
-    marginVertical: 5,
-  },
   imageSection: {
-    height: screenHeight * 0.60, // 减小高度，占屏幕60%
+    height: screenHeight * 0.60,
     position: 'relative',
     backgroundColor: '#000',
   },

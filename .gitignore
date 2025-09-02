@@ -28,6 +28,21 @@ yarn-error.*
 
 # macOS
 .DS_Store
+
+# IDE
+.vscode/
+.idea/
+
+# temporary files
+*.tmp
+*.temp
+*.log
+
+# development docs (can be uncommitted if needed)
+docs/
+
+# test files
+test-*.js
 *.pem
 
 # local env files
