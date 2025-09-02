@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Dimensions,
   Image,
   Modal,
   Platform,
@@ -13,17 +12,21 @@ import {
   View
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { gql } from '@apollo/client';
 import { useGetMyBoutiqueQuery } from '../generated/graphql';
-import { systemApolloClient } from '../utils/systemApolloClient';
-import { DirectusUser, GetCurrentUserData } from '../types/systemApi';
+import { useCurrentUser } from '../hooks/useCurrentUser';
 import { getAssetUrl } from '../config/api';
+import { logger } from '../utils/logger';
+import { useImagePreload } from '../utils/imageCache';
+import { LAYOUT } from '../utils/constants';
 
-const { width: screenWidth } = Dimensions.get('window');
+const { screenWidth } = LAYOUT;
 
 const BoutiqueScreen: React.FC = () => {
-  const [currentUser, setCurrentUser] = useState<DirectusUser | null>(null);
-  const [userError, setUserError] = useState<string | null>(null);
+  // 使用全局用户状态管理
+  const { user, loading: userLoading, error: userError } = useCurrentUser();
+  
+  // 使用图片缓存优化
+  const { preload, preloadBatch, getImageUrl, getThumbnailUrl } = useImagePreload();
   
   // 图片预览状态
   const [previewVisible, setPreviewVisible] = useState(false);
@@ -32,8 +35,7 @@ const BoutiqueScreen: React.FC = () => {
 
   // 打开图片预览
   const openImagePreview = (imageId: string) => {
-    console.log('Opening image preview for:', imageId);
-    console.log('Current previewImageUrl:', previewImageUrl);
+    logger.debug('BoutiqueScreen', '打开图片预览', { imageId, currentUrl: previewImageUrl });
     
     const imageUrl = getAssetUrl(imageId);
     const imageSource = { uri: imageUrl, cache: 'force-cache' as const };
@@ -46,64 +48,43 @@ const BoutiqueScreen: React.FC = () => {
   // 关闭图片预览
   const closeImagePreview = () => {
     setPreviewVisible(false);
-    // 不清空URL，保持缓存
+    logger.debug('BoutiqueScreen', '关闭图片预览');
   };
 
-  // 获取当前用户信息
-  useEffect(() => {
-    const fetchCurrentUser = async () => {
-      try {
-        
-        const GET_CURRENT_USER = gql`
-          query GetCurrentUser {
-            users_me {
-              id
-              first_name
-              last_name
-              email
-              status
-              role {
-                id
-                name
-              }
-              last_access
-            }
-          }
-        `;
-        
-        const result = await systemApolloClient.query<GetCurrentUserData>({
-          query: GET_CURRENT_USER,
-          fetchPolicy: 'no-cache'
-        });
-        
-        setCurrentUser(result.data.users_me);
-        setUserError(null);
-      } catch (err) {
-        setUserError(err instanceof Error ? err.message : '获取用户信息失败');
-      }
-    };
-
-    fetchCurrentUser();
-  }, []);
-
   const { data, error } = useGetMyBoutiqueQuery({
-    variables: { userId: currentUser?.id || "" },
-    skip: !currentUser?.id
+    variables: { userId: user?.id || "" },
+    skip: !user?.id
   });
 
   const boutique = data?.boutiques?.[0]; // 假设一个用户只有一个商家
 
-  // 预加载主图片到缓存
+  // 预加载主图片和相册图片到缓存
   useEffect(() => {
     if (boutique?.main_image) {
-      const imageUrl = getAssetUrl(boutique.main_image);
-      Image.prefetch(imageUrl).then(() => {
-        console.log('Main image prefetched:', imageUrl);
-      }).catch(err => {
-        console.log('Failed to prefetch main image:', err);
+      // 预加载主图片
+      preload(boutique.main_image, 'high').catch(err => {
+        logger.error('BoutiqueScreen', '主图片预加载失败', err);
       });
     }
-  }, [boutique?.main_image]);
+
+    // 预加载相册图片
+    if (boutique?.images) {
+      let imageIds: string[] = [];
+      try {
+        imageIds = Array.isArray(boutique.images) 
+          ? boutique.images 
+          : JSON.parse(boutique.images as string);
+      } catch (err) {
+        logger.error('BoutiqueScreen', '解析相册图片失败', err);
+      }
+
+      if (imageIds.length > 0) {
+        preloadBatch(imageIds, 'normal').catch(err => {
+          logger.error('BoutiqueScreen', '相册图片批量预加载失败', err);
+        });
+      }
+    }
+  }, [boutique?.main_image, boutique?.images, preload, preloadBatch]);
 
   if (error || !boutique) {
     return (

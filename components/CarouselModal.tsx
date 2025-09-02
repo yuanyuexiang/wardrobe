@@ -12,6 +12,7 @@ import {
     View,
 } from 'react-native';
 import { getDirectusImageUrl } from '../utils/directus';
+import { logger } from '../utils/logger';
 
 interface CarouselModalProps {
   visible: boolean;
@@ -120,14 +121,8 @@ const CarouselModal: React.FC<CarouselModalProps> = ({ visible, onClose, product
       )
     : null;
 
-  // 调试日志
-  console.log('轮播调试:', {
-    currentIndex,
-    productName: currentProduct?.name,
-    mainImage: currentProduct?.main_image,
-    imageUrl,
-    validProductsCount: validProducts.length
-  });
+  // 结构化日志
+  logger.debug('CarouselModal', `轮播状态更新 - 当前索引: ${currentIndex}, 商品: ${currentProduct?.name}, 总数: ${validProducts.length}`);
 
   return (
     <Modal

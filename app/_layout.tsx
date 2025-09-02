@@ -6,6 +6,8 @@ import React, { useEffect } from 'react';
 import 'react-native-reanimated';
 import FullscreenConfig from '../components/FullscreenConfig';
 import WardrobeApolloProvider from '../components/WardrobeApolloProvider';
+import ErrorBoundary from '../components/ErrorBoundary';
+import { logger } from '../utils/logger';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
 
@@ -53,6 +55,11 @@ export default function RootLayout() {
   }
 
   return (
+    <ErrorBoundary 
+      onError={(error, errorInfo) => {
+        logger.error('App', '应用级错误', { error: error.message, errorInfo });
+      }}
+    >
       <WardrobeApolloProvider>
         <FullscreenConfig />
         <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
@@ -71,5 +78,6 @@ export default function RootLayout() {
           <StatusBar style="auto" hidden={true} />
         </ThemeProvider>
       </WardrobeApolloProvider>
+    </ErrorBoundary>
   );
 }

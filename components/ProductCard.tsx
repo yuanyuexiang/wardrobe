@@ -3,6 +3,7 @@ import React from 'react';
 import { Dimensions, ImageBackground, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { GetProductsQuery } from '../generated/graphql';
 import { getDirectusThumbnailUrl } from '../utils/directus';
+import { getCardWidth } from '../utils/constants';
 
 export type Product = GetProductsQuery['products'][0];
 
@@ -10,12 +11,8 @@ interface ProductCardProps {
   product: Product;
 }
 
-// 获取屏幕宽度并计算卡片宽度
-const { width: screenWidth } = Dimensions.get('window');
-const HORIZONTAL_PADDING = 32; // 左右各16px padding
-const ITEM_SEPARATOR = 12; // 卡片间距
-const VISIBLE_CARDS = 2.2; // 显示2.2个卡片，创造滑动效果
-const cardWidth = (screenWidth - HORIZONTAL_PADDING - ITEM_SEPARATOR * (VISIBLE_CARDS - 1)) / VISIBLE_CARDS;
+// 使用统一的卡片宽度计算
+const cardWidth = getCardWidth();
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const router = useRouter();

@@ -1,8 +1,7 @@
 import { useLocalSearchParams } from 'expo-router';
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import {
   ActivityIndicator,
-  Dimensions,
   FlatList,
   Image,
   Modal,
@@ -16,8 +15,11 @@ import {
 } from 'react-native';
 import { useGetProductDetailQuery } from '../generated/graphql';
 import { getAssetUrl } from '../config/api';
+import { logger } from '../utils/logger';
+import { imageCache } from '../utils/imageCache';
+import { LAYOUT } from '../utils/constants';
 
-const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
+const { screenWidth, screenHeight } = LAYOUT;
 
 const ProductDetailScreen: React.FC = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -55,7 +57,32 @@ const ProductDetailScreen: React.FC = () => {
     }
     
     return imageList;
-  }, [product]);  const onViewableItemsChanged = useRef(({ viewableItems }: any) => {
+  }, [product]);
+
+  // 结构化日志记录
+  useEffect(() => {
+    if (id) {
+      logger.info('ProductDetailScreen', `开始加载商品详情: ${id}`);
+    }
+  }, [id]);
+
+  useEffect(() => {
+    if (product) {
+      logger.info('ProductDetailScreen', `商品详情加载成功: ${product.name}`);
+    }
+    if (error) {
+      logger.error('ProductDetailScreen', `商品详情加载失败: ${error.message}`);
+    }
+  }, [product, error]);
+
+  // 图像预加载优化
+  useEffect(() => {
+    if (images.length > 0) {
+      const imageUrls = images.map(img => getAssetUrl(img));
+      logger.info('ProductDetailScreen', `开始预加载${imageUrls.length}张商品图片`);
+      imageCache.preloadBatch(imageUrls);
+    }
+  }, [images]);  const onViewableItemsChanged = useRef(({ viewableItems }: any) => {
     if (viewableItems.length > 0) {
       setCurrentImageIndex(viewableItems[0].index || 0);
     }

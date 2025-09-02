@@ -15,7 +15,9 @@ const getApiUri = () => {
                     typeof window.addEventListener === 'function';
 
   // 环境检测和日志记录
-  logger.info('WardrobeApolloProvider', `环境检测 - isDev: ${isDev}, isRealWeb: ${isRealWeb}`);  // 只有真正的Web环境才使用代理
+  logger.info('WardrobeApolloProvider', `环境检测 - isDev: ${isDev}, isRealWeb: ${isRealWeb}`);
+  
+  // 只有真正的Web环境才使用代理
   if (isRealWeb && isDev) {
     // Web平台，使用本地代理
     const proxyUri = 'http://localhost:3001/api/graphql';
@@ -41,12 +43,10 @@ const token = process.env.EXPO_PUBLIC_AUTH_TOKEN || 'CCZnVSanwCwzS6edoC8-2ImbzJi
 const authLink = setContext((_: any, context: any) => ({
   headers: {
     ...context.headers,
-    Authorization: `Bearer ${token}`,
-    'Content-Type': 'application/json',
+    authorization: `Bearer ${token}`,
   },
 }));
 
-// 错误处理链接
 const errorLink = onError(({ graphQLErrors, networkError, operation, forward }) => {
   if (graphQLErrors) {
     graphQLErrors.forEach(({ message, locations, path }) =>
@@ -75,12 +75,18 @@ const client = new ApolloClient({
   },
   // 使用新的 devtools 配置
   devtools: {
-    enabled: process.env.NODE_ENV === 'development',
+    enabled: __DEV__,
   },
 });
 
-const WardrobeApolloProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <ApolloProvider client={client}>{children}</ApolloProvider>
-);
+interface WardrobeApolloProviderProps {
+  children: React.ReactNode;
+}
 
-export default WardrobeApolloProvider;
+export const WardrobeApolloProvider: React.FC<WardrobeApolloProviderProps> = ({ children }) => {
+  return (
+    <ApolloProvider client={client}>
+      {children}
+    </ApolloProvider>
+  );
+};

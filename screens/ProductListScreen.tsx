@@ -1,27 +1,19 @@
 import { Ionicons } from '@expo/vector-icons';
 import React, { useRef, useState, useEffect } from 'react';
-import { ActivityIndicator, Dimensions, FlatList, Platform, RefreshControl, SafeAreaView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, FlatList, RefreshControl, SafeAreaView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import CarouselModal from '../components/CarouselModal';
 import ProductCard from '../components/ProductCard';
 import Tab from '../components/Tab';
 import { useGetCategoriesQuery, useGetProductsQuery, useGetMyBoutiqueQuery } from '../generated/graphql';
-import { systemApolloClient } from '../utils/systemApolloClient';
-import { gql } from '@apollo/client';
+import { useCurrentUser } from '../hooks/useCurrentUser';
+import { logger } from '../utils/logger';
+import { LAYOUT, getCardWidth, getBottomPadding } from '../utils/constants';
+import { imageCache } from '../utils/imageCache';
+import { getDirectusThumbnailUrl } from '../utils/directus';
 
-// 计算卡片宽度 - 与ProductCard中的计算保持一致
-const { width: screenWidth } = Dimensions.get('window');
-const HORIZONTAL_PADDING = 32; // 左右各16px padding
-const ITEM_SEPARATOR = 12; // 卡片间距
-const VISIBLE_CARDS = 2.2; // 显示2.2个卡片，创造滑动效果
-const cardWidth = (screenWidth - HORIZONTAL_PADDING - ITEM_SEPARATOR * (VISIBLE_CARDS - 1)) / VISIBLE_CARDS;
-
-// 计算底部安全距离，避开底部选项卡
-const TAB_BAR_HEIGHT = Platform.select({
-  ios: 83, // iOS底部选项卡高度 + 安全区域
-  android: 70, // Android底部选项卡高度
-  default: 70,
-});
-const BOTTOM_PADDING = TAB_BAR_HEIGHT + 16; // 选项卡高度 + 额外间距
+// 使用统一的布局常量
+const cardWidth = getCardWidth();
+const BOTTOM_PADDING = getBottomPadding();
 
 const ProductListScreen: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>("recommended");
@@ -31,45 +23,18 @@ const ProductListScreen: React.FC = () => {
   const [carouselVisible, setCarouselVisible] = useState(false);
   const flatListRef = useRef<FlatList>(null);
   
-  // 用户信息状态
-  const [currentUser, setCurrentUser] = useState<any>(null);
-  const [userError, setUserError] = useState<string | null>(null);
+  // 使用新的用户状态管理hook
+  const { user: currentUser, loading: userLoading, error: userError } = useCurrentUser();
   
-  // 获取当前用户信息
+  // 记录用户状态
   useEffect(() => {
-    const fetchCurrentUser = async () => {
-      try {
-        const GET_CURRENT_USER = gql`
-          query GetCurrentUser {
-            users_me {
-              id
-              first_name
-              last_name
-              email
-              status
-              role {
-                id
-                name
-              }
-              last_access
-            }
-          }
-        `;
-        
-        const result = await systemApolloClient.query({
-          query: GET_CURRENT_USER,
-          fetchPolicy: 'no-cache'
-        });
-        
-        setCurrentUser(result.data.users_me);
-        setUserError(null);
-      } catch (err) {
-        setUserError(err instanceof Error ? err.message : '获取用户信息失败');
-      }
-    };
-
-    fetchCurrentUser();
-  }, []);
+    if (currentUser) {
+      logger.info('ProductListScreen', `用户信息加载成功 - ID: ${currentUser.id}, 姓名: ${currentUser.first_name} ${currentUser.last_name}`);
+    }
+    if (userError) {
+      logger.error('ProductListScreen', `用户信息加载失败: ${userError}`);
+    }
+  }, [currentUser, userError]);
   
   // 使用真实的API
   const { data: categoryData, loading: categoryLoading, error: categoryError } = useGetCategoriesQuery();
@@ -141,21 +106,35 @@ const ProductListScreen: React.FC = () => {
     },
   });
 
-  // 调试信息
+  // 调试信息 - 使用结构化日志
   React.useEffect(() => {
     if (categoryError) {
-      console.log('分类加载错误:', categoryError);
+      logger.error('ProductListScreen', '分类加载错误', categoryError.message);
     }
     if (productError) {
-      console.log('商品加载错误:', productError);
+      logger.error('ProductListScreen', '商品加载错误', productError.message);
     }
     if (boutiqueError) {
-      console.log('店铺信息加载错误:', boutiqueError);
+      logger.error('ProductListScreen', '店铺信息加载错误', boutiqueError.message);
     }
     if (boutique) {
-      console.log('店铺信息加载成功:', boutique);
+      logger.info('ProductListScreen', `店铺信息加载成功: ${boutique.name}`);
     }
   }, [categoryError, productError, boutiqueError, boutique]);
+
+  // 图像预加载优化
+  useEffect(() => {
+    if (productData?.products) {
+      const imageUrls = productData.products
+        .filter(product => product.main_image)
+        .map(product => getDirectusThumbnailUrl(product.main_image!, 320));
+      
+      if (imageUrls.length > 0) {
+        logger.info('ProductListScreen', `开始预加载${imageUrls.length}张商品图片`);
+        imageCache.preloadBatch(imageUrls);
+      }
+    }
+  }, [productData]);
 
   const handleRefresh = async () => {
     setRefreshing(true);
@@ -167,7 +146,7 @@ const ProductListScreen: React.FC = () => {
 
   const handleScroll = (event: any) => {
     const contentOffset = event.nativeEvent.contentOffset.x;
-    const itemWidth = cardWidth + ITEM_SEPARATOR; // 使用动态计算的卡片宽度
+    const itemWidth = cardWidth + LAYOUT.ITEM_SEPARATOR; // 使用统一的布局常量
     const index = Math.round(contentOffset / itemWidth);
     setCurrentIndex(index);
   };
