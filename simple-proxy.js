@@ -4,16 +4,16 @@ const http = require('http');
 const https = require('https');
 const url = require('url');
 
-// 从配置文件导入设置（这里用JS版本）
+// 配置设置
 const config = {
   PORT: 3001,
   BASE_URL: 'https://forge.matrix-net.tech',
   CORS_ORIGIN: 'exp://192.168.3.142:8081',
 };
 
-const PORT = API_CONFIG.PROXY.PORT;
-const TARGET_HOST = API_CONFIG.PROXY.TARGET_HOST;
-const TARGET_PORT = API_CONFIG.PROXY.TARGET_PORT;
+const PORT = config.PORT;
+const TARGET_HOST = 'forge.matrix-net.tech';
+const TARGET_PORT = 443;
 
 const server = http.createServer((req, res) => {
   // 设置CORS头
