@@ -30,7 +30,7 @@ yarn-error.*
 .DS_Store
 
 # IDE
-.vscode/
+.vscode/settings.json
 .idea/
 
 # temporary files
