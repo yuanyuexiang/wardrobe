@@ -3,7 +3,7 @@
  * 统一管理应用中的图片加载、缓存和优化策略
  */
 import { Image } from 'react-native';
-import { getAssetUrl } from '../config/api';
+import { getDirectusImageUrl } from './directus';
 import { logger } from './logger';
 
 interface ImageCacheItem {
@@ -23,7 +23,7 @@ class ImageCache {
   async preload(assetId: string, priority: 'high' | 'normal' | 'low' = 'normal'): Promise<void> {
     if (!assetId) return;
 
-    const url = getAssetUrl(assetId);
+    const url = getDirectusImageUrl(assetId);
     const cacheKey = assetId;
 
     // 检查是否已在缓存中
@@ -101,7 +101,7 @@ class ImageCache {
   getImageUrl(assetId: string, width?: number, height?: number, quality?: number): string {
     if (!assetId) return '';
 
-    let url = getAssetUrl(assetId);
+    let url = getDirectusImageUrl(assetId, width, height, quality);
     
     // 添加优化参数
     const params: string[] = [];

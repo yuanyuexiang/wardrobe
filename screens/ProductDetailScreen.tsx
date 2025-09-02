@@ -14,7 +14,7 @@ import {
   View
 } from 'react-native';
 import { useGetProductDetailQuery } from '../generated/graphql';
-import { getAssetUrl } from '../config/api';
+import { getDirectusImageUrl } from '../utils/directus';
 import { logger } from '../utils/logger';
 import { imageCache } from '../utils/imageCache';
 import { LAYOUT } from '../utils/constants';
@@ -78,7 +78,7 @@ const ProductDetailScreen: React.FC = () => {
   // 图像预加载优化
   useEffect(() => {
     if (images.length > 0) {
-      const imageUrls = images.map(img => getAssetUrl(img));
+      const imageUrls = images.map(img => getDirectusImageUrl(img));
       logger.info('ProductDetailScreen', `开始预加载${imageUrls.length}张商品图片`);
       imageCache.preloadBatch(imageUrls);
     }
@@ -108,7 +108,7 @@ const ProductDetailScreen: React.FC = () => {
   };
 
   const renderImageItem = ({ item, index }: { item: string; index: number }) => {
-    const simpleUrl = getAssetUrl(item);
+    const simpleUrl = getDirectusImageUrl(item);
     
     return (
       <TouchableOpacity 
@@ -150,7 +150,7 @@ const ProductDetailScreen: React.FC = () => {
     >
       {Platform.OS === 'web' ? (
         <img
-          src={getAssetUrl(item)}
+          src={getDirectusImageUrl(item)}
           style={{
             width: '100%',
             height: '80%',
@@ -160,7 +160,7 @@ const ProductDetailScreen: React.FC = () => {
         />
       ) : (
         <Image
-          source={{ uri: getAssetUrl(item) }}
+          source={{ uri: getDirectusImageUrl(item) }}
           style={styles.previewImage}
           resizeMode="contain"
         />

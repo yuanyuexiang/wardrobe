@@ -14,7 +14,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { useGetMyBoutiqueQuery } from '../generated/graphql';
 import { useCurrentUser } from '../hooks/useCurrentUser';
-import { getAssetUrl } from '../config/api';
+import { getDirectusImageUrl } from '../utils/directus';
 import { logger } from '../utils/logger';
 import { useImagePreload } from '../utils/imageCache';
 import { LAYOUT } from '../utils/constants';
@@ -37,7 +37,7 @@ const BoutiqueScreen: React.FC = () => {
   const openImagePreview = (imageId: string) => {
     logger.debug('BoutiqueScreen', '打开图片预览', { imageId, currentUrl: previewImageUrl });
     
-    const imageUrl = getAssetUrl(imageId);
+    const imageUrl = getDirectusImageUrl(imageId);
     const imageSource = { uri: imageUrl, cache: 'force-cache' as const };
     
     setPreviewImageUrl(imageUrl);
@@ -136,7 +136,7 @@ const BoutiqueScreen: React.FC = () => {
           >
             {Platform.OS === 'web' ? (
               <img
-                src={getAssetUrl(imageId)}
+                src={getDirectusImageUrl(imageId)}
                 style={{
                   width: 120,
                   height: 80,
@@ -148,7 +148,7 @@ const BoutiqueScreen: React.FC = () => {
             ) : (
               <Image
                 source={{ 
-                  uri: getAssetUrl(imageId),
+                  uri: getDirectusImageUrl(imageId),
                   cache: 'force-cache'
                 }}
                 style={styles.boutiqueImage}
@@ -179,7 +179,7 @@ const BoutiqueScreen: React.FC = () => {
           >
             {Platform.OS === 'web' ? (
               <img
-                src={getAssetUrl(boutique.main_image)}
+                src={getDirectusImageUrl(boutique.main_image)}
                 style={{
                   width: '100%',
                   height: 200,
@@ -191,7 +191,7 @@ const BoutiqueScreen: React.FC = () => {
             ) : (
               <Image
                 source={{ 
-                  uri: getAssetUrl(boutique.main_image),
+                  uri: getDirectusImageUrl(boutique.main_image),
                   cache: 'force-cache'
                 }}
                 style={styles.mainImage}

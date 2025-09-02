@@ -8,7 +8,7 @@ const DIRECTUS_BASE_URL = API_CONFIG.BASE_URL;
 
 /**
  * 将 Directus 文件 ID 转换为完整的图片 URL
- * @param fileId Directus 文件 ID
+ * @param fileId Directus 文件 ID 或已有的完整URL
  * @param width 可选的宽度参数（用于图片优化）
  * @param height 可选的高度参数（用于图片优化）
  * @param quality 可选的质量参数（1-100）
@@ -21,6 +21,18 @@ export const getDirectusImageUrl = (
   quality?: number
 ): string => {
   if (!fileId) return '';
+  
+  // 检查是否已经是完整的URL
+  if (fileId.startsWith('http://') || fileId.startsWith('https://')) {
+    console.warn('⚠️ getDirectusImageUrl 收到完整URL而非文件ID:', fileId);
+    return fileId; // 如果已经是完整URL，直接返回
+  }
+  
+  // 检查是否包含重复的域名前缀
+  if (fileId.includes('forge.matrix-net.tech')) {
+    console.warn('⚠️ 检测到重复域名的文件ID:', fileId);
+    return fileId; // 直接返回，避免再次拼接
+  }
   
   let url = `${DIRECTUS_BASE_URL}/assets/${fileId}`;
   
