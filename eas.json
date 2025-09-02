@@ -13,13 +13,13 @@
       "distribution": "internal"
     },
     "production": {
-      "android": {
-        "buildType": "apk",
-        "resourceClass": "medium"
-      },
       "autoIncrement": true,
-      "cache": {
-        "disabled": false
+      "android": {
+        "gradleCommand": ":app:assembleRelease"
+      },
+      "env": {
+        "EXPO_USE_PROGUARD": "1",
+        "EXPO_IMAGE_COMPRESSION": "1"
       }
     }
   },

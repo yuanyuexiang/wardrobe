@@ -4,7 +4,9 @@ import {
   ActivityIndicator,
   Dimensions,
   FlatList,
+  Image,
   Modal,
+  Platform,
   ScrollView,
   StyleSheet,
   Text,
@@ -105,30 +107,53 @@ const ProductDetailScreen: React.FC = () => {
         onPress={() => handleImagePress(index)}
         activeOpacity={0.9}
       >
-        <img
-          src={simpleUrl}
-          style={{
-            width: '100%',
-            height: '100%',
-            objectFit: 'cover' as any
-          }}
-          onError={(error: any) => {
-            console.log('HTML img 加载错误:', {
-              index,
-              fileId: item,
-              simpleUrl,
-              error
-            });
-          }}
-          onLoad={() => {
-            console.log('HTML img 加载成功:', {
-              index,
-              fileId: item,
-              url: simpleUrl
-            });
-          }}
-          alt={`商品图片 ${index + 1}`}
-        />
+        {Platform.OS === 'web' ? (
+          <img
+            src={simpleUrl}
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover' as any
+            }}
+            onError={(error: any) => {
+              console.log('HTML img 加载错误:', {
+                index,
+                fileId: item,
+                simpleUrl,
+                error
+              });
+            }}
+            onLoad={() => {
+              console.log('HTML img 加载成功:', {
+                index,
+                fileId: item,
+                url: simpleUrl
+              });
+            }}
+            alt={`商品图片 ${index + 1}`}
+          />
+        ) : (
+          <Image
+            source={{ uri: simpleUrl }}
+            style={styles.productImage}
+            onError={(error: any) => {
+              console.log('React Native Image 加载错误:', {
+                index,
+                fileId: item,
+                simpleUrl,
+                error
+              });
+            }}
+            onLoad={() => {
+              console.log('React Native Image 加载成功:', {
+                index,
+                fileId: item,
+                url: simpleUrl
+              });
+            }}
+            resizeMode="cover"
+          />
+        )}
         {/* 图片信息覆盖层 */}
         <View style={styles.imageOverlay}>
           <Text style={styles.imageCounter}>
@@ -145,15 +170,23 @@ const ProductDetailScreen: React.FC = () => {
       onPress={closeImageModal}
       activeOpacity={1}
     >
-      <img
-        src={`https://forge.matrix-net.tech/assets/${item}`}
-        style={{
-          width: '100%',
-          height: '80%',
-          objectFit: 'contain' as any
-        }}
-        alt={`预览图片 ${index + 1}`}
-      />
+      {Platform.OS === 'web' ? (
+        <img
+          src={`https://forge.matrix-net.tech/assets/${item}`}
+          style={{
+            width: '100%',
+            height: '80%',
+            objectFit: 'contain' as any
+          }}
+          alt={`预览图片 ${index + 1}`}
+        />
+      ) : (
+        <Image
+          source={{ uri: `https://forge.matrix-net.tech/assets/${item}` }}
+          style={styles.previewImage}
+          resizeMode="contain"
+        />
+      )}
     </TouchableOpacity>
   );
 
@@ -418,6 +451,10 @@ const styles = StyleSheet.create({
     width: screenWidth,
     height: '100%',
     position: 'relative',
+  },
+  productImage: {
+    width: '100%',
+    height: '100%',
   },
   image: {
     width: '100%',
