@@ -26,8 +26,8 @@ const CarouselModal: React.FC<CarouselModalProps> = ({ visible, onClose, product
   const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(true);
   const [controlsVisible, setControlsVisible] = useState(true);
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
-  const hideControlsTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const intervalRef = useRef<number | null>(null);
+  const hideControlsTimeoutRef = useRef<number | null>(null);
 
   // 过滤出有主图的商品
   const validProducts = products.filter(product => product.main_image);
