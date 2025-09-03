@@ -9,7 +9,7 @@ import WardrobeApolloProvider from '../components/WardrobeApolloProvider';
 import ErrorBoundary from '../components/ErrorBoundary';
 import { logger } from '../utils/logger';
 
-import { useColorScheme } from '@/hooks/useColorScheme';
+import { useColorScheme } from '../hooks/useColorScheme';
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();

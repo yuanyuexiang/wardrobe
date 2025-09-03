@@ -1,0 +1,1 @@
+export http_proxy=http://127.0.0.1:7890 && export https_proxy=http://127.0.0.1:7890 && export all_proxy=http://127.0.0.1:7890 && echo "代理已设置为 7890 端口"
