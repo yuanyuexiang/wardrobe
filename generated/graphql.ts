@@ -40,51 +40,44 @@ export type Mutation = {
   create_boutiques_items: Array<Boutiques>;
   create_categories_item?: Maybe<Categories>;
   create_categories_items: Array<Categories>;
+  create_customers_item?: Maybe<Customers>;
+  create_customers_items: Array<Customers>;
   create_order_items_item?: Maybe<Order_Items>;
   create_order_items_items: Array<Order_Items>;
   create_orders_item?: Maybe<Orders>;
   create_orders_items: Array<Orders>;
-  create_payments_item?: Maybe<Payments>;
-  create_payments_items: Array<Payments>;
   create_products_item?: Maybe<Products>;
   create_products_items: Array<Products>;
-  create_users_item?: Maybe<Users>;
-  create_users_items: Array<Users>;
   delete_boutiques_item?: Maybe<Delete_One>;
   delete_boutiques_items?: Maybe<Delete_Many>;
   delete_categories_item?: Maybe<Delete_One>;
   delete_categories_items?: Maybe<Delete_Many>;
+  delete_customers_item?: Maybe<Delete_One>;
+  delete_customers_items?: Maybe<Delete_Many>;
   delete_order_items_item?: Maybe<Delete_One>;
   delete_order_items_items?: Maybe<Delete_Many>;
   delete_orders_item?: Maybe<Delete_One>;
   delete_orders_items?: Maybe<Delete_Many>;
-  delete_payments_item?: Maybe<Delete_One>;
-  delete_payments_items?: Maybe<Delete_Many>;
   delete_products_item?: Maybe<Delete_One>;
   delete_products_items?: Maybe<Delete_Many>;
-  delete_users_item?: Maybe<Delete_One>;
-  delete_users_items?: Maybe<Delete_Many>;
   update_boutiques_batch: Array<Boutiques>;
   update_boutiques_item?: Maybe<Boutiques>;
   update_boutiques_items: Array<Boutiques>;
   update_categories_batch: Array<Categories>;
   update_categories_item?: Maybe<Categories>;
   update_categories_items: Array<Categories>;
+  update_customers_batch: Array<Customers>;
+  update_customers_item?: Maybe<Customers>;
+  update_customers_items: Array<Customers>;
   update_order_items_batch: Array<Order_Items>;
   update_order_items_item?: Maybe<Order_Items>;
   update_order_items_items: Array<Order_Items>;
   update_orders_batch: Array<Orders>;
   update_orders_item?: Maybe<Orders>;
   update_orders_items: Array<Orders>;
-  update_payments_batch: Array<Payments>;
-  update_payments_item?: Maybe<Payments>;
-  update_payments_items: Array<Payments>;
   update_products_batch: Array<Products>;
   update_products_item?: Maybe<Products>;
   update_products_items: Array<Products>;
-  update_users_batch: Array<Users>;
-  update_users_item?: Maybe<Users>;
-  update_users_items: Array<Users>;
 };
 
 
@@ -112,6 +105,22 @@ export type MutationCreate_Categories_ItemArgs = {
 export type MutationCreate_Categories_ItemsArgs = {
   data?: InputMaybe<Array<Create_Categories_Input>>;
   filter?: InputMaybe<Categories_Filter>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+
+export type MutationCreate_Customers_ItemArgs = {
+  data: Create_Customers_Input;
+};
+
+
+export type MutationCreate_Customers_ItemsArgs = {
+  data?: InputMaybe<Array<Create_Customers_Input>>;
+  filter?: InputMaybe<Customers_Filter>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   page?: InputMaybe<Scalars['Int']['input']>;
@@ -152,22 +161,6 @@ export type MutationCreate_Orders_ItemsArgs = {
 };
 
 
-export type MutationCreate_Payments_ItemArgs = {
-  data: Create_Payments_Input;
-};
-
-
-export type MutationCreate_Payments_ItemsArgs = {
-  data?: InputMaybe<Array<Create_Payments_Input>>;
-  filter?: InputMaybe<Payments_Filter>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  page?: InputMaybe<Scalars['Int']['input']>;
-  search?: InputMaybe<Scalars['String']['input']>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-};
-
-
 export type MutationCreate_Products_ItemArgs = {
   data: Create_Products_Input;
 };
@@ -176,22 +169,6 @@ export type MutationCreate_Products_ItemArgs = {
 export type MutationCreate_Products_ItemsArgs = {
   data?: InputMaybe<Array<Create_Products_Input>>;
   filter?: InputMaybe<Products_Filter>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  page?: InputMaybe<Scalars['Int']['input']>;
-  search?: InputMaybe<Scalars['String']['input']>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-};
-
-
-export type MutationCreate_Users_ItemArgs = {
-  data: Create_Users_Input;
-};
-
-
-export type MutationCreate_Users_ItemsArgs = {
-  data?: InputMaybe<Array<Create_Users_Input>>;
-  filter?: InputMaybe<Users_Filter>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   page?: InputMaybe<Scalars['Int']['input']>;
@@ -220,6 +197,16 @@ export type MutationDelete_Categories_ItemsArgs = {
 };
 
 
+export type MutationDelete_Customers_ItemArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type MutationDelete_Customers_ItemsArgs = {
+  ids: Array<InputMaybe<Scalars['ID']['input']>>;
+};
+
+
 export type MutationDelete_Order_Items_ItemArgs = {
   id: Scalars['ID']['input'];
 };
@@ -240,32 +227,12 @@ export type MutationDelete_Orders_ItemsArgs = {
 };
 
 
-export type MutationDelete_Payments_ItemArgs = {
-  id: Scalars['ID']['input'];
-};
-
-
-export type MutationDelete_Payments_ItemsArgs = {
-  ids: Array<InputMaybe<Scalars['ID']['input']>>;
-};
-
-
 export type MutationDelete_Products_ItemArgs = {
   id: Scalars['ID']['input'];
 };
 
 
 export type MutationDelete_Products_ItemsArgs = {
-  ids: Array<InputMaybe<Scalars['ID']['input']>>;
-};
-
-
-export type MutationDelete_Users_ItemArgs = {
-  id: Scalars['ID']['input'];
-};
-
-
-export type MutationDelete_Users_ItemsArgs = {
   ids: Array<InputMaybe<Scalars['ID']['input']>>;
 };
 
@@ -319,6 +286,35 @@ export type MutationUpdate_Categories_ItemArgs = {
 export type MutationUpdate_Categories_ItemsArgs = {
   data: Update_Categories_Input;
   filter?: InputMaybe<Categories_Filter>;
+  ids: Array<InputMaybe<Scalars['ID']['input']>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+
+export type MutationUpdate_Customers_BatchArgs = {
+  data?: InputMaybe<Array<Update_Customers_Input>>;
+  filter?: InputMaybe<Customers_Filter>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+
+export type MutationUpdate_Customers_ItemArgs = {
+  data: Update_Customers_Input;
+  id: Scalars['ID']['input'];
+};
+
+
+export type MutationUpdate_Customers_ItemsArgs = {
+  data: Update_Customers_Input;
+  filter?: InputMaybe<Customers_Filter>;
   ids: Array<InputMaybe<Scalars['ID']['input']>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -386,35 +382,6 @@ export type MutationUpdate_Orders_ItemsArgs = {
 };
 
 
-export type MutationUpdate_Payments_BatchArgs = {
-  data?: InputMaybe<Array<Update_Payments_Input>>;
-  filter?: InputMaybe<Payments_Filter>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  page?: InputMaybe<Scalars['Int']['input']>;
-  search?: InputMaybe<Scalars['String']['input']>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-};
-
-
-export type MutationUpdate_Payments_ItemArgs = {
-  data: Update_Payments_Input;
-  id: Scalars['ID']['input'];
-};
-
-
-export type MutationUpdate_Payments_ItemsArgs = {
-  data: Update_Payments_Input;
-  filter?: InputMaybe<Payments_Filter>;
-  ids: Array<InputMaybe<Scalars['ID']['input']>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  page?: InputMaybe<Scalars['Int']['input']>;
-  search?: InputMaybe<Scalars['String']['input']>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-};
-
-
 export type MutationUpdate_Products_BatchArgs = {
   data?: InputMaybe<Array<Update_Products_Input>>;
   filter?: InputMaybe<Products_Filter>;
@@ -443,35 +410,6 @@ export type MutationUpdate_Products_ItemsArgs = {
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
 };
 
-
-export type MutationUpdate_Users_BatchArgs = {
-  data?: InputMaybe<Array<Update_Users_Input>>;
-  filter?: InputMaybe<Users_Filter>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  page?: InputMaybe<Scalars['Int']['input']>;
-  search?: InputMaybe<Scalars['String']['input']>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-};
-
-
-export type MutationUpdate_Users_ItemArgs = {
-  data: Update_Users_Input;
-  id: Scalars['ID']['input'];
-};
-
-
-export type MutationUpdate_Users_ItemsArgs = {
-  data: Update_Users_Input;
-  filter?: InputMaybe<Users_Filter>;
-  ids: Array<InputMaybe<Scalars['ID']['input']>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  page?: InputMaybe<Scalars['Int']['input']>;
-  search?: InputMaybe<Scalars['String']['input']>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-};
-
 export type Query = {
   __typename?: 'Query';
   boutiques: Array<Boutiques>;
@@ -482,6 +420,10 @@ export type Query = {
   categories_aggregated: Array<Categories_Aggregated>;
   categories_by_id?: Maybe<Categories>;
   categories_by_version?: Maybe<Version_Categories>;
+  customers: Array<Customers>;
+  customers_aggregated: Array<Customers_Aggregated>;
+  customers_by_id?: Maybe<Customers>;
+  customers_by_version?: Maybe<Version_Customers>;
   order_items: Array<Order_Items>;
   order_items_aggregated: Array<Order_Items_Aggregated>;
   order_items_by_id?: Maybe<Order_Items>;
@@ -490,18 +432,10 @@ export type Query = {
   orders_aggregated: Array<Orders_Aggregated>;
   orders_by_id?: Maybe<Orders>;
   orders_by_version?: Maybe<Version_Orders>;
-  payments: Array<Payments>;
-  payments_aggregated: Array<Payments_Aggregated>;
-  payments_by_id?: Maybe<Payments>;
-  payments_by_version?: Maybe<Version_Payments>;
   products: Array<Products>;
   products_aggregated: Array<Products_Aggregated>;
   products_by_id?: Maybe<Products>;
   products_by_version?: Maybe<Version_Products>;
-  users: Array<Users>;
-  users_aggregated: Array<Users_Aggregated>;
-  users_by_id?: Maybe<Users>;
-  users_by_version?: Maybe<Version_Users>;
 };
 
 
@@ -566,6 +500,39 @@ export type QueryCategories_By_IdArgs = {
 
 
 export type QueryCategories_By_VersionArgs = {
+  id: Scalars['ID']['input'];
+  version: Scalars['String']['input'];
+};
+
+
+export type QueryCustomersArgs = {
+  filter?: InputMaybe<Customers_Filter>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+
+export type QueryCustomers_AggregatedArgs = {
+  filter?: InputMaybe<Customers_Filter>;
+  groupBy?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+
+export type QueryCustomers_By_IdArgs = {
+  id: Scalars['ID']['input'];
+  version?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type QueryCustomers_By_VersionArgs = {
   id: Scalars['ID']['input'];
   version: Scalars['String']['input'];
 };
@@ -637,39 +604,6 @@ export type QueryOrders_By_VersionArgs = {
 };
 
 
-export type QueryPaymentsArgs = {
-  filter?: InputMaybe<Payments_Filter>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  page?: InputMaybe<Scalars['Int']['input']>;
-  search?: InputMaybe<Scalars['String']['input']>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-};
-
-
-export type QueryPayments_AggregatedArgs = {
-  filter?: InputMaybe<Payments_Filter>;
-  groupBy?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  page?: InputMaybe<Scalars['Int']['input']>;
-  search?: InputMaybe<Scalars['String']['input']>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-};
-
-
-export type QueryPayments_By_IdArgs = {
-  id: Scalars['ID']['input'];
-  version?: InputMaybe<Scalars['String']['input']>;
-};
-
-
-export type QueryPayments_By_VersionArgs = {
-  id: Scalars['ID']['input'];
-  version: Scalars['String']['input'];
-};
-
-
 export type QueryProductsArgs = {
   filter?: InputMaybe<Products_Filter>;
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -702,43 +636,11 @@ export type QueryProducts_By_VersionArgs = {
   version: Scalars['String']['input'];
 };
 
-
-export type QueryUsersArgs = {
-  filter?: InputMaybe<Users_Filter>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  page?: InputMaybe<Scalars['Int']['input']>;
-  search?: InputMaybe<Scalars['String']['input']>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-};
-
-
-export type QueryUsers_AggregatedArgs = {
-  filter?: InputMaybe<Users_Filter>;
-  groupBy?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  page?: InputMaybe<Scalars['Int']['input']>;
-  search?: InputMaybe<Scalars['String']['input']>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-};
-
-
-export type QueryUsers_By_IdArgs = {
-  id: Scalars['ID']['input'];
-  version?: InputMaybe<Scalars['String']['input']>;
-};
-
-
-export type QueryUsers_By_VersionArgs = {
-  id: Scalars['ID']['input'];
-  version: Scalars['String']['input'];
-};
-
 export type Subscription = {
   __typename?: 'Subscription';
   boutiques_mutated?: Maybe<Boutiques_Mutated>;
   categories_mutated?: Maybe<Categories_Mutated>;
+  customers_mutated?: Maybe<Customers_Mutated>;
   directus_access_mutated?: Maybe<Directus_Access_Mutated>;
   directus_activity_mutated?: Maybe<Directus_Activity_Mutated>;
   directus_comments_mutated?: Maybe<Directus_Comments_Mutated>;
@@ -762,9 +664,7 @@ export type Subscription = {
   directus_webhooks_mutated?: Maybe<Directus_Webhooks_Mutated>;
   order_items_mutated?: Maybe<Order_Items_Mutated>;
   orders_mutated?: Maybe<Orders_Mutated>;
-  payments_mutated?: Maybe<Payments_Mutated>;
   products_mutated?: Maybe<Products_Mutated>;
-  users_mutated?: Maybe<Users_Mutated>;
 };
 
 
@@ -774,6 +674,11 @@ export type SubscriptionBoutiques_MutatedArgs = {
 
 
 export type SubscriptionCategories_MutatedArgs = {
+  event?: InputMaybe<EventEnum>;
+};
+
+
+export type SubscriptionCustomers_MutatedArgs = {
   event?: InputMaybe<EventEnum>;
 };
 
@@ -893,17 +798,7 @@ export type SubscriptionOrders_MutatedArgs = {
 };
 
 
-export type SubscriptionPayments_MutatedArgs = {
-  event?: InputMaybe<EventEnum>;
-};
-
-
 export type SubscriptionProducts_MutatedArgs = {
-  event?: InputMaybe<EventEnum>;
-};
-
-
-export type SubscriptionUsers_MutatedArgs = {
   event?: InputMaybe<EventEnum>;
 };
 
@@ -932,10 +827,16 @@ export type Boolean_Filter_Operators = {
 export type Boutiques = {
   __typename?: 'boutiques';
   address?: Maybe<Scalars['String']['output']>;
+  category?: Maybe<Scalars['String']['output']>;
+  city?: Maybe<Scalars['String']['output']>;
+  code?: Maybe<Scalars['String']['output']>;
+  contact?: Maybe<Scalars['String']['output']>;
   date_created?: Maybe<Scalars['Date']['output']>;
   date_created_func?: Maybe<Datetime_Functions>;
   date_updated?: Maybe<Scalars['Date']['output']>;
   date_updated_func?: Maybe<Datetime_Functions>;
+  expire_date?: Maybe<Scalars['Date']['output']>;
+  expire_date_func?: Maybe<Datetime_Functions>;
   id: Scalars['ID']['output'];
   images?: Maybe<Scalars['JSON']['output']>;
   images_func?: Maybe<Count_Functions>;
@@ -944,19 +845,8 @@ export type Boutiques = {
   sort?: Maybe<Scalars['Int']['output']>;
   stars?: Maybe<Scalars['Int']['output']>;
   status?: Maybe<Scalars['String']['output']>;
-  user?: Maybe<Directus_Users>;
   user_created?: Maybe<Directus_Users>;
   user_updated?: Maybe<Directus_Users>;
-};
-
-
-export type BoutiquesUserArgs = {
-  filter?: InputMaybe<Directus_Users_Filter>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  page?: InputMaybe<Scalars['Int']['input']>;
-  search?: InputMaybe<Scalars['String']['input']>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
 };
 
 
@@ -996,8 +886,13 @@ export type Boutiques_Aggregated = {
 export type Boutiques_Aggregated_Count = {
   __typename?: 'boutiques_aggregated_count';
   address?: Maybe<Scalars['Int']['output']>;
+  category?: Maybe<Scalars['Int']['output']>;
+  city?: Maybe<Scalars['Int']['output']>;
+  code?: Maybe<Scalars['Int']['output']>;
+  contact?: Maybe<Scalars['Int']['output']>;
   date_created?: Maybe<Scalars['Int']['output']>;
   date_updated?: Maybe<Scalars['Int']['output']>;
+  expire_date?: Maybe<Scalars['Int']['output']>;
   id?: Maybe<Scalars['Int']['output']>;
   images?: Maybe<Scalars['Int']['output']>;
   main_image?: Maybe<Scalars['Int']['output']>;
@@ -1005,7 +900,6 @@ export type Boutiques_Aggregated_Count = {
   sort?: Maybe<Scalars['Int']['output']>;
   stars?: Maybe<Scalars['Int']['output']>;
   status?: Maybe<Scalars['Int']['output']>;
-  user?: Maybe<Scalars['Int']['output']>;
   user_created?: Maybe<Scalars['Int']['output']>;
   user_updated?: Maybe<Scalars['Int']['output']>;
 };
@@ -1021,10 +915,16 @@ export type Boutiques_Filter = {
   _and?: InputMaybe<Array<InputMaybe<Boutiques_Filter>>>;
   _or?: InputMaybe<Array<InputMaybe<Boutiques_Filter>>>;
   address?: InputMaybe<String_Filter_Operators>;
+  category?: InputMaybe<String_Filter_Operators>;
+  city?: InputMaybe<String_Filter_Operators>;
+  code?: InputMaybe<String_Filter_Operators>;
+  contact?: InputMaybe<String_Filter_Operators>;
   date_created?: InputMaybe<Date_Filter_Operators>;
   date_created_func?: InputMaybe<Datetime_Function_Filter_Operators>;
   date_updated?: InputMaybe<Date_Filter_Operators>;
   date_updated_func?: InputMaybe<Datetime_Function_Filter_Operators>;
+  expire_date?: InputMaybe<Date_Filter_Operators>;
+  expire_date_func?: InputMaybe<Datetime_Function_Filter_Operators>;
   id?: InputMaybe<Number_Filter_Operators>;
   images?: InputMaybe<String_Filter_Operators>;
   images_func?: InputMaybe<Count_Function_Filter_Operators>;
@@ -1033,7 +933,6 @@ export type Boutiques_Filter = {
   sort?: InputMaybe<Number_Filter_Operators>;
   stars?: InputMaybe<Number_Filter_Operators>;
   status?: InputMaybe<String_Filter_Operators>;
-  user?: InputMaybe<Directus_Users_Filter>;
   user_created?: InputMaybe<Directus_Users_Filter>;
   user_updated?: InputMaybe<Directus_Users_Filter>;
 };
@@ -1047,13 +946,57 @@ export type Boutiques_Mutated = {
 
 export type Categories = {
   __typename?: 'categories';
-  created_at?: Maybe<Scalars['Date']['output']>;
-  created_at_func?: Maybe<Datetime_Functions>;
+  boutique?: Maybe<Boutiques>;
+  boutique_id?: Maybe<Boutiques>;
+  date_created?: Maybe<Scalars['Date']['output']>;
+  date_created_func?: Maybe<Datetime_Functions>;
+  date_updated?: Maybe<Scalars['Date']['output']>;
+  date_updated_func?: Maybe<Datetime_Functions>;
   description?: Maybe<Scalars['String']['output']>;
   id: Scalars['ID']['output'];
   name: Scalars['String']['output'];
-  updated_at?: Maybe<Scalars['Date']['output']>;
-  updated_at_func?: Maybe<Datetime_Functions>;
+  user_created?: Maybe<Directus_Users>;
+  user_updated?: Maybe<Directus_Users>;
+};
+
+
+export type CategoriesBoutiqueArgs = {
+  filter?: InputMaybe<Boutiques_Filter>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+
+export type CategoriesBoutique_IdArgs = {
+  filter?: InputMaybe<Boutiques_Filter>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+
+export type CategoriesUser_CreatedArgs = {
+  filter?: InputMaybe<Directus_Users_Filter>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+
+export type CategoriesUser_UpdatedArgs = {
+  filter?: InputMaybe<Directus_Users_Filter>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
 };
 
 export type Categories_Aggregated = {
@@ -1072,28 +1015,36 @@ export type Categories_Aggregated = {
 
 export type Categories_Aggregated_Count = {
   __typename?: 'categories_aggregated_count';
-  created_at?: Maybe<Scalars['Int']['output']>;
+  boutique_id?: Maybe<Scalars['Int']['output']>;
+  date_created?: Maybe<Scalars['Int']['output']>;
+  date_updated?: Maybe<Scalars['Int']['output']>;
   description?: Maybe<Scalars['Int']['output']>;
   id?: Maybe<Scalars['Int']['output']>;
   name?: Maybe<Scalars['Int']['output']>;
-  updated_at?: Maybe<Scalars['Int']['output']>;
+  user_created?: Maybe<Scalars['Int']['output']>;
+  user_updated?: Maybe<Scalars['Int']['output']>;
 };
 
 export type Categories_Aggregated_Fields = {
   __typename?: 'categories_aggregated_fields';
+  boutique_id?: Maybe<Scalars['Float']['output']>;
   id?: Maybe<Scalars['Float']['output']>;
 };
 
 export type Categories_Filter = {
   _and?: InputMaybe<Array<InputMaybe<Categories_Filter>>>;
   _or?: InputMaybe<Array<InputMaybe<Categories_Filter>>>;
-  created_at?: InputMaybe<Date_Filter_Operators>;
-  created_at_func?: InputMaybe<Datetime_Function_Filter_Operators>;
+  boutique?: InputMaybe<Boutiques_Filter>;
+  boutique_id?: InputMaybe<Boutiques_Filter>;
+  date_created?: InputMaybe<Date_Filter_Operators>;
+  date_created_func?: InputMaybe<Datetime_Function_Filter_Operators>;
+  date_updated?: InputMaybe<Date_Filter_Operators>;
+  date_updated_func?: InputMaybe<Datetime_Function_Filter_Operators>;
   description?: InputMaybe<String_Filter_Operators>;
   id?: InputMaybe<Number_Filter_Operators>;
   name?: InputMaybe<String_Filter_Operators>;
-  updated_at?: InputMaybe<Date_Filter_Operators>;
-  updated_at_func?: InputMaybe<Datetime_Function_Filter_Operators>;
+  user_created?: InputMaybe<Directus_Users_Filter>;
+  user_updated?: InputMaybe<Directus_Users_Filter>;
 };
 
 export type Categories_Mutated = {
@@ -1114,8 +1065,13 @@ export type Count_Functions = {
 
 export type Create_Boutiques_Input = {
   address?: InputMaybe<Scalars['String']['input']>;
+  category?: InputMaybe<Scalars['String']['input']>;
+  city?: InputMaybe<Scalars['String']['input']>;
+  code?: InputMaybe<Scalars['String']['input']>;
+  contact?: InputMaybe<Scalars['String']['input']>;
   date_created?: InputMaybe<Scalars['Date']['input']>;
   date_updated?: InputMaybe<Scalars['Date']['input']>;
+  expire_date?: InputMaybe<Scalars['Date']['input']>;
   id?: InputMaybe<Scalars['ID']['input']>;
   images?: InputMaybe<Scalars['JSON']['input']>;
   main_image?: InputMaybe<Scalars['String']['input']>;
@@ -1123,17 +1079,35 @@ export type Create_Boutiques_Input = {
   sort?: InputMaybe<Scalars['Int']['input']>;
   stars?: InputMaybe<Scalars['Int']['input']>;
   status?: InputMaybe<Scalars['String']['input']>;
-  user?: InputMaybe<Create_Directus_Users_Input>;
   user_created?: InputMaybe<Create_Directus_Users_Input>;
   user_updated?: InputMaybe<Create_Directus_Users_Input>;
 };
 
 export type Create_Categories_Input = {
-  created_at?: InputMaybe<Scalars['Date']['input']>;
+  boutique?: InputMaybe<Create_Boutiques_Input>;
+  boutique_id?: InputMaybe<Create_Boutiques_Input>;
+  date_created?: InputMaybe<Scalars['Date']['input']>;
+  date_updated?: InputMaybe<Scalars['Date']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['ID']['input']>;
   name: Scalars['String']['input'];
-  updated_at?: InputMaybe<Scalars['Date']['input']>;
+  user_created?: InputMaybe<Create_Directus_Users_Input>;
+  user_updated?: InputMaybe<Create_Directus_Users_Input>;
+};
+
+export type Create_Customers_Input = {
+  avatar?: InputMaybe<Scalars['String']['input']>;
+  date_created?: InputMaybe<Scalars['Date']['input']>;
+  date_updated?: InputMaybe<Scalars['Date']['input']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+  nick_name?: InputMaybe<Scalars['String']['input']>;
+  open_id: Scalars['String']['input'];
+  sex?: InputMaybe<Scalars['Int']['input']>;
+  sort?: InputMaybe<Scalars['Int']['input']>;
+  status?: InputMaybe<Scalars['String']['input']>;
+  type?: InputMaybe<Scalars['String']['input']>;
+  user_created?: InputMaybe<Create_Directus_Users_Input>;
+  user_updated?: InputMaybe<Create_Directus_Users_Input>;
 };
 
 export type Create_Directus_Access_Input = {
@@ -1256,29 +1230,27 @@ export type Create_Order_Items_Input = {
 };
 
 export type Create_Orders_Input = {
-  created_at?: InputMaybe<Scalars['Date']['input']>;
+  boutique?: InputMaybe<Create_Boutiques_Input>;
+  boutique_id?: InputMaybe<Create_Boutiques_Input>;
+  customers_id?: InputMaybe<Create_Customers_Input>;
+  date_created?: InputMaybe<Scalars['Date']['input']>;
+  date_updated?: InputMaybe<Scalars['Date']['input']>;
   id?: InputMaybe<Scalars['ID']['input']>;
   status?: InputMaybe<Scalars['String']['input']>;
   total_price?: InputMaybe<Scalars['Float']['input']>;
-  updated_at?: InputMaybe<Scalars['Date']['input']>;
-  user_id?: InputMaybe<Create_Users_Input>;
-};
-
-export type Create_Payments_Input = {
-  amount?: InputMaybe<Scalars['Float']['input']>;
-  id?: InputMaybe<Scalars['ID']['input']>;
-  order_id?: InputMaybe<Create_Orders_Input>;
-  paid_at?: InputMaybe<Scalars['Date']['input']>;
-  payment_method?: InputMaybe<Scalars['String']['input']>;
-  status?: InputMaybe<Scalars['String']['input']>;
+  user_created?: InputMaybe<Create_Directus_Users_Input>;
+  user_updated?: InputMaybe<Create_Directus_Users_Input>;
 };
 
 export type Create_Products_Input = {
   barcode?: InputMaybe<Scalars['String']['input']>;
+  boutique?: InputMaybe<Create_Boutiques_Input>;
   boutique_id?: InputMaybe<Create_Boutiques_Input>;
   brand?: InputMaybe<Scalars['String']['input']>;
   category_id?: InputMaybe<Create_Categories_Input>;
   created_at?: InputMaybe<Scalars['Date']['input']>;
+  date_created?: InputMaybe<Scalars['Date']['input']>;
+  date_updated?: InputMaybe<Scalars['Date']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['ID']['input']>;
   images?: InputMaybe<Scalars['JSON']['input']>;
@@ -1295,16 +1267,110 @@ export type Create_Products_Input = {
   total_reviews?: InputMaybe<Scalars['Int']['input']>;
   total_sales_volume?: InputMaybe<Scalars['Int']['input']>;
   updated_at?: InputMaybe<Scalars['Date']['input']>;
+  user_created?: InputMaybe<Create_Directus_Users_Input>;
+  user_updated?: InputMaybe<Create_Directus_Users_Input>;
   video_url?: InputMaybe<Scalars['String']['input']>;
 };
 
-export type Create_Users_Input = {
-  created_at?: InputMaybe<Scalars['Date']['input']>;
-  email: Scalars['String']['input'];
-  id?: InputMaybe<Scalars['ID']['input']>;
-  name: Scalars['String']['input'];
-  password: Scalars['String']['input'];
-  updated_at?: InputMaybe<Scalars['Date']['input']>;
+export type Customers = {
+  __typename?: 'customers';
+  avatar?: Maybe<Scalars['String']['output']>;
+  date_created?: Maybe<Scalars['Date']['output']>;
+  date_created_func?: Maybe<Datetime_Functions>;
+  date_updated?: Maybe<Scalars['Date']['output']>;
+  date_updated_func?: Maybe<Datetime_Functions>;
+  id: Scalars['ID']['output'];
+  nick_name?: Maybe<Scalars['String']['output']>;
+  open_id: Scalars['String']['output'];
+  sex?: Maybe<Scalars['Int']['output']>;
+  sort?: Maybe<Scalars['Int']['output']>;
+  status?: Maybe<Scalars['String']['output']>;
+  type?: Maybe<Scalars['String']['output']>;
+  user_created?: Maybe<Directus_Users>;
+  user_updated?: Maybe<Directus_Users>;
+};
+
+
+export type CustomersUser_CreatedArgs = {
+  filter?: InputMaybe<Directus_Users_Filter>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+
+export type CustomersUser_UpdatedArgs = {
+  filter?: InputMaybe<Directus_Users_Filter>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+export type Customers_Aggregated = {
+  __typename?: 'customers_aggregated';
+  avg?: Maybe<Customers_Aggregated_Fields>;
+  avgDistinct?: Maybe<Customers_Aggregated_Fields>;
+  count?: Maybe<Customers_Aggregated_Count>;
+  countAll?: Maybe<Scalars['Int']['output']>;
+  countDistinct?: Maybe<Customers_Aggregated_Count>;
+  group?: Maybe<Scalars['JSON']['output']>;
+  max?: Maybe<Customers_Aggregated_Fields>;
+  min?: Maybe<Customers_Aggregated_Fields>;
+  sum?: Maybe<Customers_Aggregated_Fields>;
+  sumDistinct?: Maybe<Customers_Aggregated_Fields>;
+};
+
+export type Customers_Aggregated_Count = {
+  __typename?: 'customers_aggregated_count';
+  avatar?: Maybe<Scalars['Int']['output']>;
+  date_created?: Maybe<Scalars['Int']['output']>;
+  date_updated?: Maybe<Scalars['Int']['output']>;
+  id?: Maybe<Scalars['Int']['output']>;
+  nick_name?: Maybe<Scalars['Int']['output']>;
+  open_id?: Maybe<Scalars['Int']['output']>;
+  sex?: Maybe<Scalars['Int']['output']>;
+  sort?: Maybe<Scalars['Int']['output']>;
+  status?: Maybe<Scalars['Int']['output']>;
+  type?: Maybe<Scalars['Int']['output']>;
+  user_created?: Maybe<Scalars['Int']['output']>;
+  user_updated?: Maybe<Scalars['Int']['output']>;
+};
+
+export type Customers_Aggregated_Fields = {
+  __typename?: 'customers_aggregated_fields';
+  id?: Maybe<Scalars['Float']['output']>;
+  sex?: Maybe<Scalars['Float']['output']>;
+  sort?: Maybe<Scalars['Float']['output']>;
+};
+
+export type Customers_Filter = {
+  _and?: InputMaybe<Array<InputMaybe<Customers_Filter>>>;
+  _or?: InputMaybe<Array<InputMaybe<Customers_Filter>>>;
+  avatar?: InputMaybe<String_Filter_Operators>;
+  date_created?: InputMaybe<Date_Filter_Operators>;
+  date_created_func?: InputMaybe<Datetime_Function_Filter_Operators>;
+  date_updated?: InputMaybe<Date_Filter_Operators>;
+  date_updated_func?: InputMaybe<Datetime_Function_Filter_Operators>;
+  id?: InputMaybe<Number_Filter_Operators>;
+  nick_name?: InputMaybe<String_Filter_Operators>;
+  open_id?: InputMaybe<String_Filter_Operators>;
+  sex?: InputMaybe<Number_Filter_Operators>;
+  sort?: InputMaybe<Number_Filter_Operators>;
+  status?: InputMaybe<String_Filter_Operators>;
+  type?: InputMaybe<String_Filter_Operators>;
+  user_created?: InputMaybe<Directus_Users_Filter>;
+  user_updated?: InputMaybe<Directus_Users_Filter>;
+};
+
+export type Customers_Mutated = {
+  __typename?: 'customers_mutated';
+  data?: Maybe<Customers>;
+  event?: Maybe<EventEnum>;
+  key: Scalars['ID']['output'];
 };
 
 export type Date_Filter_Operators = {
@@ -2967,19 +3033,63 @@ export type Order_Items_Mutated = {
 
 export type Orders = {
   __typename?: 'orders';
-  created_at?: Maybe<Scalars['Date']['output']>;
-  created_at_func?: Maybe<Datetime_Functions>;
+  boutique?: Maybe<Boutiques>;
+  boutique_id?: Maybe<Boutiques>;
+  customers_id?: Maybe<Customers>;
+  date_created?: Maybe<Scalars['Date']['output']>;
+  date_created_func?: Maybe<Datetime_Functions>;
+  date_updated?: Maybe<Scalars['Date']['output']>;
+  date_updated_func?: Maybe<Datetime_Functions>;
   id: Scalars['ID']['output'];
   status?: Maybe<Scalars['String']['output']>;
   total_price?: Maybe<Scalars['Float']['output']>;
-  updated_at?: Maybe<Scalars['Date']['output']>;
-  updated_at_func?: Maybe<Datetime_Functions>;
-  user_id?: Maybe<Users>;
+  user_created?: Maybe<Directus_Users>;
+  user_updated?: Maybe<Directus_Users>;
 };
 
 
-export type OrdersUser_IdArgs = {
-  filter?: InputMaybe<Users_Filter>;
+export type OrdersBoutiqueArgs = {
+  filter?: InputMaybe<Boutiques_Filter>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+
+export type OrdersBoutique_IdArgs = {
+  filter?: InputMaybe<Boutiques_Filter>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+
+export type OrdersCustomers_IdArgs = {
+  filter?: InputMaybe<Customers_Filter>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+
+export type OrdersUser_CreatedArgs = {
+  filter?: InputMaybe<Directus_Users_Filter>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+
+export type OrdersUser_UpdatedArgs = {
+  filter?: InputMaybe<Directus_Users_Filter>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   page?: InputMaybe<Scalars['Int']['input']>;
@@ -3003,32 +3113,40 @@ export type Orders_Aggregated = {
 
 export type Orders_Aggregated_Count = {
   __typename?: 'orders_aggregated_count';
-  created_at?: Maybe<Scalars['Int']['output']>;
+  boutique_id?: Maybe<Scalars['Int']['output']>;
+  customers_id?: Maybe<Scalars['Int']['output']>;
+  date_created?: Maybe<Scalars['Int']['output']>;
+  date_updated?: Maybe<Scalars['Int']['output']>;
   id?: Maybe<Scalars['Int']['output']>;
   status?: Maybe<Scalars['Int']['output']>;
   total_price?: Maybe<Scalars['Int']['output']>;
-  updated_at?: Maybe<Scalars['Int']['output']>;
-  user_id?: Maybe<Scalars['Int']['output']>;
+  user_created?: Maybe<Scalars['Int']['output']>;
+  user_updated?: Maybe<Scalars['Int']['output']>;
 };
 
 export type Orders_Aggregated_Fields = {
   __typename?: 'orders_aggregated_fields';
+  boutique_id?: Maybe<Scalars['Float']['output']>;
+  customers_id?: Maybe<Scalars['Float']['output']>;
   id?: Maybe<Scalars['Float']['output']>;
   total_price?: Maybe<Scalars['Float']['output']>;
-  user_id?: Maybe<Scalars['Float']['output']>;
 };
 
 export type Orders_Filter = {
   _and?: InputMaybe<Array<InputMaybe<Orders_Filter>>>;
   _or?: InputMaybe<Array<InputMaybe<Orders_Filter>>>;
-  created_at?: InputMaybe<Date_Filter_Operators>;
-  created_at_func?: InputMaybe<Datetime_Function_Filter_Operators>;
+  boutique?: InputMaybe<Boutiques_Filter>;
+  boutique_id?: InputMaybe<Boutiques_Filter>;
+  customers_id?: InputMaybe<Customers_Filter>;
+  date_created?: InputMaybe<Date_Filter_Operators>;
+  date_created_func?: InputMaybe<Datetime_Function_Filter_Operators>;
+  date_updated?: InputMaybe<Date_Filter_Operators>;
+  date_updated_func?: InputMaybe<Datetime_Function_Filter_Operators>;
   id?: InputMaybe<Number_Filter_Operators>;
   status?: InputMaybe<String_Filter_Operators>;
   total_price?: InputMaybe<Number_Filter_Operators>;
-  updated_at?: InputMaybe<Date_Filter_Operators>;
-  updated_at_func?: InputMaybe<Datetime_Function_Filter_Operators>;
-  user_id?: InputMaybe<Users_Filter>;
+  user_created?: InputMaybe<Directus_Users_Filter>;
+  user_updated?: InputMaybe<Directus_Users_Filter>;
 };
 
 export type Orders_Mutated = {
@@ -3038,85 +3156,19 @@ export type Orders_Mutated = {
   key: Scalars['ID']['output'];
 };
 
-export type Payments = {
-  __typename?: 'payments';
-  amount?: Maybe<Scalars['Float']['output']>;
-  id: Scalars['ID']['output'];
-  order_id?: Maybe<Orders>;
-  paid_at?: Maybe<Scalars['Date']['output']>;
-  paid_at_func?: Maybe<Datetime_Functions>;
-  payment_method?: Maybe<Scalars['String']['output']>;
-  status?: Maybe<Scalars['String']['output']>;
-};
-
-
-export type PaymentsOrder_IdArgs = {
-  filter?: InputMaybe<Orders_Filter>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  page?: InputMaybe<Scalars['Int']['input']>;
-  search?: InputMaybe<Scalars['String']['input']>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-};
-
-export type Payments_Aggregated = {
-  __typename?: 'payments_aggregated';
-  avg?: Maybe<Payments_Aggregated_Fields>;
-  avgDistinct?: Maybe<Payments_Aggregated_Fields>;
-  count?: Maybe<Payments_Aggregated_Count>;
-  countAll?: Maybe<Scalars['Int']['output']>;
-  countDistinct?: Maybe<Payments_Aggregated_Count>;
-  group?: Maybe<Scalars['JSON']['output']>;
-  max?: Maybe<Payments_Aggregated_Fields>;
-  min?: Maybe<Payments_Aggregated_Fields>;
-  sum?: Maybe<Payments_Aggregated_Fields>;
-  sumDistinct?: Maybe<Payments_Aggregated_Fields>;
-};
-
-export type Payments_Aggregated_Count = {
-  __typename?: 'payments_aggregated_count';
-  amount?: Maybe<Scalars['Int']['output']>;
-  id?: Maybe<Scalars['Int']['output']>;
-  order_id?: Maybe<Scalars['Int']['output']>;
-  paid_at?: Maybe<Scalars['Int']['output']>;
-  payment_method?: Maybe<Scalars['Int']['output']>;
-  status?: Maybe<Scalars['Int']['output']>;
-};
-
-export type Payments_Aggregated_Fields = {
-  __typename?: 'payments_aggregated_fields';
-  amount?: Maybe<Scalars['Float']['output']>;
-  id?: Maybe<Scalars['Float']['output']>;
-  order_id?: Maybe<Scalars['Float']['output']>;
-};
-
-export type Payments_Filter = {
-  _and?: InputMaybe<Array<InputMaybe<Payments_Filter>>>;
-  _or?: InputMaybe<Array<InputMaybe<Payments_Filter>>>;
-  amount?: InputMaybe<Number_Filter_Operators>;
-  id?: InputMaybe<Number_Filter_Operators>;
-  order_id?: InputMaybe<Orders_Filter>;
-  paid_at?: InputMaybe<Date_Filter_Operators>;
-  paid_at_func?: InputMaybe<Datetime_Function_Filter_Operators>;
-  payment_method?: InputMaybe<String_Filter_Operators>;
-  status?: InputMaybe<String_Filter_Operators>;
-};
-
-export type Payments_Mutated = {
-  __typename?: 'payments_mutated';
-  data?: Maybe<Payments>;
-  event?: Maybe<EventEnum>;
-  key: Scalars['ID']['output'];
-};
-
 export type Products = {
   __typename?: 'products';
   barcode?: Maybe<Scalars['String']['output']>;
+  boutique?: Maybe<Boutiques>;
   boutique_id?: Maybe<Boutiques>;
   brand?: Maybe<Scalars['String']['output']>;
   category_id?: Maybe<Categories>;
   created_at?: Maybe<Scalars['Date']['output']>;
   created_at_func?: Maybe<Datetime_Functions>;
+  date_created?: Maybe<Scalars['Date']['output']>;
+  date_created_func?: Maybe<Datetime_Functions>;
+  date_updated?: Maybe<Scalars['Date']['output']>;
+  date_updated_func?: Maybe<Datetime_Functions>;
   description?: Maybe<Scalars['String']['output']>;
   id: Scalars['ID']['output'];
   images?: Maybe<Scalars['JSON']['output']>;
@@ -3135,7 +3187,19 @@ export type Products = {
   total_sales_volume?: Maybe<Scalars['Int']['output']>;
   updated_at?: Maybe<Scalars['Date']['output']>;
   updated_at_func?: Maybe<Datetime_Functions>;
+  user_created?: Maybe<Directus_Users>;
+  user_updated?: Maybe<Directus_Users>;
   video_url?: Maybe<Scalars['String']['output']>;
+};
+
+
+export type ProductsBoutiqueArgs = {
+  filter?: InputMaybe<Boutiques_Filter>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
 };
 
 
@@ -3151,6 +3215,26 @@ export type ProductsBoutique_IdArgs = {
 
 export type ProductsCategory_IdArgs = {
   filter?: InputMaybe<Categories_Filter>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+
+export type ProductsUser_CreatedArgs = {
+  filter?: InputMaybe<Directus_Users_Filter>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+
+export type ProductsUser_UpdatedArgs = {
+  filter?: InputMaybe<Directus_Users_Filter>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   page?: InputMaybe<Scalars['Int']['input']>;
@@ -3179,6 +3263,8 @@ export type Products_Aggregated_Count = {
   brand?: Maybe<Scalars['Int']['output']>;
   category_id?: Maybe<Scalars['Int']['output']>;
   created_at?: Maybe<Scalars['Int']['output']>;
+  date_created?: Maybe<Scalars['Int']['output']>;
+  date_updated?: Maybe<Scalars['Int']['output']>;
   description?: Maybe<Scalars['Int']['output']>;
   id?: Maybe<Scalars['Int']['output']>;
   images?: Maybe<Scalars['Int']['output']>;
@@ -3195,6 +3281,8 @@ export type Products_Aggregated_Count = {
   total_reviews?: Maybe<Scalars['Int']['output']>;
   total_sales_volume?: Maybe<Scalars['Int']['output']>;
   updated_at?: Maybe<Scalars['Int']['output']>;
+  user_created?: Maybe<Scalars['Int']['output']>;
+  user_updated?: Maybe<Scalars['Int']['output']>;
   video_url?: Maybe<Scalars['Int']['output']>;
 };
 
@@ -3216,11 +3304,16 @@ export type Products_Filter = {
   _and?: InputMaybe<Array<InputMaybe<Products_Filter>>>;
   _or?: InputMaybe<Array<InputMaybe<Products_Filter>>>;
   barcode?: InputMaybe<String_Filter_Operators>;
+  boutique?: InputMaybe<Boutiques_Filter>;
   boutique_id?: InputMaybe<Boutiques_Filter>;
   brand?: InputMaybe<String_Filter_Operators>;
   category_id?: InputMaybe<Categories_Filter>;
   created_at?: InputMaybe<Date_Filter_Operators>;
   created_at_func?: InputMaybe<Datetime_Function_Filter_Operators>;
+  date_created?: InputMaybe<Date_Filter_Operators>;
+  date_created_func?: InputMaybe<Datetime_Function_Filter_Operators>;
+  date_updated?: InputMaybe<Date_Filter_Operators>;
+  date_updated_func?: InputMaybe<Datetime_Function_Filter_Operators>;
   description?: InputMaybe<String_Filter_Operators>;
   id?: InputMaybe<Number_Filter_Operators>;
   images?: InputMaybe<String_Filter_Operators>;
@@ -3239,6 +3332,8 @@ export type Products_Filter = {
   total_sales_volume?: InputMaybe<Number_Filter_Operators>;
   updated_at?: InputMaybe<Date_Filter_Operators>;
   updated_at_func?: InputMaybe<Datetime_Function_Filter_Operators>;
+  user_created?: InputMaybe<Directus_Users_Filter>;
+  user_updated?: InputMaybe<Directus_Users_Filter>;
   video_url?: InputMaybe<String_Filter_Operators>;
 };
 
@@ -3273,8 +3368,13 @@ export type String_Filter_Operators = {
 
 export type Update_Boutiques_Input = {
   address?: InputMaybe<Scalars['String']['input']>;
+  category?: InputMaybe<Scalars['String']['input']>;
+  city?: InputMaybe<Scalars['String']['input']>;
+  code?: InputMaybe<Scalars['String']['input']>;
+  contact?: InputMaybe<Scalars['String']['input']>;
   date_created?: InputMaybe<Scalars['Date']['input']>;
   date_updated?: InputMaybe<Scalars['Date']['input']>;
+  expire_date?: InputMaybe<Scalars['Date']['input']>;
   id?: InputMaybe<Scalars['ID']['input']>;
   images?: InputMaybe<Scalars['JSON']['input']>;
   main_image?: InputMaybe<Scalars['String']['input']>;
@@ -3282,17 +3382,35 @@ export type Update_Boutiques_Input = {
   sort?: InputMaybe<Scalars['Int']['input']>;
   stars?: InputMaybe<Scalars['Int']['input']>;
   status?: InputMaybe<Scalars['String']['input']>;
-  user?: InputMaybe<Update_Directus_Users_Input>;
   user_created?: InputMaybe<Update_Directus_Users_Input>;
   user_updated?: InputMaybe<Update_Directus_Users_Input>;
 };
 
 export type Update_Categories_Input = {
-  created_at?: InputMaybe<Scalars['Date']['input']>;
+  boutique?: InputMaybe<Update_Boutiques_Input>;
+  boutique_id?: InputMaybe<Update_Boutiques_Input>;
+  date_created?: InputMaybe<Scalars['Date']['input']>;
+  date_updated?: InputMaybe<Scalars['Date']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['ID']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
-  updated_at?: InputMaybe<Scalars['Date']['input']>;
+  user_created?: InputMaybe<Update_Directus_Users_Input>;
+  user_updated?: InputMaybe<Update_Directus_Users_Input>;
+};
+
+export type Update_Customers_Input = {
+  avatar?: InputMaybe<Scalars['String']['input']>;
+  date_created?: InputMaybe<Scalars['Date']['input']>;
+  date_updated?: InputMaybe<Scalars['Date']['input']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+  nick_name?: InputMaybe<Scalars['String']['input']>;
+  open_id?: InputMaybe<Scalars['String']['input']>;
+  sex?: InputMaybe<Scalars['Int']['input']>;
+  sort?: InputMaybe<Scalars['Int']['input']>;
+  status?: InputMaybe<Scalars['String']['input']>;
+  type?: InputMaybe<Scalars['String']['input']>;
+  user_created?: InputMaybe<Update_Directus_Users_Input>;
+  user_updated?: InputMaybe<Update_Directus_Users_Input>;
 };
 
 export type Update_Directus_Access_Input = {
@@ -3415,29 +3533,27 @@ export type Update_Order_Items_Input = {
 };
 
 export type Update_Orders_Input = {
-  created_at?: InputMaybe<Scalars['Date']['input']>;
+  boutique?: InputMaybe<Update_Boutiques_Input>;
+  boutique_id?: InputMaybe<Update_Boutiques_Input>;
+  customers_id?: InputMaybe<Update_Customers_Input>;
+  date_created?: InputMaybe<Scalars['Date']['input']>;
+  date_updated?: InputMaybe<Scalars['Date']['input']>;
   id?: InputMaybe<Scalars['ID']['input']>;
   status?: InputMaybe<Scalars['String']['input']>;
   total_price?: InputMaybe<Scalars['Float']['input']>;
-  updated_at?: InputMaybe<Scalars['Date']['input']>;
-  user_id?: InputMaybe<Update_Users_Input>;
-};
-
-export type Update_Payments_Input = {
-  amount?: InputMaybe<Scalars['Float']['input']>;
-  id?: InputMaybe<Scalars['ID']['input']>;
-  order_id?: InputMaybe<Update_Orders_Input>;
-  paid_at?: InputMaybe<Scalars['Date']['input']>;
-  payment_method?: InputMaybe<Scalars['String']['input']>;
-  status?: InputMaybe<Scalars['String']['input']>;
+  user_created?: InputMaybe<Update_Directus_Users_Input>;
+  user_updated?: InputMaybe<Update_Directus_Users_Input>;
 };
 
 export type Update_Products_Input = {
   barcode?: InputMaybe<Scalars['String']['input']>;
+  boutique?: InputMaybe<Update_Boutiques_Input>;
   boutique_id?: InputMaybe<Update_Boutiques_Input>;
   brand?: InputMaybe<Scalars['String']['input']>;
   category_id?: InputMaybe<Update_Categories_Input>;
   created_at?: InputMaybe<Scalars['Date']['input']>;
+  date_created?: InputMaybe<Scalars['Date']['input']>;
+  date_updated?: InputMaybe<Scalars['Date']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['ID']['input']>;
   images?: InputMaybe<Scalars['JSON']['input']>;
@@ -3454,84 +3570,21 @@ export type Update_Products_Input = {
   total_reviews?: InputMaybe<Scalars['Int']['input']>;
   total_sales_volume?: InputMaybe<Scalars['Int']['input']>;
   updated_at?: InputMaybe<Scalars['Date']['input']>;
+  user_created?: InputMaybe<Update_Directus_Users_Input>;
+  user_updated?: InputMaybe<Update_Directus_Users_Input>;
   video_url?: InputMaybe<Scalars['String']['input']>;
-};
-
-export type Update_Users_Input = {
-  created_at?: InputMaybe<Scalars['Date']['input']>;
-  email?: InputMaybe<Scalars['String']['input']>;
-  id?: InputMaybe<Scalars['ID']['input']>;
-  name?: InputMaybe<Scalars['String']['input']>;
-  password?: InputMaybe<Scalars['String']['input']>;
-  updated_at?: InputMaybe<Scalars['Date']['input']>;
-};
-
-export type Users = {
-  __typename?: 'users';
-  created_at?: Maybe<Scalars['Date']['output']>;
-  created_at_func?: Maybe<Datetime_Functions>;
-  email: Scalars['String']['output'];
-  id: Scalars['ID']['output'];
-  name: Scalars['String']['output'];
-  password: Scalars['String']['output'];
-  updated_at?: Maybe<Scalars['Date']['output']>;
-  updated_at_func?: Maybe<Datetime_Functions>;
-};
-
-export type Users_Aggregated = {
-  __typename?: 'users_aggregated';
-  avg?: Maybe<Users_Aggregated_Fields>;
-  avgDistinct?: Maybe<Users_Aggregated_Fields>;
-  count?: Maybe<Users_Aggregated_Count>;
-  countAll?: Maybe<Scalars['Int']['output']>;
-  countDistinct?: Maybe<Users_Aggregated_Count>;
-  group?: Maybe<Scalars['JSON']['output']>;
-  max?: Maybe<Users_Aggregated_Fields>;
-  min?: Maybe<Users_Aggregated_Fields>;
-  sum?: Maybe<Users_Aggregated_Fields>;
-  sumDistinct?: Maybe<Users_Aggregated_Fields>;
-};
-
-export type Users_Aggregated_Count = {
-  __typename?: 'users_aggregated_count';
-  created_at?: Maybe<Scalars['Int']['output']>;
-  email?: Maybe<Scalars['Int']['output']>;
-  id?: Maybe<Scalars['Int']['output']>;
-  name?: Maybe<Scalars['Int']['output']>;
-  password?: Maybe<Scalars['Int']['output']>;
-  updated_at?: Maybe<Scalars['Int']['output']>;
-};
-
-export type Users_Aggregated_Fields = {
-  __typename?: 'users_aggregated_fields';
-  id?: Maybe<Scalars['Float']['output']>;
-};
-
-export type Users_Filter = {
-  _and?: InputMaybe<Array<InputMaybe<Users_Filter>>>;
-  _or?: InputMaybe<Array<InputMaybe<Users_Filter>>>;
-  created_at?: InputMaybe<Date_Filter_Operators>;
-  created_at_func?: InputMaybe<Datetime_Function_Filter_Operators>;
-  email?: InputMaybe<String_Filter_Operators>;
-  id?: InputMaybe<Number_Filter_Operators>;
-  name?: InputMaybe<String_Filter_Operators>;
-  password?: InputMaybe<String_Filter_Operators>;
-  updated_at?: InputMaybe<Date_Filter_Operators>;
-  updated_at_func?: InputMaybe<Datetime_Function_Filter_Operators>;
-};
-
-export type Users_Mutated = {
-  __typename?: 'users_mutated';
-  data?: Maybe<Users>;
-  event?: Maybe<EventEnum>;
-  key: Scalars['ID']['output'];
 };
 
 export type Version_Boutiques = {
   __typename?: 'version_boutiques';
   address?: Maybe<Scalars['String']['output']>;
+  category?: Maybe<Scalars['String']['output']>;
+  city?: Maybe<Scalars['String']['output']>;
+  code?: Maybe<Scalars['String']['output']>;
+  contact?: Maybe<Scalars['String']['output']>;
   date_created?: Maybe<Scalars['Date']['output']>;
   date_updated?: Maybe<Scalars['Date']['output']>;
+  expire_date?: Maybe<Scalars['Date']['output']>;
   id?: Maybe<Scalars['ID']['output']>;
   images?: Maybe<Scalars['JSON']['output']>;
   main_image?: Maybe<Scalars['String']['output']>;
@@ -3539,18 +3592,37 @@ export type Version_Boutiques = {
   sort?: Maybe<Scalars['Int']['output']>;
   stars?: Maybe<Scalars['Int']['output']>;
   status?: Maybe<Scalars['String']['output']>;
-  user?: Maybe<Scalars['JSON']['output']>;
   user_created?: Maybe<Scalars['JSON']['output']>;
   user_updated?: Maybe<Scalars['JSON']['output']>;
 };
 
 export type Version_Categories = {
   __typename?: 'version_categories';
-  created_at?: Maybe<Scalars['Date']['output']>;
+  boutique?: Maybe<Scalars['JSON']['output']>;
+  boutique_id?: Maybe<Scalars['JSON']['output']>;
+  date_created?: Maybe<Scalars['Date']['output']>;
+  date_updated?: Maybe<Scalars['Date']['output']>;
   description?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['ID']['output']>;
   name?: Maybe<Scalars['String']['output']>;
-  updated_at?: Maybe<Scalars['Date']['output']>;
+  user_created?: Maybe<Scalars['JSON']['output']>;
+  user_updated?: Maybe<Scalars['JSON']['output']>;
+};
+
+export type Version_Customers = {
+  __typename?: 'version_customers';
+  avatar?: Maybe<Scalars['String']['output']>;
+  date_created?: Maybe<Scalars['Date']['output']>;
+  date_updated?: Maybe<Scalars['Date']['output']>;
+  id?: Maybe<Scalars['ID']['output']>;
+  nick_name?: Maybe<Scalars['String']['output']>;
+  open_id?: Maybe<Scalars['String']['output']>;
+  sex?: Maybe<Scalars['Int']['output']>;
+  sort?: Maybe<Scalars['Int']['output']>;
+  status?: Maybe<Scalars['String']['output']>;
+  type?: Maybe<Scalars['String']['output']>;
+  user_created?: Maybe<Scalars['JSON']['output']>;
+  user_updated?: Maybe<Scalars['JSON']['output']>;
 };
 
 export type Version_Order_Items = {
@@ -3564,31 +3636,28 @@ export type Version_Order_Items = {
 
 export type Version_Orders = {
   __typename?: 'version_orders';
-  created_at?: Maybe<Scalars['Date']['output']>;
+  boutique?: Maybe<Scalars['JSON']['output']>;
+  boutique_id?: Maybe<Scalars['JSON']['output']>;
+  customers_id?: Maybe<Scalars['JSON']['output']>;
+  date_created?: Maybe<Scalars['Date']['output']>;
+  date_updated?: Maybe<Scalars['Date']['output']>;
   id?: Maybe<Scalars['ID']['output']>;
   status?: Maybe<Scalars['String']['output']>;
   total_price?: Maybe<Scalars['Float']['output']>;
-  updated_at?: Maybe<Scalars['Date']['output']>;
-  user_id?: Maybe<Scalars['JSON']['output']>;
-};
-
-export type Version_Payments = {
-  __typename?: 'version_payments';
-  amount?: Maybe<Scalars['Float']['output']>;
-  id?: Maybe<Scalars['ID']['output']>;
-  order_id?: Maybe<Scalars['JSON']['output']>;
-  paid_at?: Maybe<Scalars['Date']['output']>;
-  payment_method?: Maybe<Scalars['String']['output']>;
-  status?: Maybe<Scalars['String']['output']>;
+  user_created?: Maybe<Scalars['JSON']['output']>;
+  user_updated?: Maybe<Scalars['JSON']['output']>;
 };
 
 export type Version_Products = {
   __typename?: 'version_products';
   barcode?: Maybe<Scalars['String']['output']>;
+  boutique?: Maybe<Scalars['JSON']['output']>;
   boutique_id?: Maybe<Scalars['JSON']['output']>;
   brand?: Maybe<Scalars['String']['output']>;
   category_id?: Maybe<Scalars['JSON']['output']>;
   created_at?: Maybe<Scalars['Date']['output']>;
+  date_created?: Maybe<Scalars['Date']['output']>;
+  date_updated?: Maybe<Scalars['Date']['output']>;
   description?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['ID']['output']>;
   images?: Maybe<Scalars['JSON']['output']>;
@@ -3605,30 +3674,134 @@ export type Version_Products = {
   total_reviews?: Maybe<Scalars['Int']['output']>;
   total_sales_volume?: Maybe<Scalars['Int']['output']>;
   updated_at?: Maybe<Scalars['Date']['output']>;
+  user_created?: Maybe<Scalars['JSON']['output']>;
+  user_updated?: Maybe<Scalars['JSON']['output']>;
   video_url?: Maybe<Scalars['String']['output']>;
 };
 
-export type Version_Users = {
-  __typename?: 'version_users';
-  created_at?: Maybe<Scalars['Date']['output']>;
-  email?: Maybe<Scalars['String']['output']>;
-  id?: Maybe<Scalars['ID']['output']>;
-  name?: Maybe<Scalars['String']['output']>;
-  password?: Maybe<Scalars['String']['output']>;
-  updated_at?: Maybe<Scalars['Date']['output']>;
-};
+export type GetBoutiquesQueryVariables = Exact<{
+  filter?: InputMaybe<Boutiques_Filter>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>> | InputMaybe<Scalars['String']['input']>>;
+}>;
+
+
+export type GetBoutiquesQuery = { __typename?: 'Query', boutiques: Array<{ __typename?: 'boutiques', id: string, name?: string | null, address?: string | null, city?: string | null, code?: string | null, category?: string | null, contact?: string | null, expire_date?: any | null, main_image?: string | null, images?: any | null, status?: string | null, stars?: number | null, sort?: number | null, date_created?: any | null, date_updated?: any | null }> };
+
+export type GetBoutiqueDetailQueryVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type GetBoutiqueDetailQuery = { __typename?: 'Query', boutiques_by_id?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null, city?: string | null, code?: string | null, category?: string | null, contact?: string | null, expire_date?: any | null, main_image?: string | null, images?: any | null, status?: string | null, stars?: number | null, sort?: number | null, date_created?: any | null, date_updated?: any | null } | null };
 
 export type GetMyBoutiqueQueryVariables = Exact<{
   userId: Scalars['ID']['input'];
 }>;
 
 
-export type GetMyBoutiqueQuery = { __typename?: 'Query', boutiques: Array<{ __typename?: 'boutiques', id: string, name?: string | null, address?: string | null, main_image?: string | null, images?: any | null, status?: string | null, stars?: number | null, sort?: number | null, date_created?: any | null, date_updated?: any | null }> };
+export type GetMyBoutiqueQuery = { __typename?: 'Query', boutiques: Array<{ __typename?: 'boutiques', id: string, name?: string | null, address?: string | null, city?: string | null, code?: string | null, category?: string | null, contact?: string | null, expire_date?: any | null, main_image?: string | null, images?: any | null, status?: string | null, stars?: number | null, sort?: number | null, date_created?: any | null, date_updated?: any | null }> };
 
-export type GetCategoriesQueryVariables = Exact<{ [key: string]: never; }>;
+export type GetBoutiqueProductsQueryVariables = Exact<{
+  boutiqueId: Scalars['GraphQLStringOrFloat']['input'];
+  filter?: InputMaybe<Products_Filter>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>> | InputMaybe<Scalars['String']['input']>>;
+}>;
 
 
-export type GetCategoriesQuery = { __typename?: 'Query', categories: Array<{ __typename?: 'categories', id: string, name: string, description?: string | null }> };
+export type GetBoutiqueProductsQuery = { __typename?: 'Query', products: Array<{ __typename?: 'products', id: string, name: string, subtitle?: string | null, description?: string | null, price: number, market_price?: number | null, stock?: number | null, main_image?: string | null, images?: any | null, video_url?: string | null, is_on_sale?: boolean | null, status?: string | null, total_sales_volume?: number | null, rating_avg?: number | null, total_reviews?: number | null, brand?: string | null, created_at?: any | null, updated_at?: any | null, category_id?: { __typename?: 'categories', id: string, name: string, description?: string | null } | null }> };
+
+export type GetBoutiqueCategoriesQueryVariables = Exact<{
+  boutiqueId: Scalars['GraphQLStringOrFloat']['input'];
+  filter?: InputMaybe<Categories_Filter>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>> | InputMaybe<Scalars['String']['input']>>;
+}>;
+
+
+export type GetBoutiqueCategoriesQuery = { __typename?: 'Query', categories: Array<{ __typename?: 'categories', id: string, name: string, description?: string | null, date_created?: any | null, date_updated?: any | null }> };
+
+export type GetAllCategoriesQueryVariables = Exact<{
+  filter?: InputMaybe<Categories_Filter>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>> | InputMaybe<Scalars['String']['input']>>;
+}>;
+
+
+export type GetAllCategoriesQuery = { __typename?: 'Query', categories: Array<{ __typename?: 'categories', id: string, name: string, description?: string | null, date_created?: any | null, date_updated?: any | null, boutique?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null, city?: string | null, category?: string | null } | null }> };
+
+export type GetCategoryByIdQueryVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type GetCategoryByIdQuery = { __typename?: 'Query', categories_by_id?: { __typename?: 'categories', id: string, name: string, description?: string | null, date_created?: any | null, date_updated?: any | null, boutique?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null, city?: string | null, code?: string | null, category?: string | null, contact?: string | null, expire_date?: any | null, stars?: number | null, main_image?: string | null, images?: any | null } | null } | null };
+
+export type GetProductsByCategoryQueryVariables = Exact<{
+  categoryId: Scalars['GraphQLStringOrFloat']['input'];
+  filter?: InputMaybe<Products_Filter>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>> | InputMaybe<Scalars['String']['input']>>;
+}>;
+
+
+export type GetProductsByCategoryQuery = { __typename?: 'Query', products: Array<{ __typename?: 'products', id: string, name: string, subtitle?: string | null, description?: string | null, price: number, market_price?: number | null, stock?: number | null, main_image?: string | null, images?: any | null, video_url?: string | null, is_on_sale?: boolean | null, status?: string | null, total_sales_volume?: number | null, rating_avg?: number | null, total_reviews?: number | null, brand?: string | null, created_at?: any | null, updated_at?: any | null, boutique?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null, city?: string | null, category?: string | null } | null }> };
+
+export type GetCategoriesAggregatedQueryVariables = Exact<{
+  filter?: InputMaybe<Categories_Filter>;
+  groupBy?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>> | InputMaybe<Scalars['String']['input']>>;
+}>;
+
+
+export type GetCategoriesAggregatedQuery = { __typename?: 'Query', categories_aggregated: Array<{ __typename?: 'categories_aggregated', group?: any | null, countAll?: number | null }> };
+
+export type GetCustomerByOpenIdQueryVariables = Exact<{
+  openId: Scalars['String']['input'];
+}>;
+
+
+export type GetCustomerByOpenIdQuery = { __typename?: 'Query', customers: Array<{ __typename?: 'customers', id: string, open_id: string, nick_name?: string | null, avatar?: string | null, type?: string | null, sex?: number | null, status?: string | null, date_created?: any | null, date_updated?: any | null }> };
+
+export type GetCustomerByIdQueryVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type GetCustomerByIdQuery = { __typename?: 'Query', customers_by_id?: { __typename?: 'customers', id: string, open_id: string, nick_name?: string | null, avatar?: string | null, type?: string | null, sex?: number | null, status?: string | null, sort?: number | null, date_created?: any | null, date_updated?: any | null } | null };
+
+export type UpsertCustomerMutationVariables = Exact<{
+  open_id: Scalars['String']['input'];
+  nick_name?: InputMaybe<Scalars['String']['input']>;
+  avatar?: InputMaybe<Scalars['String']['input']>;
+  type?: InputMaybe<Scalars['String']['input']>;
+  sex?: InputMaybe<Scalars['Int']['input']>;
+}>;
+
+
+export type UpsertCustomerMutation = { __typename?: 'Mutation', create_customers_item?: { __typename?: 'customers', id: string, open_id: string, nick_name?: string | null, avatar?: string | null, type?: string | null, sex?: number | null, status?: string | null, date_created?: any | null } | null };
+
+export type GetCategoriesQueryVariables = Exact<{
+  filter?: InputMaybe<Categories_Filter>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>> | InputMaybe<Scalars['String']['input']>>;
+}>;
+
+
+export type GetCategoriesQuery = { __typename?: 'Query', categories: Array<{ __typename?: 'categories', id: string, name: string, description?: string | null, date_created?: any | null, date_updated?: any | null, boutique_id?: { __typename?: 'boutiques', id: string, name?: string | null } | null }> };
+
+export type GetCategoryDetailQueryVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type GetCategoryDetailQuery = { __typename?: 'Query', categories_by_id?: { __typename?: 'categories', id: string, name: string, description?: string | null, date_created?: any | null, date_updated?: any | null, boutique?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null, city?: string | null, category?: string | null } | null } | null };
 
 export type GetProductsQueryVariables = Exact<{
   filter?: InputMaybe<Products_Filter>;
@@ -3638,43 +3811,206 @@ export type GetProductsQueryVariables = Exact<{
 }>;
 
 
-export type GetProductsQuery = { __typename?: 'Query', products: Array<{ __typename?: 'products', id: string, name: string, subtitle?: string | null, description?: string | null, price: number, main_image?: string | null, images?: any | null, category_id?: { __typename?: 'categories', id: string, name: string, description?: string | null } | null }> };
+export type GetProductsQuery = { __typename?: 'Query', products: Array<{ __typename?: 'products', id: string, name: string, subtitle?: string | null, description?: string | null, price: number, market_price?: number | null, stock?: number | null, main_image?: string | null, images?: any | null, video_url?: string | null, is_on_sale?: boolean | null, status?: string | null, total_sales_volume?: number | null, rating_avg?: number | null, total_reviews?: number | null, brand?: string | null, barcode?: string | null, seller_id?: number | null, created_at?: any | null, updated_at?: any | null, date_created?: any | null, date_updated?: any | null, category_id?: { __typename?: 'categories', id: string, name: string, description?: string | null } | null, boutique_id?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null, city?: string | null, category?: string | null } | null, boutique?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null, city?: string | null, category?: string | null } | null, user_created?: { __typename?: 'directus_users', id: string, first_name?: string | null, last_name?: string | null, email?: string | null } | null }> };
+
+export type GetProductsByUserQueryVariables = Exact<{
+  userId: Scalars['ID']['input'];
+  filter?: InputMaybe<Products_Filter>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>> | InputMaybe<Scalars['String']['input']>>;
+}>;
+
+
+export type GetProductsByUserQuery = { __typename?: 'Query', products: Array<{ __typename?: 'products', id: string, name: string, subtitle?: string | null, description?: string | null, price: number, market_price?: number | null, stock?: number | null, main_image?: string | null, images?: any | null, video_url?: string | null, is_on_sale?: boolean | null, status?: string | null, total_sales_volume?: number | null, rating_avg?: number | null, total_reviews?: number | null, brand?: string | null, barcode?: string | null, seller_id?: number | null, created_at?: any | null, updated_at?: any | null, date_created?: any | null, date_updated?: any | null, category_id?: { __typename?: 'categories', id: string, name: string, description?: string | null } | null, boutique_id?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null, city?: string | null, category?: string | null } | null, user_created?: { __typename?: 'directus_users', id: string, first_name?: string | null, last_name?: string | null, email?: string | null } | null }> };
+
+export type GetProductsByBoutiqueQueryVariables = Exact<{
+  boutiqueId: Scalars['GraphQLStringOrFloat']['input'];
+  filter?: InputMaybe<Products_Filter>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>> | InputMaybe<Scalars['String']['input']>>;
+}>;
+
+
+export type GetProductsByBoutiqueQuery = { __typename?: 'Query', products: Array<{ __typename?: 'products', id: string, name: string, subtitle?: string | null, description?: string | null, price: number, market_price?: number | null, stock?: number | null, main_image?: string | null, images?: any | null, video_url?: string | null, is_on_sale?: boolean | null, status?: string | null, total_sales_volume?: number | null, rating_avg?: number | null, total_reviews?: number | null, brand?: string | null, barcode?: string | null, seller_id?: number | null, created_at?: any | null, updated_at?: any | null, date_created?: any | null, date_updated?: any | null, category_id?: { __typename?: 'categories', id: string, name: string, description?: string | null } | null, boutique_id?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null, city?: string | null, category?: string | null } | null, user_created?: { __typename?: 'directus_users', id: string, first_name?: string | null, last_name?: string | null, email?: string | null } | null }> };
+
+export type GetProductsByUserAndBoutiqueQueryVariables = Exact<{
+  userId: Scalars['ID']['input'];
+  boutiqueId: Scalars['GraphQLStringOrFloat']['input'];
+  filter?: InputMaybe<Products_Filter>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>> | InputMaybe<Scalars['String']['input']>>;
+}>;
+
+
+export type GetProductsByUserAndBoutiqueQuery = { __typename?: 'Query', products: Array<{ __typename?: 'products', id: string, name: string, subtitle?: string | null, description?: string | null, price: number, market_price?: number | null, stock?: number | null, main_image?: string | null, images?: any | null, video_url?: string | null, is_on_sale?: boolean | null, status?: string | null, total_sales_volume?: number | null, rating_avg?: number | null, total_reviews?: number | null, brand?: string | null, barcode?: string | null, seller_id?: number | null, created_at?: any | null, updated_at?: any | null, date_created?: any | null, date_updated?: any | null, category_id?: { __typename?: 'categories', id: string, name: string, description?: string | null } | null, boutique_id?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null, city?: string | null, category?: string | null } | null, user_created?: { __typename?: 'directus_users', id: string, first_name?: string | null, last_name?: string | null, email?: string | null } | null }> };
 
 export type GetProductDetailQueryVariables = Exact<{
   id: Scalars['ID']['input'];
 }>;
 
 
-export type GetProductDetailQuery = { __typename?: 'Query', products_by_id?: { __typename?: 'products', id: string, name: string, subtitle?: string | null, description?: string | null, price: number, market_price?: number | null, stock?: number | null, main_image?: string | null, images?: any | null, brand?: string | null, category_id?: { __typename?: 'categories', id: string, name: string, description?: string | null } | null } | null };
+export type GetProductDetailQuery = { __typename?: 'Query', products_by_id?: { __typename?: 'products', id: string, name: string, subtitle?: string | null, description?: string | null, price: number, market_price?: number | null, stock?: number | null, main_image?: string | null, images?: any | null, video_url?: string | null, is_on_sale?: boolean | null, status?: string | null, total_sales_volume?: number | null, rating_avg?: number | null, total_reviews?: number | null, brand?: string | null, barcode?: string | null, seller_id?: number | null, created_at?: any | null, updated_at?: any | null, date_created?: any | null, date_updated?: any | null, category_id?: { __typename?: 'categories', id: string, name: string, description?: string | null, boutique?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null, city?: string | null, category?: string | null } | null } | null, boutique_id?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null, city?: string | null, code?: string | null, category?: string | null, contact?: string | null, expire_date?: any | null, stars?: number | null, main_image?: string | null, images?: any | null } | null, boutique?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null, city?: string | null, code?: string | null, category?: string | null, contact?: string | null, expire_date?: any | null, stars?: number | null, main_image?: string | null, images?: any | null } | null, user_created?: { __typename?: 'directus_users', id: string, first_name?: string | null, last_name?: string | null, email?: string | null } | null } | null };
 
-export type GetUserQueryVariables = Exact<{
-  id: Scalars['ID']['input'];
+export type GetMyProductsQueryVariables = Exact<{
+  userId: Scalars['ID']['input'];
+  status?: InputMaybe<Scalars['String']['input']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>> | InputMaybe<Scalars['String']['input']>>;
 }>;
 
 
-export type GetUserQuery = { __typename?: 'Query', users_by_id?: { __typename?: 'users', id: string, name: string, email: string } | null };
+export type GetMyProductsQuery = { __typename?: 'Query', products: Array<{ __typename?: 'products', id: string, name: string, subtitle?: string | null, description?: string | null, price: number, market_price?: number | null, stock?: number | null, main_image?: string | null, images?: any | null, is_on_sale?: boolean | null, status?: string | null, total_sales_volume?: number | null, rating_avg?: number | null, total_reviews?: number | null, created_at?: any | null, updated_at?: any | null, category_id?: { __typename?: 'categories', id: string, name: string } | null, boutique_id?: { __typename?: 'boutiques', id: string, name?: string | null } | null }> };
 
-export type GetUsersQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type GetUsersQuery = { __typename?: 'Query', users: Array<{ __typename?: 'users', id: string, name: string, email: string }> };
-
-export type UpdateUserMutationVariables = Exact<{
-  id: Scalars['ID']['input'];
-  name?: InputMaybe<Scalars['String']['input']>;
-  email?: InputMaybe<Scalars['String']['input']>;
+export type GetOnSaleProductsQueryVariables = Exact<{
+  boutiqueId?: InputMaybe<Scalars['GraphQLStringOrFloat']['input']>;
+  categoryId?: InputMaybe<Scalars['GraphQLStringOrFloat']['input']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>> | InputMaybe<Scalars['String']['input']>>;
 }>;
 
 
-export type UpdateUserMutation = { __typename?: 'Mutation', update_users_item?: { __typename?: 'users', id: string, name: string, email: string } | null };
+export type GetOnSaleProductsQuery = { __typename?: 'Query', products: Array<{ __typename?: 'products', id: string, name: string, subtitle?: string | null, description?: string | null, price: number, market_price?: number | null, stock?: number | null, main_image?: string | null, images?: any | null, video_url?: string | null, is_on_sale?: boolean | null, total_sales_volume?: number | null, rating_avg?: number | null, total_reviews?: number | null, brand?: string | null, created_at?: any | null, updated_at?: any | null, category_id?: { __typename?: 'categories', id: string, name: string } | null, boutique?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null, city?: string | null } | null }> };
+
+export type SearchProductsQueryVariables = Exact<{
+  search: Scalars['String']['input'];
+  boutiqueId?: InputMaybe<Scalars['GraphQLStringOrFloat']['input']>;
+  categoryId?: InputMaybe<Scalars['GraphQLStringOrFloat']['input']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>> | InputMaybe<Scalars['String']['input']>>;
+}>;
 
 
-export const GetMyBoutiqueDocument = gql`
-    query GetMyBoutique($userId: ID!) {
-  boutiques(filter: {user: {id: {_eq: $userId}}}) {
+export type SearchProductsQuery = { __typename?: 'Query', products: Array<{ __typename?: 'products', id: string, name: string, subtitle?: string | null, description?: string | null, price: number, market_price?: number | null, stock?: number | null, main_image?: string | null, images?: any | null, is_on_sale?: boolean | null, rating_avg?: number | null, total_reviews?: number | null, brand?: string | null, created_at?: any | null, category_id?: { __typename?: 'categories', id: string, name: string } | null, boutique?: { __typename?: 'boutiques', id: string, name?: string | null } | null }> };
+
+
+export const GetBoutiquesDocument = gql`
+    query GetBoutiques($filter: boutiques_filter, $limit: Int, $offset: Int, $sort: [String]) {
+  boutiques(filter: $filter, limit: $limit, offset: $offset, sort: $sort) {
     id
     name
     address
+    city
+    code
+    category
+    contact
+    expire_date
+    main_image
+    images
+    status
+    stars
+    sort
+    date_created
+    date_updated
+  }
+}
+    `;
+
+/**
+ * __useGetBoutiquesQuery__
+ *
+ * To run a query within a React component, call `useGetBoutiquesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetBoutiquesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetBoutiquesQuery({
+ *   variables: {
+ *      filter: // value for 'filter'
+ *      limit: // value for 'limit'
+ *      offset: // value for 'offset'
+ *      sort: // value for 'sort'
+ *   },
+ * });
+ */
+export function useGetBoutiquesQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetBoutiquesQuery, GetBoutiquesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetBoutiquesQuery, GetBoutiquesQueryVariables>(GetBoutiquesDocument, options);
+      }
+export function useGetBoutiquesLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetBoutiquesQuery, GetBoutiquesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetBoutiquesQuery, GetBoutiquesQueryVariables>(GetBoutiquesDocument, options);
+        }
+export function useGetBoutiquesSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetBoutiquesQuery, GetBoutiquesQueryVariables>) {
+          const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetBoutiquesQuery, GetBoutiquesQueryVariables>(GetBoutiquesDocument, options);
+        }
+export type GetBoutiquesQueryHookResult = ReturnType<typeof useGetBoutiquesQuery>;
+export type GetBoutiquesLazyQueryHookResult = ReturnType<typeof useGetBoutiquesLazyQuery>;
+export type GetBoutiquesSuspenseQueryHookResult = ReturnType<typeof useGetBoutiquesSuspenseQuery>;
+export type GetBoutiquesQueryResult = ApolloReactCommon.QueryResult<GetBoutiquesQuery, GetBoutiquesQueryVariables>;
+export const GetBoutiqueDetailDocument = gql`
+    query GetBoutiqueDetail($id: ID!) {
+  boutiques_by_id(id: $id) {
+    id
+    name
+    address
+    city
+    code
+    category
+    contact
+    expire_date
+    main_image
+    images
+    status
+    stars
+    sort
+    date_created
+    date_updated
+  }
+}
+    `;
+
+/**
+ * __useGetBoutiqueDetailQuery__
+ *
+ * To run a query within a React component, call `useGetBoutiqueDetailQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetBoutiqueDetailQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetBoutiqueDetailQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetBoutiqueDetailQuery(baseOptions: ApolloReactHooks.QueryHookOptions<GetBoutiqueDetailQuery, GetBoutiqueDetailQueryVariables> & ({ variables: GetBoutiqueDetailQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetBoutiqueDetailQuery, GetBoutiqueDetailQueryVariables>(GetBoutiqueDetailDocument, options);
+      }
+export function useGetBoutiqueDetailLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetBoutiqueDetailQuery, GetBoutiqueDetailQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetBoutiqueDetailQuery, GetBoutiqueDetailQueryVariables>(GetBoutiqueDetailDocument, options);
+        }
+export function useGetBoutiqueDetailSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetBoutiqueDetailQuery, GetBoutiqueDetailQueryVariables>) {
+          const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetBoutiqueDetailQuery, GetBoutiqueDetailQueryVariables>(GetBoutiqueDetailDocument, options);
+        }
+export type GetBoutiqueDetailQueryHookResult = ReturnType<typeof useGetBoutiqueDetailQuery>;
+export type GetBoutiqueDetailLazyQueryHookResult = ReturnType<typeof useGetBoutiqueDetailLazyQuery>;
+export type GetBoutiqueDetailSuspenseQueryHookResult = ReturnType<typeof useGetBoutiqueDetailSuspenseQuery>;
+export type GetBoutiqueDetailQueryResult = ApolloReactCommon.QueryResult<GetBoutiqueDetailQuery, GetBoutiqueDetailQueryVariables>;
+export const GetMyBoutiqueDocument = gql`
+    query GetMyBoutique($userId: ID!) {
+  boutiques(filter: {user_created: {id: {_eq: $userId}}}) {
+    id
+    name
+    address
+    city
+    code
+    category
+    contact
+    expire_date
     main_image
     images
     status
@@ -3718,12 +4054,511 @@ export type GetMyBoutiqueQueryHookResult = ReturnType<typeof useGetMyBoutiqueQue
 export type GetMyBoutiqueLazyQueryHookResult = ReturnType<typeof useGetMyBoutiqueLazyQuery>;
 export type GetMyBoutiqueSuspenseQueryHookResult = ReturnType<typeof useGetMyBoutiqueSuspenseQuery>;
 export type GetMyBoutiqueQueryResult = ApolloReactCommon.QueryResult<GetMyBoutiqueQuery, GetMyBoutiqueQueryVariables>;
-export const GetCategoriesDocument = gql`
-    query GetCategories {
-  categories {
+export const GetBoutiqueProductsDocument = gql`
+    query GetBoutiqueProducts($boutiqueId: GraphQLStringOrFloat!, $filter: products_filter, $limit: Int, $offset: Int, $sort: [String]) {
+  products(
+    filter: {boutique_id: {id: {_eq: $boutiqueId}}}
+    limit: $limit
+    offset: $offset
+    sort: $sort
+  ) {
+    id
+    name
+    subtitle
+    description
+    price
+    market_price
+    stock
+    main_image
+    images
+    video_url
+    is_on_sale
+    status
+    total_sales_volume
+    rating_avg
+    total_reviews
+    brand
+    category_id {
+      id
+      name
+      description
+    }
+    created_at
+    updated_at
+  }
+}
+    `;
+
+/**
+ * __useGetBoutiqueProductsQuery__
+ *
+ * To run a query within a React component, call `useGetBoutiqueProductsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetBoutiqueProductsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetBoutiqueProductsQuery({
+ *   variables: {
+ *      boutiqueId: // value for 'boutiqueId'
+ *      filter: // value for 'filter'
+ *      limit: // value for 'limit'
+ *      offset: // value for 'offset'
+ *      sort: // value for 'sort'
+ *   },
+ * });
+ */
+export function useGetBoutiqueProductsQuery(baseOptions: ApolloReactHooks.QueryHookOptions<GetBoutiqueProductsQuery, GetBoutiqueProductsQueryVariables> & ({ variables: GetBoutiqueProductsQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetBoutiqueProductsQuery, GetBoutiqueProductsQueryVariables>(GetBoutiqueProductsDocument, options);
+      }
+export function useGetBoutiqueProductsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetBoutiqueProductsQuery, GetBoutiqueProductsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetBoutiqueProductsQuery, GetBoutiqueProductsQueryVariables>(GetBoutiqueProductsDocument, options);
+        }
+export function useGetBoutiqueProductsSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetBoutiqueProductsQuery, GetBoutiqueProductsQueryVariables>) {
+          const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetBoutiqueProductsQuery, GetBoutiqueProductsQueryVariables>(GetBoutiqueProductsDocument, options);
+        }
+export type GetBoutiqueProductsQueryHookResult = ReturnType<typeof useGetBoutiqueProductsQuery>;
+export type GetBoutiqueProductsLazyQueryHookResult = ReturnType<typeof useGetBoutiqueProductsLazyQuery>;
+export type GetBoutiqueProductsSuspenseQueryHookResult = ReturnType<typeof useGetBoutiqueProductsSuspenseQuery>;
+export type GetBoutiqueProductsQueryResult = ApolloReactCommon.QueryResult<GetBoutiqueProductsQuery, GetBoutiqueProductsQueryVariables>;
+export const GetBoutiqueCategoriesDocument = gql`
+    query GetBoutiqueCategories($boutiqueId: GraphQLStringOrFloat!, $filter: categories_filter, $limit: Int, $offset: Int, $sort: [String]) {
+  categories(
+    filter: {boutique_id: {id: {_eq: $boutiqueId}}}
+    limit: $limit
+    offset: $offset
+    sort: $sort
+  ) {
     id
     name
     description
+    date_created
+    date_updated
+  }
+}
+    `;
+
+/**
+ * __useGetBoutiqueCategoriesQuery__
+ *
+ * To run a query within a React component, call `useGetBoutiqueCategoriesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetBoutiqueCategoriesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetBoutiqueCategoriesQuery({
+ *   variables: {
+ *      boutiqueId: // value for 'boutiqueId'
+ *      filter: // value for 'filter'
+ *      limit: // value for 'limit'
+ *      offset: // value for 'offset'
+ *      sort: // value for 'sort'
+ *   },
+ * });
+ */
+export function useGetBoutiqueCategoriesQuery(baseOptions: ApolloReactHooks.QueryHookOptions<GetBoutiqueCategoriesQuery, GetBoutiqueCategoriesQueryVariables> & ({ variables: GetBoutiqueCategoriesQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetBoutiqueCategoriesQuery, GetBoutiqueCategoriesQueryVariables>(GetBoutiqueCategoriesDocument, options);
+      }
+export function useGetBoutiqueCategoriesLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetBoutiqueCategoriesQuery, GetBoutiqueCategoriesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetBoutiqueCategoriesQuery, GetBoutiqueCategoriesQueryVariables>(GetBoutiqueCategoriesDocument, options);
+        }
+export function useGetBoutiqueCategoriesSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetBoutiqueCategoriesQuery, GetBoutiqueCategoriesQueryVariables>) {
+          const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetBoutiqueCategoriesQuery, GetBoutiqueCategoriesQueryVariables>(GetBoutiqueCategoriesDocument, options);
+        }
+export type GetBoutiqueCategoriesQueryHookResult = ReturnType<typeof useGetBoutiqueCategoriesQuery>;
+export type GetBoutiqueCategoriesLazyQueryHookResult = ReturnType<typeof useGetBoutiqueCategoriesLazyQuery>;
+export type GetBoutiqueCategoriesSuspenseQueryHookResult = ReturnType<typeof useGetBoutiqueCategoriesSuspenseQuery>;
+export type GetBoutiqueCategoriesQueryResult = ApolloReactCommon.QueryResult<GetBoutiqueCategoriesQuery, GetBoutiqueCategoriesQueryVariables>;
+export const GetAllCategoriesDocument = gql`
+    query GetAllCategories($filter: categories_filter, $limit: Int, $offset: Int, $sort: [String]) {
+  categories(filter: $filter, limit: $limit, offset: $offset, sort: $sort) {
+    id
+    name
+    description
+    boutique {
+      id
+      name
+      address
+      city
+      category
+    }
+    date_created
+    date_updated
+  }
+}
+    `;
+
+/**
+ * __useGetAllCategoriesQuery__
+ *
+ * To run a query within a React component, call `useGetAllCategoriesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllCategoriesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAllCategoriesQuery({
+ *   variables: {
+ *      filter: // value for 'filter'
+ *      limit: // value for 'limit'
+ *      offset: // value for 'offset'
+ *      sort: // value for 'sort'
+ *   },
+ * });
+ */
+export function useGetAllCategoriesQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetAllCategoriesQuery, GetAllCategoriesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetAllCategoriesQuery, GetAllCategoriesQueryVariables>(GetAllCategoriesDocument, options);
+      }
+export function useGetAllCategoriesLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetAllCategoriesQuery, GetAllCategoriesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetAllCategoriesQuery, GetAllCategoriesQueryVariables>(GetAllCategoriesDocument, options);
+        }
+export function useGetAllCategoriesSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetAllCategoriesQuery, GetAllCategoriesQueryVariables>) {
+          const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetAllCategoriesQuery, GetAllCategoriesQueryVariables>(GetAllCategoriesDocument, options);
+        }
+export type GetAllCategoriesQueryHookResult = ReturnType<typeof useGetAllCategoriesQuery>;
+export type GetAllCategoriesLazyQueryHookResult = ReturnType<typeof useGetAllCategoriesLazyQuery>;
+export type GetAllCategoriesSuspenseQueryHookResult = ReturnType<typeof useGetAllCategoriesSuspenseQuery>;
+export type GetAllCategoriesQueryResult = ApolloReactCommon.QueryResult<GetAllCategoriesQuery, GetAllCategoriesQueryVariables>;
+export const GetCategoryByIdDocument = gql`
+    query GetCategoryById($id: ID!) {
+  categories_by_id(id: $id) {
+    id
+    name
+    description
+    boutique {
+      id
+      name
+      address
+      city
+      code
+      category
+      contact
+      expire_date
+      stars
+      main_image
+      images
+    }
+    date_created
+    date_updated
+  }
+}
+    `;
+
+/**
+ * __useGetCategoryByIdQuery__
+ *
+ * To run a query within a React component, call `useGetCategoryByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCategoryByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCategoryByIdQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetCategoryByIdQuery(baseOptions: ApolloReactHooks.QueryHookOptions<GetCategoryByIdQuery, GetCategoryByIdQueryVariables> & ({ variables: GetCategoryByIdQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetCategoryByIdQuery, GetCategoryByIdQueryVariables>(GetCategoryByIdDocument, options);
+      }
+export function useGetCategoryByIdLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetCategoryByIdQuery, GetCategoryByIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetCategoryByIdQuery, GetCategoryByIdQueryVariables>(GetCategoryByIdDocument, options);
+        }
+export function useGetCategoryByIdSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetCategoryByIdQuery, GetCategoryByIdQueryVariables>) {
+          const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetCategoryByIdQuery, GetCategoryByIdQueryVariables>(GetCategoryByIdDocument, options);
+        }
+export type GetCategoryByIdQueryHookResult = ReturnType<typeof useGetCategoryByIdQuery>;
+export type GetCategoryByIdLazyQueryHookResult = ReturnType<typeof useGetCategoryByIdLazyQuery>;
+export type GetCategoryByIdSuspenseQueryHookResult = ReturnType<typeof useGetCategoryByIdSuspenseQuery>;
+export type GetCategoryByIdQueryResult = ApolloReactCommon.QueryResult<GetCategoryByIdQuery, GetCategoryByIdQueryVariables>;
+export const GetProductsByCategoryDocument = gql`
+    query GetProductsByCategory($categoryId: GraphQLStringOrFloat!, $filter: products_filter, $limit: Int, $offset: Int, $sort: [String]) {
+  products(
+    filter: {category_id: {id: {_eq: $categoryId}}}
+    limit: $limit
+    offset: $offset
+    sort: $sort
+  ) {
+    id
+    name
+    subtitle
+    description
+    price
+    market_price
+    stock
+    main_image
+    images
+    video_url
+    is_on_sale
+    status
+    total_sales_volume
+    rating_avg
+    total_reviews
+    brand
+    boutique {
+      id
+      name
+      address
+      city
+      category
+    }
+    created_at
+    updated_at
+  }
+}
+    `;
+
+/**
+ * __useGetProductsByCategoryQuery__
+ *
+ * To run a query within a React component, call `useGetProductsByCategoryQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetProductsByCategoryQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetProductsByCategoryQuery({
+ *   variables: {
+ *      categoryId: // value for 'categoryId'
+ *      filter: // value for 'filter'
+ *      limit: // value for 'limit'
+ *      offset: // value for 'offset'
+ *      sort: // value for 'sort'
+ *   },
+ * });
+ */
+export function useGetProductsByCategoryQuery(baseOptions: ApolloReactHooks.QueryHookOptions<GetProductsByCategoryQuery, GetProductsByCategoryQueryVariables> & ({ variables: GetProductsByCategoryQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetProductsByCategoryQuery, GetProductsByCategoryQueryVariables>(GetProductsByCategoryDocument, options);
+      }
+export function useGetProductsByCategoryLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetProductsByCategoryQuery, GetProductsByCategoryQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetProductsByCategoryQuery, GetProductsByCategoryQueryVariables>(GetProductsByCategoryDocument, options);
+        }
+export function useGetProductsByCategorySuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetProductsByCategoryQuery, GetProductsByCategoryQueryVariables>) {
+          const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetProductsByCategoryQuery, GetProductsByCategoryQueryVariables>(GetProductsByCategoryDocument, options);
+        }
+export type GetProductsByCategoryQueryHookResult = ReturnType<typeof useGetProductsByCategoryQuery>;
+export type GetProductsByCategoryLazyQueryHookResult = ReturnType<typeof useGetProductsByCategoryLazyQuery>;
+export type GetProductsByCategorySuspenseQueryHookResult = ReturnType<typeof useGetProductsByCategorySuspenseQuery>;
+export type GetProductsByCategoryQueryResult = ApolloReactCommon.QueryResult<GetProductsByCategoryQuery, GetProductsByCategoryQueryVariables>;
+export const GetCategoriesAggregatedDocument = gql`
+    query GetCategoriesAggregated($filter: categories_filter, $groupBy: [String]) {
+  categories_aggregated(filter: $filter, groupBy: $groupBy) {
+    group
+    countAll
+  }
+}
+    `;
+
+/**
+ * __useGetCategoriesAggregatedQuery__
+ *
+ * To run a query within a React component, call `useGetCategoriesAggregatedQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCategoriesAggregatedQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCategoriesAggregatedQuery({
+ *   variables: {
+ *      filter: // value for 'filter'
+ *      groupBy: // value for 'groupBy'
+ *   },
+ * });
+ */
+export function useGetCategoriesAggregatedQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetCategoriesAggregatedQuery, GetCategoriesAggregatedQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetCategoriesAggregatedQuery, GetCategoriesAggregatedQueryVariables>(GetCategoriesAggregatedDocument, options);
+      }
+export function useGetCategoriesAggregatedLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetCategoriesAggregatedQuery, GetCategoriesAggregatedQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetCategoriesAggregatedQuery, GetCategoriesAggregatedQueryVariables>(GetCategoriesAggregatedDocument, options);
+        }
+export function useGetCategoriesAggregatedSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetCategoriesAggregatedQuery, GetCategoriesAggregatedQueryVariables>) {
+          const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetCategoriesAggregatedQuery, GetCategoriesAggregatedQueryVariables>(GetCategoriesAggregatedDocument, options);
+        }
+export type GetCategoriesAggregatedQueryHookResult = ReturnType<typeof useGetCategoriesAggregatedQuery>;
+export type GetCategoriesAggregatedLazyQueryHookResult = ReturnType<typeof useGetCategoriesAggregatedLazyQuery>;
+export type GetCategoriesAggregatedSuspenseQueryHookResult = ReturnType<typeof useGetCategoriesAggregatedSuspenseQuery>;
+export type GetCategoriesAggregatedQueryResult = ApolloReactCommon.QueryResult<GetCategoriesAggregatedQuery, GetCategoriesAggregatedQueryVariables>;
+export const GetCustomerByOpenIdDocument = gql`
+    query GetCustomerByOpenId($openId: String!) {
+  customers(filter: {open_id: {_eq: $openId}}, limit: 1) {
+    id
+    open_id
+    nick_name
+    avatar
+    type
+    sex
+    status
+    date_created
+    date_updated
+  }
+}
+    `;
+
+/**
+ * __useGetCustomerByOpenIdQuery__
+ *
+ * To run a query within a React component, call `useGetCustomerByOpenIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCustomerByOpenIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCustomerByOpenIdQuery({
+ *   variables: {
+ *      openId: // value for 'openId'
+ *   },
+ * });
+ */
+export function useGetCustomerByOpenIdQuery(baseOptions: ApolloReactHooks.QueryHookOptions<GetCustomerByOpenIdQuery, GetCustomerByOpenIdQueryVariables> & ({ variables: GetCustomerByOpenIdQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetCustomerByOpenIdQuery, GetCustomerByOpenIdQueryVariables>(GetCustomerByOpenIdDocument, options);
+      }
+export function useGetCustomerByOpenIdLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetCustomerByOpenIdQuery, GetCustomerByOpenIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetCustomerByOpenIdQuery, GetCustomerByOpenIdQueryVariables>(GetCustomerByOpenIdDocument, options);
+        }
+export function useGetCustomerByOpenIdSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetCustomerByOpenIdQuery, GetCustomerByOpenIdQueryVariables>) {
+          const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetCustomerByOpenIdQuery, GetCustomerByOpenIdQueryVariables>(GetCustomerByOpenIdDocument, options);
+        }
+export type GetCustomerByOpenIdQueryHookResult = ReturnType<typeof useGetCustomerByOpenIdQuery>;
+export type GetCustomerByOpenIdLazyQueryHookResult = ReturnType<typeof useGetCustomerByOpenIdLazyQuery>;
+export type GetCustomerByOpenIdSuspenseQueryHookResult = ReturnType<typeof useGetCustomerByOpenIdSuspenseQuery>;
+export type GetCustomerByOpenIdQueryResult = ApolloReactCommon.QueryResult<GetCustomerByOpenIdQuery, GetCustomerByOpenIdQueryVariables>;
+export const GetCustomerByIdDocument = gql`
+    query GetCustomerById($id: ID!) {
+  customers_by_id(id: $id) {
+    id
+    open_id
+    nick_name
+    avatar
+    type
+    sex
+    status
+    sort
+    date_created
+    date_updated
+  }
+}
+    `;
+
+/**
+ * __useGetCustomerByIdQuery__
+ *
+ * To run a query within a React component, call `useGetCustomerByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCustomerByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCustomerByIdQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetCustomerByIdQuery(baseOptions: ApolloReactHooks.QueryHookOptions<GetCustomerByIdQuery, GetCustomerByIdQueryVariables> & ({ variables: GetCustomerByIdQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetCustomerByIdQuery, GetCustomerByIdQueryVariables>(GetCustomerByIdDocument, options);
+      }
+export function useGetCustomerByIdLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetCustomerByIdQuery, GetCustomerByIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetCustomerByIdQuery, GetCustomerByIdQueryVariables>(GetCustomerByIdDocument, options);
+        }
+export function useGetCustomerByIdSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetCustomerByIdQuery, GetCustomerByIdQueryVariables>) {
+          const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetCustomerByIdQuery, GetCustomerByIdQueryVariables>(GetCustomerByIdDocument, options);
+        }
+export type GetCustomerByIdQueryHookResult = ReturnType<typeof useGetCustomerByIdQuery>;
+export type GetCustomerByIdLazyQueryHookResult = ReturnType<typeof useGetCustomerByIdLazyQuery>;
+export type GetCustomerByIdSuspenseQueryHookResult = ReturnType<typeof useGetCustomerByIdSuspenseQuery>;
+export type GetCustomerByIdQueryResult = ApolloReactCommon.QueryResult<GetCustomerByIdQuery, GetCustomerByIdQueryVariables>;
+export const UpsertCustomerDocument = gql`
+    mutation UpsertCustomer($open_id: String!, $nick_name: String, $avatar: String, $type: String, $sex: Int) {
+  create_customers_item(
+    data: {open_id: $open_id, nick_name: $nick_name, avatar: $avatar, type: $type, sex: $sex, status: "published"}
+  ) {
+    id
+    open_id
+    nick_name
+    avatar
+    type
+    sex
+    status
+    date_created
+  }
+}
+    `;
+export type UpsertCustomerMutationFn = ApolloReactCommon.MutationFunction<UpsertCustomerMutation, UpsertCustomerMutationVariables>;
+
+/**
+ * __useUpsertCustomerMutation__
+ *
+ * To run a mutation, you first call `useUpsertCustomerMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpsertCustomerMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [upsertCustomerMutation, { data, loading, error }] = useUpsertCustomerMutation({
+ *   variables: {
+ *      open_id: // value for 'open_id'
+ *      nick_name: // value for 'nick_name'
+ *      avatar: // value for 'avatar'
+ *      type: // value for 'type'
+ *      sex: // value for 'sex'
+ *   },
+ * });
+ */
+export function useUpsertCustomerMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpsertCustomerMutation, UpsertCustomerMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<UpsertCustomerMutation, UpsertCustomerMutationVariables>(UpsertCustomerDocument, options);
+      }
+export type UpsertCustomerMutationHookResult = ReturnType<typeof useUpsertCustomerMutation>;
+export type UpsertCustomerMutationResult = ApolloReactCommon.MutationResult<UpsertCustomerMutation>;
+export type UpsertCustomerMutationOptions = ApolloReactCommon.BaseMutationOptions<UpsertCustomerMutation, UpsertCustomerMutationVariables>;
+export const GetCategoriesDocument = gql`
+    query GetCategories($filter: categories_filter, $limit: Int, $offset: Int, $sort: [String]) {
+  categories(filter: $filter, limit: $limit, offset: $offset, sort: $sort) {
+    id
+    name
+    description
+    boutique_id {
+      id
+      name
+    }
+    date_created
+    date_updated
   }
 }
     `;
@@ -3740,6 +4575,10 @@ export const GetCategoriesDocument = gql`
  * @example
  * const { data, loading, error } = useGetCategoriesQuery({
  *   variables: {
+ *      filter: // value for 'filter'
+ *      limit: // value for 'limit'
+ *      offset: // value for 'offset'
+ *      sort: // value for 'sort'
  *   },
  * });
  */
@@ -3759,6 +4598,57 @@ export type GetCategoriesQueryHookResult = ReturnType<typeof useGetCategoriesQue
 export type GetCategoriesLazyQueryHookResult = ReturnType<typeof useGetCategoriesLazyQuery>;
 export type GetCategoriesSuspenseQueryHookResult = ReturnType<typeof useGetCategoriesSuspenseQuery>;
 export type GetCategoriesQueryResult = ApolloReactCommon.QueryResult<GetCategoriesQuery, GetCategoriesQueryVariables>;
+export const GetCategoryDetailDocument = gql`
+    query GetCategoryDetail($id: ID!) {
+  categories_by_id(id: $id) {
+    id
+    name
+    description
+    boutique {
+      id
+      name
+      address
+      city
+      category
+    }
+    date_created
+    date_updated
+  }
+}
+    `;
+
+/**
+ * __useGetCategoryDetailQuery__
+ *
+ * To run a query within a React component, call `useGetCategoryDetailQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCategoryDetailQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCategoryDetailQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetCategoryDetailQuery(baseOptions: ApolloReactHooks.QueryHookOptions<GetCategoryDetailQuery, GetCategoryDetailQueryVariables> & ({ variables: GetCategoryDetailQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetCategoryDetailQuery, GetCategoryDetailQueryVariables>(GetCategoryDetailDocument, options);
+      }
+export function useGetCategoryDetailLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetCategoryDetailQuery, GetCategoryDetailQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetCategoryDetailQuery, GetCategoryDetailQueryVariables>(GetCategoryDetailDocument, options);
+        }
+export function useGetCategoryDetailSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetCategoryDetailQuery, GetCategoryDetailQueryVariables>) {
+          const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetCategoryDetailQuery, GetCategoryDetailQueryVariables>(GetCategoryDetailDocument, options);
+        }
+export type GetCategoryDetailQueryHookResult = ReturnType<typeof useGetCategoryDetailQuery>;
+export type GetCategoryDetailLazyQueryHookResult = ReturnType<typeof useGetCategoryDetailLazyQuery>;
+export type GetCategoryDetailSuspenseQueryHookResult = ReturnType<typeof useGetCategoryDetailSuspenseQuery>;
+export type GetCategoryDetailQueryResult = ApolloReactCommon.QueryResult<GetCategoryDetailQuery, GetCategoryDetailQueryVariables>;
 export const GetProductsDocument = gql`
     query GetProducts($filter: products_filter, $limit: Int, $offset: Int, $sort: [String]) {
   products(filter: $filter, limit: $limit, offset: $offset, sort: $sort) {
@@ -3767,13 +4657,48 @@ export const GetProductsDocument = gql`
     subtitle
     description
     price
+    market_price
+    stock
     main_image
     images
+    video_url
+    is_on_sale
+    status
+    total_sales_volume
+    rating_avg
+    total_reviews
+    brand
+    barcode
+    seller_id
     category_id {
       id
       name
       description
     }
+    boutique_id {
+      id
+      name
+      address
+      city
+      category
+    }
+    boutique {
+      id
+      name
+      address
+      city
+      category
+    }
+    user_created {
+      id
+      first_name
+      last_name
+      email
+    }
+    created_at
+    updated_at
+    date_created
+    date_updated
   }
 }
     `;
@@ -3813,6 +4738,271 @@ export type GetProductsQueryHookResult = ReturnType<typeof useGetProductsQuery>;
 export type GetProductsLazyQueryHookResult = ReturnType<typeof useGetProductsLazyQuery>;
 export type GetProductsSuspenseQueryHookResult = ReturnType<typeof useGetProductsSuspenseQuery>;
 export type GetProductsQueryResult = ApolloReactCommon.QueryResult<GetProductsQuery, GetProductsQueryVariables>;
+export const GetProductsByUserDocument = gql`
+    query GetProductsByUser($userId: ID!, $filter: products_filter, $limit: Int, $offset: Int, $sort: [String]) {
+  products(
+    filter: {user_created: {id: {_eq: $userId}}, _and: [$filter]}
+    limit: $limit
+    offset: $offset
+    sort: $sort
+  ) {
+    id
+    name
+    subtitle
+    description
+    price
+    market_price
+    stock
+    main_image
+    images
+    video_url
+    is_on_sale
+    status
+    total_sales_volume
+    rating_avg
+    total_reviews
+    brand
+    barcode
+    seller_id
+    category_id {
+      id
+      name
+      description
+    }
+    boutique_id {
+      id
+      name
+      address
+      city
+      category
+    }
+    user_created {
+      id
+      first_name
+      last_name
+      email
+    }
+    created_at
+    updated_at
+    date_created
+    date_updated
+  }
+}
+    `;
+
+/**
+ * __useGetProductsByUserQuery__
+ *
+ * To run a query within a React component, call `useGetProductsByUserQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetProductsByUserQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetProductsByUserQuery({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *      filter: // value for 'filter'
+ *      limit: // value for 'limit'
+ *      offset: // value for 'offset'
+ *      sort: // value for 'sort'
+ *   },
+ * });
+ */
+export function useGetProductsByUserQuery(baseOptions: ApolloReactHooks.QueryHookOptions<GetProductsByUserQuery, GetProductsByUserQueryVariables> & ({ variables: GetProductsByUserQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetProductsByUserQuery, GetProductsByUserQueryVariables>(GetProductsByUserDocument, options);
+      }
+export function useGetProductsByUserLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetProductsByUserQuery, GetProductsByUserQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetProductsByUserQuery, GetProductsByUserQueryVariables>(GetProductsByUserDocument, options);
+        }
+export function useGetProductsByUserSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetProductsByUserQuery, GetProductsByUserQueryVariables>) {
+          const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetProductsByUserQuery, GetProductsByUserQueryVariables>(GetProductsByUserDocument, options);
+        }
+export type GetProductsByUserQueryHookResult = ReturnType<typeof useGetProductsByUserQuery>;
+export type GetProductsByUserLazyQueryHookResult = ReturnType<typeof useGetProductsByUserLazyQuery>;
+export type GetProductsByUserSuspenseQueryHookResult = ReturnType<typeof useGetProductsByUserSuspenseQuery>;
+export type GetProductsByUserQueryResult = ApolloReactCommon.QueryResult<GetProductsByUserQuery, GetProductsByUserQueryVariables>;
+export const GetProductsByBoutiqueDocument = gql`
+    query GetProductsByBoutique($boutiqueId: GraphQLStringOrFloat!, $filter: products_filter, $limit: Int, $offset: Int, $sort: [String]) {
+  products(
+    filter: {boutique_id: {id: {_eq: $boutiqueId}}}
+    limit: $limit
+    offset: $offset
+    sort: $sort
+  ) {
+    id
+    name
+    subtitle
+    description
+    price
+    market_price
+    stock
+    main_image
+    images
+    video_url
+    is_on_sale
+    status
+    total_sales_volume
+    rating_avg
+    total_reviews
+    brand
+    barcode
+    seller_id
+    category_id {
+      id
+      name
+      description
+    }
+    boutique_id {
+      id
+      name
+      address
+      city
+      category
+    }
+    user_created {
+      id
+      first_name
+      last_name
+      email
+    }
+    created_at
+    updated_at
+    date_created
+    date_updated
+  }
+}
+    `;
+
+/**
+ * __useGetProductsByBoutiqueQuery__
+ *
+ * To run a query within a React component, call `useGetProductsByBoutiqueQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetProductsByBoutiqueQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetProductsByBoutiqueQuery({
+ *   variables: {
+ *      boutiqueId: // value for 'boutiqueId'
+ *      filter: // value for 'filter'
+ *      limit: // value for 'limit'
+ *      offset: // value for 'offset'
+ *      sort: // value for 'sort'
+ *   },
+ * });
+ */
+export function useGetProductsByBoutiqueQuery(baseOptions: ApolloReactHooks.QueryHookOptions<GetProductsByBoutiqueQuery, GetProductsByBoutiqueQueryVariables> & ({ variables: GetProductsByBoutiqueQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetProductsByBoutiqueQuery, GetProductsByBoutiqueQueryVariables>(GetProductsByBoutiqueDocument, options);
+      }
+export function useGetProductsByBoutiqueLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetProductsByBoutiqueQuery, GetProductsByBoutiqueQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetProductsByBoutiqueQuery, GetProductsByBoutiqueQueryVariables>(GetProductsByBoutiqueDocument, options);
+        }
+export function useGetProductsByBoutiqueSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetProductsByBoutiqueQuery, GetProductsByBoutiqueQueryVariables>) {
+          const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetProductsByBoutiqueQuery, GetProductsByBoutiqueQueryVariables>(GetProductsByBoutiqueDocument, options);
+        }
+export type GetProductsByBoutiqueQueryHookResult = ReturnType<typeof useGetProductsByBoutiqueQuery>;
+export type GetProductsByBoutiqueLazyQueryHookResult = ReturnType<typeof useGetProductsByBoutiqueLazyQuery>;
+export type GetProductsByBoutiqueSuspenseQueryHookResult = ReturnType<typeof useGetProductsByBoutiqueSuspenseQuery>;
+export type GetProductsByBoutiqueQueryResult = ApolloReactCommon.QueryResult<GetProductsByBoutiqueQuery, GetProductsByBoutiqueQueryVariables>;
+export const GetProductsByUserAndBoutiqueDocument = gql`
+    query GetProductsByUserAndBoutique($userId: ID!, $boutiqueId: GraphQLStringOrFloat!, $filter: products_filter, $limit: Int, $offset: Int, $sort: [String]) {
+  products(
+    filter: {user_created: {id: {_eq: $userId}}, boutique_id: {id: {_eq: $boutiqueId}}, _and: [$filter]}
+    limit: $limit
+    offset: $offset
+    sort: $sort
+  ) {
+    id
+    name
+    subtitle
+    description
+    price
+    market_price
+    stock
+    main_image
+    images
+    video_url
+    is_on_sale
+    status
+    total_sales_volume
+    rating_avg
+    total_reviews
+    brand
+    barcode
+    seller_id
+    category_id {
+      id
+      name
+      description
+    }
+    boutique_id {
+      id
+      name
+      address
+      city
+      category
+    }
+    user_created {
+      id
+      first_name
+      last_name
+      email
+    }
+    created_at
+    updated_at
+    date_created
+    date_updated
+  }
+}
+    `;
+
+/**
+ * __useGetProductsByUserAndBoutiqueQuery__
+ *
+ * To run a query within a React component, call `useGetProductsByUserAndBoutiqueQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetProductsByUserAndBoutiqueQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetProductsByUserAndBoutiqueQuery({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *      boutiqueId: // value for 'boutiqueId'
+ *      filter: // value for 'filter'
+ *      limit: // value for 'limit'
+ *      offset: // value for 'offset'
+ *      sort: // value for 'sort'
+ *   },
+ * });
+ */
+export function useGetProductsByUserAndBoutiqueQuery(baseOptions: ApolloReactHooks.QueryHookOptions<GetProductsByUserAndBoutiqueQuery, GetProductsByUserAndBoutiqueQueryVariables> & ({ variables: GetProductsByUserAndBoutiqueQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetProductsByUserAndBoutiqueQuery, GetProductsByUserAndBoutiqueQueryVariables>(GetProductsByUserAndBoutiqueDocument, options);
+      }
+export function useGetProductsByUserAndBoutiqueLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetProductsByUserAndBoutiqueQuery, GetProductsByUserAndBoutiqueQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetProductsByUserAndBoutiqueQuery, GetProductsByUserAndBoutiqueQueryVariables>(GetProductsByUserAndBoutiqueDocument, options);
+        }
+export function useGetProductsByUserAndBoutiqueSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetProductsByUserAndBoutiqueQuery, GetProductsByUserAndBoutiqueQueryVariables>) {
+          const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetProductsByUserAndBoutiqueQuery, GetProductsByUserAndBoutiqueQueryVariables>(GetProductsByUserAndBoutiqueDocument, options);
+        }
+export type GetProductsByUserAndBoutiqueQueryHookResult = ReturnType<typeof useGetProductsByUserAndBoutiqueQuery>;
+export type GetProductsByUserAndBoutiqueLazyQueryHookResult = ReturnType<typeof useGetProductsByUserAndBoutiqueLazyQuery>;
+export type GetProductsByUserAndBoutiqueSuspenseQueryHookResult = ReturnType<typeof useGetProductsByUserAndBoutiqueSuspenseQuery>;
+export type GetProductsByUserAndBoutiqueQueryResult = ApolloReactCommon.QueryResult<GetProductsByUserAndBoutiqueQuery, GetProductsByUserAndBoutiqueQueryVariables>;
 export const GetProductDetailDocument = gql`
     query GetProductDetail($id: ID!) {
   products_by_id(id: $id) {
@@ -3825,12 +5015,63 @@ export const GetProductDetailDocument = gql`
     stock
     main_image
     images
+    video_url
+    is_on_sale
+    status
+    total_sales_volume
+    rating_avg
+    total_reviews
     brand
+    barcode
+    seller_id
     category_id {
       id
       name
       description
+      boutique {
+        id
+        name
+        address
+        city
+        category
+      }
     }
+    boutique_id {
+      id
+      name
+      address
+      city
+      code
+      category
+      contact
+      expire_date
+      stars
+      main_image
+      images
+    }
+    boutique {
+      id
+      name
+      address
+      city
+      code
+      category
+      contact
+      expire_date
+      stars
+      main_image
+      images
+    }
+    user_created {
+      id
+      first_name
+      last_name
+      email
+    }
+    created_at
+    updated_at
+    date_created
+    date_updated
   }
 }
     `;
@@ -3867,123 +5108,221 @@ export type GetProductDetailQueryHookResult = ReturnType<typeof useGetProductDet
 export type GetProductDetailLazyQueryHookResult = ReturnType<typeof useGetProductDetailLazyQuery>;
 export type GetProductDetailSuspenseQueryHookResult = ReturnType<typeof useGetProductDetailSuspenseQuery>;
 export type GetProductDetailQueryResult = ApolloReactCommon.QueryResult<GetProductDetailQuery, GetProductDetailQueryVariables>;
-export const GetUserDocument = gql`
-    query GetUser($id: ID!) {
-  users_by_id(id: $id) {
+export const GetMyProductsDocument = gql`
+    query GetMyProducts($userId: ID!, $status: String, $limit: Int, $offset: Int, $sort: [String]) {
+  products(
+    filter: {user_created: {id: {_eq: $userId}}, status: {_eq: $status}}
+    limit: $limit
+    offset: $offset
+    sort: $sort
+  ) {
     id
     name
-    email
+    subtitle
+    description
+    price
+    market_price
+    stock
+    main_image
+    images
+    is_on_sale
+    status
+    total_sales_volume
+    rating_avg
+    total_reviews
+    category_id {
+      id
+      name
+    }
+    boutique_id {
+      id
+      name
+    }
+    created_at
+    updated_at
   }
 }
     `;
 
 /**
- * __useGetUserQuery__
+ * __useGetMyProductsQuery__
  *
- * To run a query within a React component, call `useGetUserQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetUserQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetMyProductsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetMyProductsQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetUserQuery({
+ * const { data, loading, error } = useGetMyProductsQuery({
  *   variables: {
- *      id: // value for 'id'
+ *      userId: // value for 'userId'
+ *      status: // value for 'status'
+ *      limit: // value for 'limit'
+ *      offset: // value for 'offset'
+ *      sort: // value for 'sort'
  *   },
  * });
  */
-export function useGetUserQuery(baseOptions: ApolloReactHooks.QueryHookOptions<GetUserQuery, GetUserQueryVariables> & ({ variables: GetUserQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+export function useGetMyProductsQuery(baseOptions: ApolloReactHooks.QueryHookOptions<GetMyProductsQuery, GetMyProductsQueryVariables> & ({ variables: GetMyProductsQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
         const options = {...defaultOptions, ...baseOptions}
-        return ApolloReactHooks.useQuery<GetUserQuery, GetUserQueryVariables>(GetUserDocument, options);
+        return ApolloReactHooks.useQuery<GetMyProductsQuery, GetMyProductsQueryVariables>(GetMyProductsDocument, options);
       }
-export function useGetUserLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetUserQuery, GetUserQueryVariables>) {
+export function useGetMyProductsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetMyProductsQuery, GetMyProductsQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return ApolloReactHooks.useLazyQuery<GetUserQuery, GetUserQueryVariables>(GetUserDocument, options);
+          return ApolloReactHooks.useLazyQuery<GetMyProductsQuery, GetMyProductsQueryVariables>(GetMyProductsDocument, options);
         }
-export function useGetUserSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetUserQuery, GetUserQueryVariables>) {
+export function useGetMyProductsSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetMyProductsQuery, GetMyProductsQueryVariables>) {
           const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
-          return ApolloReactHooks.useSuspenseQuery<GetUserQuery, GetUserQueryVariables>(GetUserDocument, options);
+          return ApolloReactHooks.useSuspenseQuery<GetMyProductsQuery, GetMyProductsQueryVariables>(GetMyProductsDocument, options);
         }
-export type GetUserQueryHookResult = ReturnType<typeof useGetUserQuery>;
-export type GetUserLazyQueryHookResult = ReturnType<typeof useGetUserLazyQuery>;
-export type GetUserSuspenseQueryHookResult = ReturnType<typeof useGetUserSuspenseQuery>;
-export type GetUserQueryResult = ApolloReactCommon.QueryResult<GetUserQuery, GetUserQueryVariables>;
-export const GetUsersDocument = gql`
-    query GetUsers {
-  users {
+export type GetMyProductsQueryHookResult = ReturnType<typeof useGetMyProductsQuery>;
+export type GetMyProductsLazyQueryHookResult = ReturnType<typeof useGetMyProductsLazyQuery>;
+export type GetMyProductsSuspenseQueryHookResult = ReturnType<typeof useGetMyProductsSuspenseQuery>;
+export type GetMyProductsQueryResult = ApolloReactCommon.QueryResult<GetMyProductsQuery, GetMyProductsQueryVariables>;
+export const GetOnSaleProductsDocument = gql`
+    query GetOnSaleProducts($boutiqueId: GraphQLStringOrFloat, $categoryId: GraphQLStringOrFloat, $limit: Int, $offset: Int, $sort: [String]) {
+  products(
+    filter: {is_on_sale: {_eq: true}, status: {_eq: "published"}, boutique_id: {id: {_eq: $boutiqueId}}, category_id: {id: {_eq: $categoryId}}}
+    limit: $limit
+    offset: $offset
+    sort: $sort
+  ) {
     id
     name
-    email
+    subtitle
+    description
+    price
+    market_price
+    stock
+    main_image
+    images
+    video_url
+    is_on_sale
+    total_sales_volume
+    rating_avg
+    total_reviews
+    brand
+    category_id {
+      id
+      name
+    }
+    boutique {
+      id
+      name
+      address
+      city
+    }
+    created_at
+    updated_at
   }
 }
     `;
 
 /**
- * __useGetUsersQuery__
+ * __useGetOnSaleProductsQuery__
  *
- * To run a query within a React component, call `useGetUsersQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetUsersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetOnSaleProductsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetOnSaleProductsQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetUsersQuery({
+ * const { data, loading, error } = useGetOnSaleProductsQuery({
  *   variables: {
+ *      boutiqueId: // value for 'boutiqueId'
+ *      categoryId: // value for 'categoryId'
+ *      limit: // value for 'limit'
+ *      offset: // value for 'offset'
+ *      sort: // value for 'sort'
  *   },
  * });
  */
-export function useGetUsersQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetUsersQuery, GetUsersQueryVariables>) {
+export function useGetOnSaleProductsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetOnSaleProductsQuery, GetOnSaleProductsQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return ApolloReactHooks.useQuery<GetUsersQuery, GetUsersQueryVariables>(GetUsersDocument, options);
+        return ApolloReactHooks.useQuery<GetOnSaleProductsQuery, GetOnSaleProductsQueryVariables>(GetOnSaleProductsDocument, options);
       }
-export function useGetUsersLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetUsersQuery, GetUsersQueryVariables>) {
+export function useGetOnSaleProductsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetOnSaleProductsQuery, GetOnSaleProductsQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return ApolloReactHooks.useLazyQuery<GetUsersQuery, GetUsersQueryVariables>(GetUsersDocument, options);
+          return ApolloReactHooks.useLazyQuery<GetOnSaleProductsQuery, GetOnSaleProductsQueryVariables>(GetOnSaleProductsDocument, options);
         }
-export function useGetUsersSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetUsersQuery, GetUsersQueryVariables>) {
+export function useGetOnSaleProductsSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetOnSaleProductsQuery, GetOnSaleProductsQueryVariables>) {
           const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
-          return ApolloReactHooks.useSuspenseQuery<GetUsersQuery, GetUsersQueryVariables>(GetUsersDocument, options);
+          return ApolloReactHooks.useSuspenseQuery<GetOnSaleProductsQuery, GetOnSaleProductsQueryVariables>(GetOnSaleProductsDocument, options);
         }
-export type GetUsersQueryHookResult = ReturnType<typeof useGetUsersQuery>;
-export type GetUsersLazyQueryHookResult = ReturnType<typeof useGetUsersLazyQuery>;
-export type GetUsersSuspenseQueryHookResult = ReturnType<typeof useGetUsersSuspenseQuery>;
-export type GetUsersQueryResult = ApolloReactCommon.QueryResult<GetUsersQuery, GetUsersQueryVariables>;
-export const UpdateUserDocument = gql`
-    mutation UpdateUser($id: ID!, $name: String, $email: String) {
-  update_users_item(id: $id, data: {name: $name, email: $email}) {
+export type GetOnSaleProductsQueryHookResult = ReturnType<typeof useGetOnSaleProductsQuery>;
+export type GetOnSaleProductsLazyQueryHookResult = ReturnType<typeof useGetOnSaleProductsLazyQuery>;
+export type GetOnSaleProductsSuspenseQueryHookResult = ReturnType<typeof useGetOnSaleProductsSuspenseQuery>;
+export type GetOnSaleProductsQueryResult = ApolloReactCommon.QueryResult<GetOnSaleProductsQuery, GetOnSaleProductsQueryVariables>;
+export const SearchProductsDocument = gql`
+    query SearchProducts($search: String!, $boutiqueId: GraphQLStringOrFloat, $categoryId: GraphQLStringOrFloat, $limit: Int, $offset: Int, $sort: [String]) {
+  products(
+    filter: {_or: [{name: {_icontains: $search}}, {subtitle: {_icontains: $search}}, {description: {_icontains: $search}}, {brand: {_icontains: $search}}], status: {_eq: "published"}, boutique_id: {id: {_eq: $boutiqueId}}, category_id: {id: {_eq: $categoryId}}}
+    limit: $limit
+    offset: $offset
+    sort: $sort
+  ) {
     id
     name
-    email
+    subtitle
+    description
+    price
+    market_price
+    stock
+    main_image
+    images
+    is_on_sale
+    rating_avg
+    total_reviews
+    brand
+    category_id {
+      id
+      name
+    }
+    boutique {
+      id
+      name
+    }
+    created_at
   }
 }
     `;
-export type UpdateUserMutationFn = ApolloReactCommon.MutationFunction<UpdateUserMutation, UpdateUserMutationVariables>;
 
 /**
- * __useUpdateUserMutation__
+ * __useSearchProductsQuery__
  *
- * To run a mutation, you first call `useUpdateUserMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUpdateUserMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
+ * To run a query within a React component, call `useSearchProductsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSearchProductsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
  *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const [updateUserMutation, { data, loading, error }] = useUpdateUserMutation({
+ * const { data, loading, error } = useSearchProductsQuery({
  *   variables: {
- *      id: // value for 'id'
- *      name: // value for 'name'
- *      email: // value for 'email'
+ *      search: // value for 'search'
+ *      boutiqueId: // value for 'boutiqueId'
+ *      categoryId: // value for 'categoryId'
+ *      limit: // value for 'limit'
+ *      offset: // value for 'offset'
+ *      sort: // value for 'sort'
  *   },
  * });
  */
-export function useUpdateUserMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateUserMutation, UpdateUserMutationVariables>) {
+export function useSearchProductsQuery(baseOptions: ApolloReactHooks.QueryHookOptions<SearchProductsQuery, SearchProductsQueryVariables> & ({ variables: SearchProductsQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
         const options = {...defaultOptions, ...baseOptions}
-        return ApolloReactHooks.useMutation<UpdateUserMutation, UpdateUserMutationVariables>(UpdateUserDocument, options);
+        return ApolloReactHooks.useQuery<SearchProductsQuery, SearchProductsQueryVariables>(SearchProductsDocument, options);
       }
-export type UpdateUserMutationHookResult = ReturnType<typeof useUpdateUserMutation>;
-export type UpdateUserMutationResult = ApolloReactCommon.MutationResult<UpdateUserMutation>;
-export type UpdateUserMutationOptions = ApolloReactCommon.BaseMutationOptions<UpdateUserMutation, UpdateUserMutationVariables>;
+export function useSearchProductsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<SearchProductsQuery, SearchProductsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<SearchProductsQuery, SearchProductsQueryVariables>(SearchProductsDocument, options);
+        }
+export function useSearchProductsSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<SearchProductsQuery, SearchProductsQueryVariables>) {
+          const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<SearchProductsQuery, SearchProductsQueryVariables>(SearchProductsDocument, options);
+        }
+export type SearchProductsQueryHookResult = ReturnType<typeof useSearchProductsQuery>;
+export type SearchProductsLazyQueryHookResult = ReturnType<typeof useSearchProductsLazyQuery>;
+export type SearchProductsSuspenseQueryHookResult = ReturnType<typeof useSearchProductsSuspenseQuery>;
+export type SearchProductsQueryResult = ApolloReactCommon.QueryResult<SearchProductsQuery, SearchProductsQueryVariables>;

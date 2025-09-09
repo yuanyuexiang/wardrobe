@@ -1,0 +1,53 @@
+# 客户相关查询 - 仅在需要时使用
+
+# 根据 open_id 获取客户信息（常用于微信小程序）
+query GetCustomerByOpenId($openId: String!) {
+  customers(filter: { open_id: { _eq: $openId } }, limit: 1) {
+    id
+    open_id
+    nick_name
+    avatar
+    type
+    sex
+    status
+    date_created
+    date_updated
+  }
+}
+
+# 根据 ID 获取客户详情
+query GetCustomerById($id: ID!) {
+  customers_by_id(id: $id) {
+    id
+    open_id
+    nick_name
+    avatar
+    type
+    sex
+    status
+    sort
+    date_created
+    date_updated
+  }
+}
+
+# 创建或更新客户信息（用于微信授权后的用户信息同步）
+mutation UpsertCustomer($open_id: String!, $nick_name: String, $avatar: String, $type: String, $sex: Int) {
+  create_customers_item(data: { 
+    open_id: $open_id
+    nick_name: $nick_name
+    avatar: $avatar
+    type: $type
+    sex: $sex
+    status: "published"
+  }) {
+    id
+    open_id
+    nick_name
+    avatar
+    type
+    sex
+    status
+    date_created
+  }
+}

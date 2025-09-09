@@ -1,11 +1,17 @@
-query GetCurrentUser {
-  users_me {
-    id
-    first_name
-    last_name
-    email
-    status
-    role
-    last_access
-  }
-}
+# 客户端认证相关查询
+# 由于这是客户端应用，主要关注业务数据查询
+# 认证功能可能通过其他方式（如微信小程序授权）处理
+
+# 如果需要客户信息查询，可以使用以下查询：
+# query GetCustomerInfo($openId: String!) {
+#   customers(filter: { open_id: { _eq: $openId } }) {
+#     id
+#     open_id
+#     nick_name
+#     avatar
+#     type
+#     sex
+#     status
+#     date_created
+#   }
+# }

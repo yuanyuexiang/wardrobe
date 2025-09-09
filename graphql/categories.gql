@@ -1,0 +1,95 @@
+# Categories 分类相关查询
+
+query GetAllCategories($filter: categories_filter, $limit: Int, $offset: Int, $sort: [String]) {
+  categories(
+    filter: $filter
+    limit: $limit
+    offset: $offset
+    sort: $sort
+  ) {
+    id
+    name
+    description
+    boutique {
+      id
+      name
+      address
+      city
+      category
+    }
+    date_created
+    date_updated
+  }
+}
+
+query GetCategoryById($id: ID!) {
+  categories_by_id(id: $id) {
+    id
+    name
+    description
+    boutique {
+      id
+      name
+      address
+      city
+      code
+      category
+      contact
+      expire_date
+      stars
+      main_image
+      images
+    }
+    date_created
+    date_updated
+  }
+}
+
+# 获取分类下的产品
+query GetProductsByCategory($categoryId: GraphQLStringOrFloat!, $filter: products_filter, $limit: Int, $offset: Int, $sort: [String]) {
+  products(
+    filter: { 
+      category_id: { id: { _eq: $categoryId } }
+    }
+    limit: $limit
+    offset: $offset
+    sort: $sort
+  ) {
+    id
+    name
+    subtitle
+    description
+    price
+    market_price
+    stock
+    main_image
+    images
+    video_url
+    is_on_sale
+    status
+    total_sales_volume
+    rating_avg
+    total_reviews
+    brand
+    boutique {
+      id
+      name
+      address
+      city
+      category
+    }
+    created_at
+    updated_at
+  }
+}
+
+# 聚合查询 - 获取分类统计信息
+query GetCategoriesAggregated($filter: categories_filter, $groupBy: [String]) {
+  categories_aggregated(
+    filter: $filter
+    groupBy: $groupBy
+  ) {
+    group
+    countAll
+  }
+}

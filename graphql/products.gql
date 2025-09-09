@@ -1,11 +1,41 @@
-query GetCategories {
-  categories {
+# Categories 查询
+query GetCategories($filter: categories_filter, $limit: Int, $offset: Int, $sort: [String]) {
+  categories(
+    filter: $filter
+    limit: $limit
+    offset: $offset
+    sort: $sort
+  ) {
     id
     name
     description
+    boutique_id {
+      id
+      name
+    }
+    date_created
+    date_updated
   }
 }
 
+query GetCategoryDetail($id: ID!) {
+  categories_by_id(id: $id) {
+    id
+    name
+    description
+    boutique {
+      id
+      name
+      address
+      city
+      category
+    }
+    date_created
+    date_updated
+  }
+}
+
+# Products 查询
 query GetProducts($filter: products_filter, $limit: Int, $offset: Int, $sort: [String]) {
   products(
     filter: $filter
@@ -18,13 +48,217 @@ query GetProducts($filter: products_filter, $limit: Int, $offset: Int, $sort: [S
     subtitle
     description
     price
+    market_price
+    stock
     main_image
     images
+    video_url
+    is_on_sale
+    status
+    total_sales_volume
+    rating_avg
+    total_reviews
+    brand
+    barcode
+    seller_id
     category_id {
       id
       name
       description
     }
+    boutique_id {
+      id
+      name
+      address
+      city
+      category
+    }
+    boutique {
+      id
+      name
+      address
+      city
+      category
+    }
+    user_created {
+      id
+      first_name
+      last_name
+      email
+    }
+    created_at
+    updated_at
+    date_created
+    date_updated
+  }
+}
+
+# 根据用户创建者获取产品
+query GetProductsByUser($userId: ID!, $filter: products_filter, $limit: Int, $offset: Int, $sort: [String]) {
+  products(
+    filter: { 
+      user_created: { id: { _eq: $userId } }
+      _and: [$filter]
+    }
+    limit: $limit
+    offset: $offset
+    sort: $sort
+  ) {
+    id
+    name
+    subtitle
+    description
+    price
+    market_price
+    stock
+    main_image
+    images
+    video_url
+    is_on_sale
+    status
+    total_sales_volume
+    rating_avg
+    total_reviews
+    brand
+    barcode
+    seller_id
+    category_id {
+      id
+      name
+      description
+    }
+    boutique_id {
+      id
+      name
+      address
+      city
+      category
+    }
+    user_created {
+      id
+      first_name
+      last_name
+      email
+    }
+    created_at
+    updated_at
+    date_created
+    date_updated
+  }
+}
+
+# 根据精品店获取产品
+query GetProductsByBoutique($boutiqueId: GraphQLStringOrFloat!, $filter: products_filter, $limit: Int, $offset: Int, $sort: [String]) {
+  products(
+    filter: { 
+      boutique_id: { id: { _eq: $boutiqueId } }
+    }
+    limit: $limit
+    offset: $offset
+    sort: $sort
+  ) {
+    id
+    name
+    subtitle
+    description
+    price
+    market_price
+    stock
+    main_image
+    images
+    video_url
+    is_on_sale
+    status
+    total_sales_volume
+    rating_avg
+    total_reviews
+    brand
+    barcode
+    seller_id
+    category_id {
+      id
+      name
+      description
+    }
+    boutique_id {
+      id
+      name
+      address
+      city
+      category
+    }
+    user_created {
+      id
+      first_name
+      last_name
+      email
+    }
+    created_at
+    updated_at
+    date_created
+    date_updated
+  }
+}
+
+# 根据用户和精品店获取产品（组合过滤）
+query GetProductsByUserAndBoutique(
+  $userId: ID!
+  $boutiqueId: GraphQLStringOrFloat!
+  $filter: products_filter
+  $limit: Int
+  $offset: Int
+  $sort: [String]
+) {
+  products(
+    filter: { 
+      user_created: { id: { _eq: $userId } }
+      boutique_id: { id: { _eq: $boutiqueId } }
+      _and: [$filter]
+    }
+    limit: $limit
+    offset: $offset
+    sort: $sort
+  ) {
+    id
+    name
+    subtitle
+    description
+    price
+    market_price
+    stock
+    main_image
+    images
+    video_url
+    is_on_sale
+    status
+    total_sales_volume
+    rating_avg
+    total_reviews
+    brand
+    barcode
+    seller_id
+    category_id {
+      id
+      name
+      description
+    }
+    boutique_id {
+      id
+      name
+      address
+      city
+      category
+    }
+    user_created {
+      id
+      first_name
+      last_name
+      email
+    }
+    created_at
+    updated_at
+    date_created
+    date_updated
   }
 }
 
@@ -39,7 +273,186 @@ query GetProductDetail($id: ID!) {
     stock
     main_image
     images
+    video_url
+    is_on_sale
+    status
+    total_sales_volume
+    rating_avg
+    total_reviews
     brand
-    category_id { id name description }
+    barcode
+    seller_id
+    category_id {
+      id
+      name
+      description
+      boutique {
+        id
+        name
+        address
+        city
+        category
+      }
+    }
+    boutique_id {
+      id
+      name
+      address
+      city
+      code
+      category
+      contact
+      expire_date
+      stars
+      main_image
+      images
+    }
+    boutique {
+      id
+      name
+      address
+      city
+      code
+      category
+      contact
+      expire_date
+      stars
+      main_image
+      images
+    }
+    user_created {
+      id
+      first_name
+      last_name
+      email
+    }
+    created_at
+    updated_at
+    date_created
+    date_updated
+  }
+}
+
+# 获取我的产品（当前用户创建的产品）
+query GetMyProducts($userId: ID!, $status: String, $limit: Int, $offset: Int, $sort: [String]) {
+  products(
+    filter: { 
+      user_created: { id: { _eq: $userId } }
+      status: { _eq: $status }
+    }
+    limit: $limit
+    offset: $offset
+    sort: $sort
+  ) {
+    id
+    name
+    subtitle
+    description
+    price
+    market_price
+    stock
+    main_image
+    images
+    is_on_sale
+    status
+    total_sales_volume
+    rating_avg
+    total_reviews
+    category_id {
+      id
+      name
+    }
+    boutique_id {
+      id
+      name
+    }
+    created_at
+    updated_at
+  }
+}
+
+# 获取在售产品
+query GetOnSaleProducts($boutiqueId: GraphQLStringOrFloat, $categoryId: GraphQLStringOrFloat, $limit: Int, $offset: Int, $sort: [String]) {
+  products(
+    filter: { 
+      is_on_sale: { _eq: true }
+      status: { _eq: "published" }
+      boutique_id: { id: { _eq: $boutiqueId } }
+      category_id: { id: { _eq: $categoryId } }
+    }
+    limit: $limit
+    offset: $offset
+    sort: $sort
+  ) {
+    id
+    name
+    subtitle
+    description
+    price
+    market_price
+    stock
+    main_image
+    images
+    video_url
+    is_on_sale
+    total_sales_volume
+    rating_avg
+    total_reviews
+    brand
+    category_id {
+      id
+      name
+    }
+    boutique {
+      id
+      name
+      address
+      city
+    }
+    created_at
+    updated_at
+  }
+}
+
+# 产品搜索查询
+query SearchProducts($search: String!, $boutiqueId: GraphQLStringOrFloat, $categoryId: GraphQLStringOrFloat, $limit: Int, $offset: Int, $sort: [String]) {
+  products(
+    filter: { 
+      _or: [
+        { name: { _icontains: $search } }
+        { subtitle: { _icontains: $search } }
+        { description: { _icontains: $search } }
+        { brand: { _icontains: $search } }
+      ]
+      status: { _eq: "published" }
+      boutique_id: { id: { _eq: $boutiqueId } }
+      category_id: { id: { _eq: $categoryId } }
+    }
+    limit: $limit
+    offset: $offset
+    sort: $sort
+  ) {
+    id
+    name
+    subtitle
+    description
+    price
+    market_price
+    stock
+    main_image
+    images
+    is_on_sale
+    rating_avg
+    total_reviews
+    brand
+    category_id {
+      id
+      name
+    }
+    boutique {
+      id
+      name
+    }
+    created_at
   }
 }
