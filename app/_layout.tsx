@@ -26,9 +26,9 @@ export default function RootLayout() {
   const [isConfigured, setIsConfigured] = useState(false);
   const [splashReady, setSplashReady] = useState(false); // 启动屏准备状态
 
-  // 启动屏控制：确保显示至少5秒
+  // 启动屏控制：确保显示至少3秒
   useEffect(() => {
-    const minSplashTime = 5000; // 5秒
+    const minSplashTime = 3000; // 3秒
     const startTime = Date.now();
 
     const hideSplashWhenReady = async () => {
@@ -146,6 +146,7 @@ export default function RootLayout() {
         }}
       >
         <WardrobeApolloProvider>
+          <FullscreenConfig />
           <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
             <ConfigScreen />
             <StatusBar style="auto" />
