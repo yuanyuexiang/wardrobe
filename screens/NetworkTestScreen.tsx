@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import { Button, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { useRouter } from 'expo-router';
 import { useGetCategoriesQuery, useGetProductsQuery } from '../generated/graphql';
 import { API_CONFIG } from '../config/api';
+import { configManager } from '../utils/configManager';
 
 const NetworkTestScreen = () => {
   const [testResults, setTestResults] = useState<string[]>([]);
+  const router = useRouter();
   
   const { data: categoriesData, loading: categoriesLoading, error: categoriesError } = useGetCategoriesQuery();
   const { data: productsData, loading: productsLoading, error: productsError } = useGetProductsQuery();
@@ -118,6 +121,20 @@ const NetworkTestScreen = () => {
     setTestResults([]);
   };
 
+  const goToConfig = () => {
+    router.push('/config');
+  };
+
+  const resetConfigAndGoToConfig = async () => {
+    try {
+      await configManager.resetConfig();
+      addTestResult('🔄 配置已重置');
+      router.replace('/config');
+    } catch (error) {
+      addTestResult(`❌ 重置配置失败: ${error}`);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>🔧 网络连接测试</Text>
@@ -126,6 +143,14 @@ const NetworkTestScreen = () => {
         <Button title="测试直接API调用" onPress={testDirectusConnection} />
         <Button title="测试Apollo查询" onPress={testApolloQueries} />
         <Button title="清除结果" onPress={clearResults} color="#ff6b6b" />
+      </View>
+      
+      <View style={styles.configSection}>
+        <Text style={styles.configTitle}>⚙️ 配置管理</Text>
+        <View style={styles.buttonContainer}>
+          <Button title="进入配置页面" onPress={goToConfig} color="#007AFF" />
+          <Button title="重置并重新配置" onPress={resetConfigAndGoToConfig} color="#FF9500" />
+        </View>
       </View>
       
       <Text style={styles.subtitle}>状态信息:</Text>
@@ -204,6 +229,18 @@ const styles = StyleSheet.create({
     color: '#999',
     textAlign: 'center',
     marginTop: 20,
+  },
+  configSection: {
+    backgroundColor: 'white',
+    padding: 15,
+    borderRadius: 8,
+    marginBottom: 20,
+  },
+  configTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    marginBottom: 15,
+    textAlign: 'center',
   },
 });
 

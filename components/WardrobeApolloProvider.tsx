@@ -1,87 +1,125 @@
 import { ApolloClient, ApolloProvider, createHttpLink, from, InMemoryCache } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 import { onError } from '@apollo/client/link/error';
-import React from 'react';
-import { API_CONFIG } from '../config/api';
+import React, { useEffect, useState } from 'react';
+import { configManager } from '../utils/configManager';
 import { logger } from '../utils/logger';
 
-// 选择API端点
-const getApiUri = () => {
-  // 重新检测环境，确保在运行时检测
-  const isDev = process.env.NODE_ENV === 'development' || process.env.NODE_ENV !== 'production';
+// 动态创建 Apollo Client，使用配置管理器的配置
+const createApolloClient = (apiBaseUrl: string, authToken: string) => {
+  // 运行时环境检测
+  const isDev = process.env.NODE_ENV === 'development';
   const isWebEnvironment = typeof window !== 'undefined';
-  const currentHost = typeof window !== 'undefined' ? window.location?.hostname : '';
+  const currentHost = isWebEnvironment ? window.location?.hostname : '';
   const isLocalhost = currentHost === 'localhost' || currentHost === '127.0.0.1';
 
-  // 环境检测和日志记录
-  logger.info('WardrobeApolloProvider', `环境检测 - isDev: ${isDev}, isWeb: ${isWebEnvironment}, host: ${currentHost}, isLocalhost: ${isLocalhost}`);
+  let apiUri: string;
   
-  // 在Web环境且为开发模式时使用代理
+  // 在Web开发环境且为localhost时使用代理
   if (isWebEnvironment && isDev && isLocalhost) {
-    // Web平台，使用本地代理
-    const proxyUri = 'http://localhost:3001/api/graphql';
-    logger.info('WardrobeApolloProvider', `Web环境使用代理: ${proxyUri}`);
-    return proxyUri;
+    apiUri = `http://localhost:3001/api/graphql`;
+    logger.info('WardrobeApolloProvider', `Web开发环境使用代理: ${apiUri}`);
   } else {
-    // 服务器端渲染或移动端，直接连接
-    const directUri = API_CONFIG.GRAPHQL_ENDPOINT;
-    logger.info('WardrobeApolloProvider', `直接连接API: ${directUri}`);
-    return directUri;
+    apiUri = `${apiBaseUrl}/graphql`;
+    logger.info('WardrobeApolloProvider', `直接连接API: ${apiUri}`);
   }
+
+  const httpLink = createHttpLink({
+    uri: apiUri,
+    fetchOptions: {
+      mode: 'cors',
+    },
+  });
+
+  const authLink = setContext((_: any, context: any) => ({
+    headers: {
+      ...context.headers,
+      Authorization: `Bearer ${authToken}`,
+      'Content-Type': 'application/json',
+    },
+  }));
+
+  // 错误处理链接
+  const errorLink = onError(({ graphQLErrors, networkError, operation, forward }) => {
+    if (graphQLErrors) {
+      graphQLErrors.forEach(({ message, locations, path }) =>
+        logger.error('WardrobeApolloProvider', `GraphQL错误 - 消息: ${message}, 位置: ${locations}, 路径: ${path}`)
+      );
+    }
+
+    if (networkError) {
+      logger.error('WardrobeApolloProvider', `网络错误: ${networkError.message}`, networkError.toString());
+    }
+  });
+
+  return new ApolloClient({
+    link: from([errorLink, authLink, httpLink]),
+    cache: new InMemoryCache(),
+    defaultOptions: {
+      watchQuery: {
+        errorPolicy: 'all',
+      },
+      query: {
+        errorPolicy: 'all',
+      },
+    },
+  });
 };
 
-const httpLink = createHttpLink({
-  uri: getApiUri(),
-  fetchOptions: {
-    mode: 'cors',
-  },
-});
+const WardrobeApolloProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [client, setClient] = useState<ApolloClient<any> | null>(null);
 
-const token = process.env.EXPO_PUBLIC_AUTH_TOKEN || 'CCZnVSanwCwzS6edoC8-2ImbzJiZLeAD';
+  useEffect(() => {
+    const initializeClient = async () => {
+      // 加载配置
+      await configManager.loadConfig();
+      const config = configManager.getConfig();
+      
+      // 使用配置创建 Apollo Client
+      const apolloClient = createApolloClient(
+        config.apiBaseUrl,
+        config.authToken
+      );
+      
+      setClient(apolloClient);
+      logger.info('WardrobeApolloProvider', '使用配置初始化Apollo Client', {
+        apiBaseUrl: config.apiBaseUrl,
+        authToken: config.authToken.substring(0, 8) + '...'
+      });
+    };
 
-const authLink = setContext((_: any, context: any) => ({
-  headers: {
-    ...context.headers,
-    Authorization: `Bearer ${token}`,
-    'Content-Type': 'application/json',
-  },
-}));
+    initializeClient();
 
-// 错误处理链接
-const errorLink = onError(({ graphQLErrors, networkError, operation, forward }) => {
-  if (graphQLErrors) {
-    graphQLErrors.forEach(({ message, locations, path }) =>
-      logger.error('WardrobeApolloProvider', `GraphQL错误 - 消息: ${message}, 位置: ${locations}, 路径: ${path}`)
+    // 监听配置变化，重新创建客户端
+    const unsubscribe = configManager.addListener((newConfig) => {
+      logger.info('WardrobeApolloProvider', '配置已更新，重新创建Apollo Client');
+      const newClient = createApolloClient(
+        newConfig.apiBaseUrl,
+        newConfig.authToken
+      );
+      setClient(newClient);
+    });
+
+    return unsubscribe;
+  }, []);
+
+  // 如果客户端还没准备好，显示加载状态
+  if (!client) {
+    return (
+      <div style={{ 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        height: '100vh',
+        fontSize: '16px',
+        color: '#666'
+      }}>
+        正在初始化...
+      </div>
     );
   }
 
-  if (networkError) {
-    logger.error('WardrobeApolloProvider', `网络错误: ${networkError.message}`, networkError.toString());
-  }
-});
-
-const client = new ApolloClient({
-  link: from([errorLink, authLink, httpLink]),
-  cache: new InMemoryCache({
-    // 移除已废弃的 addTypename 选项
-    typePolicies: {},
-  }),
-  defaultOptions: {
-    watchQuery: {
-      errorPolicy: 'all',
-    },
-    query: {
-      errorPolicy: 'all',
-    },
-  },
-  // 使用新的 devtools 配置
-  devtools: {
-    enabled: process.env.NODE_ENV === 'development',
-  },
-});
-
-const WardrobeApolloProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <ApolloProvider client={client}>{children}</ApolloProvider>
-);
+  return <ApolloProvider client={client}>{children}</ApolloProvider>;
+};
 
 export default WardrobeApolloProvider;

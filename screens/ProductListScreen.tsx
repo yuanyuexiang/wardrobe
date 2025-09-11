@@ -236,10 +236,20 @@ const ProductListScreen: React.FC = () => {
         </View>
         <View style={styles.headerRight}>
           <TouchableOpacity 
-            style={styles.couponButton}
+            style={[styles.couponButton, { marginRight: 8 }]}
             onPress={() => setCarouselVisible(true)}
           >
             <Text style={styles.couponText}>轮播</Text>
+          </TouchableOpacity>
+          <TouchableOpacity 
+            style={[styles.couponButton, { backgroundColor: '#666' }]}
+            onPress={() => {
+              // 临时添加配置测试
+              // 这里可以跳转到配置页面或显示配置信息
+              logger.info('ProductListScreen', '配置按钮被点击');
+            }}
+          >
+            <Ionicons name="settings" size={16} color="#fff" />
           </TouchableOpacity>
         </View>
       </View>
