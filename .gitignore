@@ -58,3 +58,4 @@ test-*.js
 *.tsbuildinfo
 
 app-example
+build-***.apk

@@ -30,7 +30,11 @@
       "autoIncrement": true,
       "android": {
         "gradleCommand": ":app:assembleRelease",
-        "buildType": "apk"
+        "buildType": "apk",
+        "buildConfiguration": "release"
+      },
+      "cache": {
+        "disabled": false
       },
       "env": {
         "EXPO_USE_PROGUARD": "1",

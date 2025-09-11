@@ -2,6 +2,7 @@ import { ApolloClient, ApolloProvider, createHttpLink, from, InMemoryCache } fro
 import { setContext } from '@apollo/client/link/context';
 import { onError } from '@apollo/client/link/error';
 import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet } from 'react-native';
 import { configManager } from '../utils/configManager';
 import { logger } from '../utils/logger';
 
@@ -106,20 +107,25 @@ const WardrobeApolloProvider: React.FC<{ children: React.ReactNode }> = ({ child
   // 如果客户端还没准备好，显示加载状态
   if (!client) {
     return (
-      <div style={{ 
-        display: 'flex', 
-        justifyContent: 'center', 
-        alignItems: 'center', 
-        height: '100vh',
-        fontSize: '16px',
-        color: '#666'
-      }}>
-        正在初始化...
-      </div>
+      <View style={styles.loadingContainer}>
+        <Text style={styles.loadingText}>正在初始化...</Text>
+      </View>
     );
   }
 
   return <ApolloProvider client={client}>{children}</ApolloProvider>;
 };
+
+const styles = StyleSheet.create({
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loadingText: {
+    fontSize: 16,
+    color: '#666',
+  },
+});
 
 export default WardrobeApolloProvider;
