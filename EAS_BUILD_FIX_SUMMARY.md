@@ -243,7 +243,8 @@ eas build --profile production --platform android
 ### 当前构建状态
 - ✅ **第一次构建成功**: APK 已生成 (包含所有架构，80.4 MB)
 - ⚠️ **插件问题**: expo-build-properties 插件不兼容 EAS 构建环境，已移除
-- 🔄 **当前构建**: 正常构建进行中（版本号 38，包含所有架构）
+- ⚠️ **配置问题**: 修复了 eas.json 中不被允许的 `buildConfiguration` 配置项
+- 🔄 **当前构建**: 准备重新开始生产构建
 - 💡 **优化方案**: 使用 `npx expo prebuild` 生成原生目录后手动配置架构限制
 - 📈 **预期优化效果**: 手动配置架构后可减少构建时间 60%，APK 大小减小 75%
 
