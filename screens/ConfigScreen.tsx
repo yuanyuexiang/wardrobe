@@ -94,8 +94,8 @@ export default function ConfigScreen() {
       // 判断是否为重新配置：
       // 1. 如果配置已完成 且 是通过路由访问(/config)，则为重新配置
       // 2. 如果配置未完成，则为初次配置
-      const isRouteAccess = typeof window !== 'undefined' && 
-        (window.location.pathname.includes('/config') || window.location.hash.includes('/config'));
+      const isRouteAccess = typeof window !== 'undefined' && window.location && 
+        (window.location.pathname?.includes('/config') || window.location.hash?.includes('/config'));
       const isReconfig = currentConfig.isConfigured && isRouteAccess;
       
       setIsReconfiguring(isReconfig);
@@ -275,7 +275,7 @@ export default function ConfigScreen() {
       await new Promise(resolve => setTimeout(resolve, 500));
       
       // 直接导航而不是刷新页面
-      if (typeof window !== 'undefined') {
+      if (typeof window !== 'undefined' && window.location) {
         console.log('Web环境：导航到首页');
         window.location.href = '/';
       } else {
@@ -285,7 +285,7 @@ export default function ConfigScreen() {
       
     } catch (error) {
       console.error('配置失败:', error);
-      Alert.alert('保存失败', '保存配置时出现错误');
+      Alert.alert('配置失败', '保存配置时出现错误，请重试');
     } finally {
       setLoading(false);
     }
@@ -366,7 +366,12 @@ export default function ConfigScreen() {
       Alert.alert('配置完成', '开发配置已设置，即将进入应用');
       // 触发页面重载以应用新配置
       setTimeout(() => {
-        window.location.reload();
+        if (typeof window !== 'undefined' && window.location) {
+          window.location.reload();
+        } else {
+          // React Native环境中使用路由替换
+          router.replace('/(tabs)');
+        }
       }, 1000);
     } catch (error) {
       logger.error('ConfigScreen', '设置开发配置失败', error);
