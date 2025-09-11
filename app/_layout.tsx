@@ -27,11 +27,17 @@ export default function RootLayout() {
       try {
         // 添加小延迟确保所有依赖都已初始化
         await new Promise(resolve => setTimeout(resolve, 100));
-        logger.info('RootLayout', '开始加载配置');
+        console.log('RootLayout: 开始加载配置');
         const config = await configManager.loadConfig();
+        console.log('RootLayout: 配置加载完成', { 
+          isConfigured: config.isConfigured,
+          selectedBoutiqueId: config.selectedBoutiqueId,
+          selectedBoutiqueName: config.selectedBoutiqueName
+        });
         setIsConfigured(config.isConfigured);
         logger.info('RootLayout', '配置加载完成', { isConfigured: config.isConfigured });
       } catch (error) {
+        console.error('RootLayout: 配置加载失败', error);
         logger.error('RootLayout', '配置加载失败', error);
         // 如果配置加载失败，默认为未配置状态
         setIsConfigured(false);
@@ -96,6 +102,7 @@ export default function RootLayout() {
 
   // 配置检查逻辑：如果未配置，先显示配置页
   if (!isConfigured) {
+    console.log('RootLayout: 应用未配置，显示配置页面', { isConfigured, configLoaded });
     logger.info('RootLayout', '应用未配置，显示配置页面');
     // 直接导入并渲染配置组件
     const ConfigScreen = require('../screens/ConfigScreen').default;

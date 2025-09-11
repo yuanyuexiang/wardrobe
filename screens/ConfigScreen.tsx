@@ -11,16 +11,74 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Platform,
+  ActivityIndicator,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { logger } from '../utils/logger';
 import { configManager, AppConfig, DEFAULT_CONFIG } from '../utils/configManager';
+import { ApolloClient, createHttpLink, InMemoryCache, gql } from '@apollo/client';
+import { setContext } from '@apollo/client/link/context';
+import { GetCurrentUserData } from '../types/systemApi';
+
+interface Boutique {
+  id: string;
+  name?: string | null;
+  address?: string | null;
+  city?: string | null;
+  code?: string | null;
+  category?: string | null;
+  contact?: string | null;
+  expire_date?: any | null;
+  main_image?: string | null;
+  images?: any | null;
+  status?: string | null;
+  stars?: number | null;
+  sort?: number | null;
+  date_created?: any | null;
+  date_updated?: any | null;
+}
+
+// GraphQL 查询
+const GET_CURRENT_USER = gql`
+  query GetCurrentUser {
+    users_me {
+      id
+      first_name
+      last_name
+      email
+      status
+      role {
+        id
+        name
+      }
+      last_access
+    }
+  }
+`;
+
+const GET_MY_BOUTIQUES = gql`
+  query GetMyBoutiques($userId: ID!) {
+    boutiques(filter: { user_created: { id: { _eq: $userId } } }) {
+      id
+      name
+      main_image
+      address
+      city
+      category
+      status
+    }
+  }
+`;
 
 export default function ConfigScreen() {
   const [config, setConfig] = useState<AppConfig>(DEFAULT_CONFIG);
   const [loading, setLoading] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [currentStep, setCurrentStep] = useState(1);
+  const [boutiques, setBoutiques] = useState<Boutique[]>([]);
+  const [selectedBoutique, setSelectedBoutique] = useState<Boutique | null>(null);
+  const [isReconfiguring, setIsReconfiguring] = useState(false);
 
   // 加载保存的配置
   useEffect(() => {
@@ -32,7 +90,21 @@ export default function ConfigScreen() {
       await configManager.loadConfig();
       const currentConfig = configManager.getConfig();
       setConfig(currentConfig);
-      logger.info('ConfigScreen', '配置加载成功', currentConfig);
+      
+      // 判断是否为重新配置：
+      // 1. 如果配置已完成 且 是通过路由访问(/config)，则为重新配置
+      // 2. 如果配置未完成，则为初次配置
+      const isRouteAccess = typeof window !== 'undefined' && 
+        (window.location.pathname.includes('/config') || window.location.hash.includes('/config'));
+      const isReconfig = currentConfig.isConfigured && isRouteAccess;
+      
+      setIsReconfiguring(isReconfig);
+      
+      logger.info('ConfigScreen', '配置加载成功', { 
+        isConfigured: currentConfig.isConfigured,
+        isRouteAccess,
+        isReconfiguring: isReconfig
+      });
     } catch (error) {
       logger.error('ConfigScreen', '加载配置失败', error);
     } finally {
@@ -40,42 +112,180 @@ export default function ConfigScreen() {
     }
   };
 
-  const saveConfig = async () => {
+  // 创建临时Apollo客户端用于获取店铺信息
+  const createTempApolloClient = (apiBaseUrl: string, authToken: string, isSystemAPI: boolean = false) => {
+    const isDev = process.env.NODE_ENV === 'development';
+    const isWebEnvironment = typeof window !== 'undefined';
+    const currentHost = isWebEnvironment ? window.location?.hostname : '';
+    const isLocalhost = currentHost === 'localhost' || currentHost === '127.0.0.1';
+
+    let apiUri: string;
+    if (isWebEnvironment && isDev && isLocalhost) {
+      apiUri = `http://localhost:3001/api/graphql${isSystemAPI ? '/system' : ''}`;
+    } else {
+      apiUri = `${apiBaseUrl}/graphql${isSystemAPI ? '/system' : ''}`;
+    }
+
+    logger.info('ConfigScreen', 'Apollo客户端配置', {
+      apiUri,
+      isSystemAPI,
+      isDev,
+      isLocalhost,
+      currentHost
+    });
+
+    const httpLink = createHttpLink({
+      uri: apiUri,
+      fetchOptions: { mode: 'cors' },
+    });
+
+    const authLink = setContext((_: any, context: any) => ({
+      headers: {
+        ...context.headers,
+        Authorization: `Bearer ${authToken}`,
+        'Content-Type': 'application/json',
+      },
+    }));
+
+    return new ApolloClient({
+      link: authLink.concat(httpLink),
+      cache: new InMemoryCache(),
+    });
+  };
+
+  // 获取用户的店铺列表
+  const fetchUserBoutiques = async () => {
     try {
       setLoading(true);
       
-      // 验证必填字段
-      if (!config.authToken.trim()) {
-        Alert.alert('错误', '请输入认证Token');
-        return;
-      }
+      // 调试信息：记录请求配置
+      logger.info('ConfigScreen', '开始获取用户和店铺信息', {
+        apiBaseUrl: config.apiBaseUrl,
+        authToken: config.authToken ? `${config.authToken.substring(0, 10)}...` : 'empty'
+      });
       
-      if (!config.apiBaseUrl.trim()) {
-        Alert.alert('错误', '请输入API地址');
-        return;
+      // 首先使用系统API获取当前用户信息
+      const systemClient = createTempApolloClient(config.apiBaseUrl, config.authToken, true);
+      
+      logger.info('ConfigScreen', '尝试获取用户信息...');
+      const { data: userData } = await systemClient.query<GetCurrentUserData>({
+        query: GET_CURRENT_USER,
+        fetchPolicy: 'network-only',
+      });
+
+      if (!userData.users_me) {
+        throw new Error('无法获取用户信息，请检查Token是否正确');
       }
 
-      // 保存配置
-      const configToSave = { ...config, isConfigured: true };
+      const userId = userData.users_me.id;
+      setConfig(prev => ({ ...prev, userId }));
+      
+      logger.info('ConfigScreen', '用户信息获取成功', { userId, email: userData.users_me.email });
+
+      // 然后使用主API获取该用户的店铺
+      const mainClient = createTempApolloClient(config.apiBaseUrl, config.authToken, false);
+      
+      logger.info('ConfigScreen', '尝试获取店铺信息...', { userId });
+      const { data: boutiqueData } = await mainClient.query({
+        query: GET_MY_BOUTIQUES,
+        variables: { userId },
+        fetchPolicy: 'network-only',
+      });
+
+      if (boutiqueData.boutiques) {
+        const userBoutiques = boutiqueData.boutiques;
+        setBoutiques(userBoutiques);
+        
+        logger.info('ConfigScreen', '获取店铺成功', { 
+          userId, 
+          boutiquesCount: userBoutiques.length,
+          userName: `${userData.users_me.first_name || ''} ${userData.users_me.last_name || ''}`.trim()
+        });
+
+        if (userBoutiques.length === 0) {
+          Alert.alert('提示', '未找到您的店铺，请联系管理员');
+          return;
+        }
+        
+        setCurrentStep(2);
+      }
+    } catch (error: any) {
+      logger.error('ConfigScreen', '获取店铺失败', error);
+      
+      // 提供更详细的错误信息
+      let errorMessage = '无法获取店铺信息';
+      if (error.networkError) {
+        errorMessage += ': 网络连接失败，请检查网络或代理设置';
+      } else if (error.graphQLErrors && error.graphQLErrors.length > 0) {
+        errorMessage += ': ' + error.graphQLErrors[0].message;
+      } else if (error.message) {
+        errorMessage += ': ' + error.message;
+      }
+      
+      Alert.alert('获取失败', errorMessage);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleStep1Next = async () => {
+    // 验证必填字段
+    if (!config.authToken.trim()) {
+      Alert.alert('错误', '请输入认证Token');
+      return;
+    }
+    
+    if (!config.apiBaseUrl.trim()) {
+      Alert.alert('错误', '请输入API地址');
+      return;
+    }
+
+    // 获取店铺信息
+    await fetchUserBoutiques();
+  };
+
+  const handleStep2Complete = async () => {
+    console.log('=== 完成配置按钮被点击 ===');
+    
+    if (!selectedBoutique) {
+      Alert.alert('错误', '请选择一个店铺');
+      return;
+    }
+
+    try {
+      setLoading(true);
+      console.log('开始保存配置...');
+      
+      // 保存完整配置
+      const configToSave: AppConfig = {
+        ...config,
+        selectedBoutiqueId: selectedBoutique.id,
+        selectedBoutiqueName: selectedBoutique.name || '未命名店铺',
+        isConfigured: true,
+      };
+      
       await configManager.saveConfig(configToSave);
+      console.log('配置保存成功，准备跳转...');
       
-      logger.info('ConfigScreen', '配置保存成功', configToSave);
+      // 验证配置是否真的保存成功
+      const savedConfig = configManager.getConfig();
+      console.log('验证保存的配置:', savedConfig);
       
-      Alert.alert(
-        '配置保存成功',
-        '配置已保存，即将进入应用',
-        [
-          {
-            text: '确定',
-            onPress: () => {
-              router.replace('/(tabs)');
-            },
-          },
-        ]
-      );
+      // 等待一下确保配置已经保存
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      // 直接导航而不是刷新页面
+      if (typeof window !== 'undefined') {
+        console.log('Web环境：导航到首页');
+        window.location.href = '/';
+      } else {
+        console.log('移动端环境：使用路由跳转');
+        router.replace('/(tabs)');
+      }
+      
     } catch (error) {
-      logger.error('ConfigScreen', '保存配置失败', error);
-      Alert.alert('错误', '保存配置失败，请重试');
+      console.error('配置失败:', error);
+      Alert.alert('保存失败', '保存配置时出现错误');
     } finally {
       setLoading(false);
     }
@@ -198,112 +408,218 @@ export default function ConfigScreen() {
     );
   }
 
+  const renderStep1 = () => (
+    <>
+      {/* 头部 */}
+      <View style={styles.header}>
+        {isReconfiguring && (
+          <TouchableOpacity 
+            style={styles.backButton}
+            onPress={() => {
+              logger.info('ConfigScreen', '返回主页');
+              try {
+                router.back();
+              } catch (error) {
+                logger.error('ConfigScreen', '返回失败，尝试导航到首页', error);
+                router.replace('/');
+              }
+            }}
+          >
+            <Ionicons name="arrow-back" size={24} color="#007AFF" />
+          </TouchableOpacity>
+        )}
+        <Ionicons name="settings-outline" size={60} color="#007AFF" />
+        <Text style={styles.title}>
+          {isReconfiguring ? '重新配置' : '应用配置'}
+        </Text>
+        <Text style={styles.subtitle}>步骤 1/2: 配置API连接</Text>
+      </View>
+
+      {/* 步骤指示器 */}
+      <View style={styles.stepIndicator}>
+        <View style={[styles.stepItem, styles.activeStep]}>
+          <Text style={[styles.stepText, styles.activeStepText]}>1</Text>
+        </View>
+        <View style={styles.stepLine} />
+        <View style={styles.stepItem}>
+          <Text style={styles.stepText}>2</Text>
+        </View>
+      </View>
+
+      {/* 配置表单 */}
+      <View style={styles.form}>
+        <View style={styles.inputGroup}>
+          <Text style={styles.label}>
+            <Ionicons name="key-outline" size={16} color="#666" /> 认证Token *
+          </Text>
+          <TextInput
+            style={styles.input}
+            placeholder="请输入认证Token"
+            value={config.authToken}
+            onChangeText={(text) => setConfig(prev => ({ ...prev, authToken: text }))}
+            secureTextEntry={true}
+            autoCapitalize="none"
+          />
+        </View>
+
+        <View style={styles.inputGroup}>
+          <Text style={styles.label}>
+            <Ionicons name="globe-outline" size={16} color="#666" /> API地址 *
+          </Text>
+          <TextInput
+            style={styles.input}
+            placeholder="https://forge.matrix-net.tech"
+            value={config.apiBaseUrl}
+            onChangeText={(text) => setConfig(prev => ({ ...prev, apiBaseUrl: text }))}
+            autoCapitalize="none"
+            keyboardType="url"
+          />
+        </View>
+      </View>
+
+      {/* 操作按钮 */}
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity
+          style={[styles.button, styles.devButton]}
+          onPress={useDevConfig}
+          disabled={loading}
+        >
+          <Ionicons name="code-outline" size={20} color="#fff" />
+          <Text style={styles.buttonText}>使用开发配置</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[styles.button, styles.primaryButton]}
+          onPress={handleStep1Next}
+          disabled={loading}
+        >
+          {loading ? (
+            <ActivityIndicator size="small" color="#fff" />
+          ) : (
+            <Ionicons name="arrow-forward-outline" size={20} color="#fff" />
+          )}
+          <Text style={styles.buttonText}>下一步</Text>
+        </TouchableOpacity>
+      </View>
+    </>
+  );
+
+  const renderStep2 = () => (
+    <>
+      {/* 头部 */}
+      <View style={styles.header}>
+        {isReconfiguring && (
+          <TouchableOpacity 
+            style={styles.backButton}
+            onPress={() => {
+              logger.info('ConfigScreen', '返回主页');
+              try {
+                router.back();
+              } catch (error) {
+                logger.error('ConfigScreen', '返回失败，尝试导航到首页', error);
+                router.replace('/');
+              }
+            }}
+          >
+            <Ionicons name="arrow-back" size={24} color="#007AFF" />
+          </TouchableOpacity>
+        )}
+        <Ionicons name="storefront-outline" size={60} color="#007AFF" />
+        <Text style={styles.title}>选择店铺</Text>
+        <Text style={styles.subtitle}>步骤 2/2: 选择您的店铺</Text>
+      </View>
+
+      {/* 步骤指示器 */}
+      <View style={styles.stepIndicator}>
+        <View style={[styles.stepItem, styles.completedStep]}>
+          <Ionicons name="checkmark" size={16} color="#fff" />
+        </View>
+        <View style={[styles.stepLine, styles.completedStepLine]} />
+        <View style={[styles.stepItem, styles.activeStep]}>
+          <Text style={[styles.stepText, styles.activeStepText]}>2</Text>
+        </View>
+      </View>
+
+      {/* 店铺列表 */}
+      <View style={styles.form}>
+        <Text style={styles.sectionTitle}>请选择您的店铺：</Text>
+        {boutiques.length === 0 ? (
+          <View style={styles.emptyContainer}>
+            <Ionicons name="storefront-outline" size={48} color="#ccc" />
+            <Text style={styles.emptyText}>未找到店铺</Text>
+            <Text style={styles.emptySubtext}>请联系管理员检查您的权限</Text>
+          </View>
+        ) : (
+          boutiques.map((boutique) => (
+            <TouchableOpacity
+              key={boutique.id}
+              style={[
+                styles.boutiqueItem,
+                selectedBoutique?.id === boutique.id && styles.selectedBoutiqueItem
+              ]}
+              onPress={() => setSelectedBoutique(boutique)}
+            >
+              <View style={styles.boutiqueInfo}>
+                <Ionicons 
+                  name="storefront" 
+                  size={24} 
+                  color={selectedBoutique?.id === boutique.id ? '#007AFF' : '#666'} 
+                />
+                <Text style={[
+                  styles.boutiqueName,
+                  selectedBoutique?.id === boutique.id && styles.selectedBoutiqueName
+                ]}>
+                  {boutique.name || '未命名店铺'}
+                </Text>
+              </View>
+              {selectedBoutique?.id === boutique.id && (
+                <Ionicons name="checkmark-circle" size={24} color="#007AFF" />
+              )}
+            </TouchableOpacity>
+          ))
+        )}
+      </View>
+
+      {/* 操作按钮 */}
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity
+          style={[styles.button, styles.secondaryButton]}
+          onPress={() => setCurrentStep(1)}
+          disabled={loading}
+        >
+          <Ionicons name="arrow-back-outline" size={20} color="#007AFF" />
+          <Text style={[styles.buttonText, styles.secondaryButtonText]}>上一步</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[styles.button, styles.primaryButton]}
+          onPress={handleStep2Complete}
+          disabled={loading || !selectedBoutique}
+        >
+          {loading ? (
+            <ActivityIndicator size="small" color="#fff" />
+          ) : (
+            <Ionicons name="checkmark-circle-outline" size={20} color="#fff" />
+          )}
+          <Text style={styles.buttonText}>完成配置</Text>
+        </TouchableOpacity>
+      </View>
+    </>
+  );
+
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#fff" />
-      
-      <KeyboardAvoidingView 
-        style={styles.container}
+      <StatusBar barStyle="dark-content" backgroundColor="#f8f9fa" />
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       >
-        <ScrollView 
+        <ScrollView
           style={styles.scrollView}
           contentContainerStyle={styles.scrollContent}
           keyboardShouldPersistTaps="handled"
         >
-          {/* 标题 */}
-          <View style={styles.header}>
-            <Ionicons name="settings-outline" size={48} color="#007AFF" />
-            <Text style={styles.title}>应用配置</Text>
-            <Text style={styles.subtitle}>请配置应用连接信息</Text>
-          </View>
-
-          {/* 配置表单 */}
-          <View style={styles.form}>
-            <View style={styles.inputGroup}>
-              <Text style={styles.label}>
-                <Ionicons name="key-outline" size={16} color="#666" /> 认证Token *
-              </Text>
-              <TextInput
-                style={styles.input}
-                placeholder="请输入认证Token"
-                value={config.authToken}
-                onChangeText={(text) => setConfig(prev => ({ ...prev, authToken: text }))}
-                secureTextEntry={true}
-                autoCapitalize="none"
-              />
-            </View>
-
-            <View style={styles.inputGroup}>
-              <Text style={styles.label}>
-                <Ionicons name="globe-outline" size={16} color="#666" /> API地址 *
-              </Text>
-              <TextInput
-                style={styles.input}
-                placeholder="https://forge.matrix-net.tech"
-                value={config.apiBaseUrl}
-                onChangeText={(text) => setConfig(prev => ({ ...prev, apiBaseUrl: text }))}
-                autoCapitalize="none"
-                keyboardType="url"
-              />
-            </View>
-          </View>
-
-          {/* 操作按钮 */}
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity
-              style={[styles.button, styles.devButton]}
-              onPress={useDevConfig}
-              disabled={loading}
-            >
-              <Ionicons name="code-outline" size={20} color="#fff" />
-              <Text style={styles.buttonText}>使用开发配置</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={[styles.button, styles.primaryButton]}
-              onPress={saveConfig}
-              disabled={loading}
-            >
-              <Ionicons name="checkmark-circle-outline" size={20} color="#fff" />
-              <Text style={styles.buttonText}>保存配置</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={[styles.button, styles.secondaryButton]}
-              onPress={testConnection}
-              disabled={loading}
-            >
-              <Ionicons name="pulse-outline" size={20} color="#007AFF" />
-              <Text style={[styles.buttonText, styles.secondaryButtonText]}>测试连接</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={[styles.button, styles.warningButton]}
-              onPress={resetConfig}
-              disabled={loading}
-            >
-              <Ionicons name="refresh-outline" size={20} color="#FF9500" />
-              <Text style={[styles.buttonText, styles.warningButtonText]}>重置配置</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={[styles.button, styles.skipButton]}
-              onPress={skipConfig}
-              disabled={loading}
-            >
-              <Ionicons name="arrow-forward-outline" size={20} color="#666" />
-              <Text style={[styles.buttonText, styles.skipButtonText]}>跳过配置</Text>
-            </TouchableOpacity>
-          </View>
-
-          {/* 帮助信息 */}
-          <View style={styles.helpContainer}>
-            <Text style={styles.helpTitle}>配置说明:</Text>
-            <Text style={styles.helpText}>• 认证Token: 用于API访问授权</Text>
-            <Text style={styles.helpText}>• API地址: 后端服务器地址</Text>
-            <Text style={styles.helpText}>• 开发环境会自动使用代理避免CORS问题</Text>
-          </View>
+          {currentStep === 1 ? renderStep1() : renderStep2()}
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -334,6 +650,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 40,
     paddingHorizontal: 20,
+    position: 'relative',
+  },
+  backButton: {
+    position: 'absolute',
+    top: 40,
+    left: 20,
+    padding: 8,
+    zIndex: 1,
   },
   title: {
     fontSize: 28,
@@ -439,5 +763,99 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#666',
     marginBottom: 6,
+  },
+  
+  // 步骤指示器样式
+  stepIndicator: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 40,
+    marginBottom: 30,
+  },
+  stepItem: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: '#E5E5EA',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  activeStep: {
+    backgroundColor: '#007AFF',
+  },
+  completedStep: {
+    backgroundColor: '#34C759',
+  },
+  stepText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#666',
+  },
+  activeStepText: {
+    color: '#fff',
+  },
+  stepLine: {
+    flex: 1,
+    height: 2,
+    backgroundColor: '#E5E5EA',
+    marginHorizontal: 16,
+  },
+  completedStepLine: {
+    backgroundColor: '#34C759',
+  },
+  
+  // 店铺选择样式
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#333',
+    marginBottom: 20,
+  },
+  boutiqueItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: 16,
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    marginBottom: 12,
+    borderWidth: 1,
+    borderColor: '#E5E5EA',
+  },
+  selectedBoutiqueItem: {
+    borderColor: '#007AFF',
+    backgroundColor: '#F0F8FF',
+  },
+  boutiqueInfo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+  },
+  boutiqueName: {
+    fontSize: 16,
+    color: '#333',
+    marginLeft: 12,
+    fontWeight: '500',
+  },
+  selectedBoutiqueName: {
+    color: '#007AFF',
+    fontWeight: '600',
+  },
+  emptyContainer: {
+    alignItems: 'center',
+    paddingVertical: 40,
+  },
+  emptyText: {
+    fontSize: 18,
+    color: '#999',
+    marginTop: 16,
+    fontWeight: '600',
+  },
+  emptySubtext: {
+    fontSize: 14,
+    color: '#666',
+    marginTop: 8,
+    textAlign: 'center',
   },
 });

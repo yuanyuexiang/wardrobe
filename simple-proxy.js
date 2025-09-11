@@ -72,8 +72,20 @@ const server = http.createServer((req, res) => {
 
   proxyReq.on('error', (err) => {
     console.log(`❌ 代理错误: ${err.message}`);
-    res.writeHead(500, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify({ error: '代理服务器错误', details: err.message }));
+    if (!res.headersSent) {
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: '代理服务器错误', details: err.message }));
+    }
+  });
+
+  // 添加请求超时处理
+  proxyReq.setTimeout(30000, () => {
+    console.log(`⏰ 请求超时: ${req.url}`);
+    proxyReq.destroy();
+    if (!res.headersSent) {
+      res.writeHead(408, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: '请求超时' }));
+    }
   });
 
   // 转发请求体

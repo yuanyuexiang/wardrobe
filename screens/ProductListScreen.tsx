@@ -1,6 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import React, { useRef, useState, useEffect } from 'react';
 import { ActivityIndicator, FlatList, RefreshControl, SafeAreaView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { router } from 'expo-router';
 import CarouselModal from '../components/CarouselModal';
 import ProductCard from '../components/ProductCard';
 import Tab from '../components/Tab';
@@ -10,6 +11,7 @@ import { logger } from '../utils/logger';
 import { LAYOUT, getCardWidth, getBottomPadding } from '../utils/constants';
 import { imageCache } from '../utils/imageCache';
 import { getDirectusThumbnailUrl } from '../utils/directus';
+import { configManager } from '../utils/configManager';
 
 // 使用统一的布局常量
 const cardWidth = getCardWidth();
@@ -22,6 +24,7 @@ const ProductListScreen: React.FC = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [carouselVisible, setCarouselVisible] = useState(false);
   const flatListRef = useRef<FlatList>(null);
+  const [currentConfig, setCurrentConfig] = useState(configManager.getConfig());
   
   // 使用新的用户状态管理hook
   const { user: currentUser, loading: userLoading, error: userError } = useCurrentUser();
@@ -35,18 +38,34 @@ const ProductListScreen: React.FC = () => {
       logger.error('ProductListScreen', `用户信息加载失败: ${userError}`);
     }
   }, [currentUser, userError]);
+
+  // 监听配置变化
+  useEffect(() => {
+    const unsubscribe = configManager.addListener((config) => {
+      setCurrentConfig(config);
+      logger.info('ProductListScreen', '配置更新', { 
+        selectedBoutiqueId: config.selectedBoutiqueId,
+        selectedBoutiqueName: config.selectedBoutiqueName 
+      });
+    });
+    
+    return unsubscribe;
+  }, []);
   
   // 使用真实的API
   const { data: categoryData, loading: categoryLoading, error: categoryError } = useGetCategoriesQuery();
   
-  // 获取店铺信息 - 使用主端点和真实的用户ID
+  // 获取店铺信息 - 根据配置中的selectedBoutiqueId获取特定店铺
   const { data: boutiqueData, loading: boutiqueLoading, error: boutiqueError } = useGetMyBoutiqueQuery({
     variables: { userId: currentUser?.id || "" },
     skip: !currentUser?.id,
     // 不指定client，使用默认的主GraphQL端点
   });
   
-  const boutique = boutiqueData?.boutiques?.[0]; // 取用户的第一个店铺
+  // 根据配置选择特定店铺，而不是默认取第一个
+  const boutique = currentConfig.selectedBoutiqueId 
+    ? boutiqueData?.boutiques?.find(b => b.id === currentConfig.selectedBoutiqueId)
+    : boutiqueData?.boutiques?.[0]; // 如果没有配置，则取第一个作为后备
   
   // 调试信息：记录店铺信息
   useEffect(() => {
@@ -220,7 +239,11 @@ const ProductListScreen: React.FC = () => {
           </View>
           <View style={styles.brandInfo}>
             <Text style={styles.brandName}>
-              {boutiqueLoading ? '加载中...' : (boutique?.name || '朱老板服装旗舰店')}
+              {boutiqueLoading ? '加载中...' : (
+                currentConfig.selectedBoutiqueName || 
+                boutique?.name || 
+                '朱老板服装旗舰店'
+              )}
             </Text>
             <View style={styles.ratingSection}>
               <View style={styles.stars}>
@@ -244,9 +267,12 @@ const ProductListScreen: React.FC = () => {
           <TouchableOpacity 
             style={[styles.couponButton, { backgroundColor: '#666' }]}
             onPress={() => {
-              // 临时添加配置测试
-              // 这里可以跳转到配置页面或显示配置信息
-              logger.info('ProductListScreen', '配置按钮被点击');
+              logger.info('ProductListScreen', '配置按钮被点击，跳转到配置页面');
+              try {
+                router.push('/config');
+              } catch (error) {
+                logger.error('ProductListScreen', '跳转配置页面失败', error);
+              }
             }}
           >
             <Ionicons name="settings" size={16} color="#fff" />

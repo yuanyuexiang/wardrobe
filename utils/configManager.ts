@@ -4,12 +4,18 @@ import { logger } from './logger';
 export interface AppConfig {
   authToken: string;
   apiBaseUrl: string;
+  selectedBoutiqueId: string;
+  selectedBoutiqueName: string;
+  userId: string;
   isConfigured: boolean;
 }
 
 export const DEFAULT_CONFIG: AppConfig = {
   authToken: 'CCZnVSanwCwzS6edoC8-2ImbzJiZLeAD',
   apiBaseUrl: 'https://forge.matrix-net.tech',
+  selectedBoutiqueId: '',
+  selectedBoutiqueName: '',
+  userId: '',
   isConfigured: false,
 };
 
