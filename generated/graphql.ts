@@ -3811,7 +3811,7 @@ export type GetProductsQueryVariables = Exact<{
 }>;
 
 
-export type GetProductsQuery = { __typename?: 'Query', products: Array<{ __typename?: 'products', id: string, name: string, subtitle?: string | null, description?: string | null, price: number, market_price?: number | null, stock?: number | null, main_image?: string | null, images?: any | null, video_url?: string | null, is_on_sale?: boolean | null, status?: string | null, total_sales_volume?: number | null, rating_avg?: number | null, total_reviews?: number | null, brand?: string | null, barcode?: string | null, seller_id?: number | null, created_at?: any | null, updated_at?: any | null, date_created?: any | null, date_updated?: any | null, category_id?: { __typename?: 'categories', id: string, name: string, description?: string | null } | null, boutique_id?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null, city?: string | null, category?: string | null } | null, boutique?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null, city?: string | null, category?: string | null } | null, user_created?: { __typename?: 'directus_users', id: string, first_name?: string | null, last_name?: string | null, email?: string | null } | null }> };
+export type GetProductsQuery = { __typename?: 'Query', products: Array<{ __typename?: 'products', id: string, name: string, subtitle?: string | null, description?: string | null, price: number, market_price?: number | null, stock?: number | null, main_image?: string | null, images?: any | null, video_url?: string | null, is_on_sale?: boolean | null, status?: string | null, total_sales_volume?: number | null, rating_avg?: number | null, total_reviews?: number | null, brand?: string | null, barcode?: string | null, seller_id?: number | null, created_at?: any | null, updated_at?: any | null, date_created?: any | null, date_updated?: any | null, category_id?: { __typename?: 'categories', id: string, name: string, description?: string | null } | null, boutique_id?: { __typename?: 'boutiques', id: string, name?: string | null } | null, user_created?: { __typename?: 'directus_users', id: string, first_name?: string | null, last_name?: string | null, email?: string | null } | null }> };
 
 export type GetProductsByUserQueryVariables = Exact<{
   userId: Scalars['ID']['input'];
@@ -3852,7 +3852,7 @@ export type GetProductDetailQueryVariables = Exact<{
 }>;
 
 
-export type GetProductDetailQuery = { __typename?: 'Query', products_by_id?: { __typename?: 'products', id: string, name: string, subtitle?: string | null, description?: string | null, price: number, market_price?: number | null, stock?: number | null, main_image?: string | null, images?: any | null, video_url?: string | null, is_on_sale?: boolean | null, status?: string | null, total_sales_volume?: number | null, rating_avg?: number | null, total_reviews?: number | null, brand?: string | null, barcode?: string | null, seller_id?: number | null, created_at?: any | null, updated_at?: any | null, date_created?: any | null, date_updated?: any | null, category_id?: { __typename?: 'categories', id: string, name: string, description?: string | null, boutique?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null, city?: string | null, category?: string | null } | null } | null, boutique_id?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null, city?: string | null, code?: string | null, category?: string | null, contact?: string | null, expire_date?: any | null, stars?: number | null, main_image?: string | null, images?: any | null } | null, boutique?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null, city?: string | null, code?: string | null, category?: string | null, contact?: string | null, expire_date?: any | null, stars?: number | null, main_image?: string | null, images?: any | null } | null, user_created?: { __typename?: 'directus_users', id: string, first_name?: string | null, last_name?: string | null, email?: string | null } | null } | null };
+export type GetProductDetailQuery = { __typename?: 'Query', products_by_id?: { __typename?: 'products', id: string, name: string, subtitle?: string | null, description?: string | null, price: number, market_price?: number | null, stock?: number | null, main_image?: string | null, images?: any | null, video_url?: string | null, is_on_sale?: boolean | null, status?: string | null, total_sales_volume?: number | null, rating_avg?: number | null, total_reviews?: number | null, brand?: string | null, barcode?: string | null, seller_id?: number | null, created_at?: any | null, updated_at?: any | null, date_created?: any | null, date_updated?: any | null, boutique_id?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null, city?: string | null, code?: string | null, category?: string | null, contact?: string | null, expire_date?: any | null, stars?: number | null, main_image?: string | null, images?: any | null } | null, user_created?: { __typename?: 'directus_users', id: string, first_name?: string | null, last_name?: string | null, email?: string | null } | null } | null };
 
 export type GetMyProductsQueryVariables = Exact<{
   userId: Scalars['ID']['input'];
@@ -3874,7 +3874,7 @@ export type GetOnSaleProductsQueryVariables = Exact<{
 }>;
 
 
-export type GetOnSaleProductsQuery = { __typename?: 'Query', products: Array<{ __typename?: 'products', id: string, name: string, subtitle?: string | null, description?: string | null, price: number, market_price?: number | null, stock?: number | null, main_image?: string | null, images?: any | null, video_url?: string | null, is_on_sale?: boolean | null, total_sales_volume?: number | null, rating_avg?: number | null, total_reviews?: number | null, brand?: string | null, created_at?: any | null, updated_at?: any | null, category_id?: { __typename?: 'categories', id: string, name: string } | null, boutique?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null, city?: string | null } | null }> };
+export type GetOnSaleProductsQuery = { __typename?: 'Query', products: Array<{ __typename?: 'products', id: string, name: string, subtitle?: string | null, description?: string | null, price: number, market_price?: number | null, stock?: number | null, main_image?: string | null, images?: any | null, video_url?: string | null, is_on_sale?: boolean | null, total_sales_volume?: number | null, rating_avg?: number | null, total_reviews?: number | null, brand?: string | null, created_at?: any | null, updated_at?: any | null, category_id?: { __typename?: 'categories', id: string, name: string } | null, boutique_id?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null, city?: string | null } | null }> };
 
 export type SearchProductsQueryVariables = Exact<{
   search: Scalars['String']['input'];
@@ -3886,7 +3886,7 @@ export type SearchProductsQueryVariables = Exact<{
 }>;
 
 
-export type SearchProductsQuery = { __typename?: 'Query', products: Array<{ __typename?: 'products', id: string, name: string, subtitle?: string | null, description?: string | null, price: number, market_price?: number | null, stock?: number | null, main_image?: string | null, images?: any | null, is_on_sale?: boolean | null, rating_avg?: number | null, total_reviews?: number | null, brand?: string | null, created_at?: any | null, category_id?: { __typename?: 'categories', id: string, name: string } | null, boutique?: { __typename?: 'boutiques', id: string, name?: string | null } | null }> };
+export type SearchProductsQuery = { __typename?: 'Query', products: Array<{ __typename?: 'products', id: string, name: string, subtitle?: string | null, description?: string | null, price: number, market_price?: number | null, stock?: number | null, main_image?: string | null, images?: any | null, is_on_sale?: boolean | null, rating_avg?: number | null, total_reviews?: number | null, brand?: string | null, created_at?: any | null, category_id?: { __typename?: 'categories', id: string, name: string } | null, boutique_id?: { __typename?: 'boutiques', id: string, name?: string | null } | null }> };
 
 
 export const GetBoutiquesDocument = gql`
@@ -4678,16 +4678,6 @@ export const GetProductsDocument = gql`
     boutique_id {
       id
       name
-      address
-      city
-      category
-    }
-    boutique {
-      id
-      name
-      address
-      city
-      category
     }
     user_created {
       id
@@ -5024,32 +5014,7 @@ export const GetProductDetailDocument = gql`
     brand
     barcode
     seller_id
-    category_id {
-      id
-      name
-      description
-      boutique {
-        id
-        name
-        address
-        city
-        category
-      }
-    }
     boutique_id {
-      id
-      name
-      address
-      city
-      code
-      category
-      contact
-      expire_date
-      stars
-      main_image
-      images
-    }
-    boutique {
       id
       name
       address
@@ -5207,7 +5172,7 @@ export const GetOnSaleProductsDocument = gql`
       id
       name
     }
-    boutique {
+    boutique_id {
       id
       name
       address
@@ -5280,7 +5245,7 @@ export const SearchProductsDocument = gql`
       id
       name
     }
-    boutique {
+    boutique_id {
       id
       name
     }

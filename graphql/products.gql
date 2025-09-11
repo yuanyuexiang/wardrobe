@@ -35,7 +35,7 @@ query GetCategoryDetail($id: ID!) {
   }
 }
 
-# Products 查询
+# Products 查询 - 简化版本，移除可能无权限的字段
 query GetProducts($filter: products_filter, $limit: Int, $offset: Int, $sort: [String]) {
   products(
     filter: $filter
@@ -69,16 +69,6 @@ query GetProducts($filter: products_filter, $limit: Int, $offset: Int, $sort: [S
     boutique_id {
       id
       name
-      address
-      city
-      category
-    }
-    boutique {
-      id
-      name
-      address
-      city
-      category
     }
     user_created {
       id
@@ -282,32 +272,7 @@ query GetProductDetail($id: ID!) {
     brand
     barcode
     seller_id
-    category_id {
-      id
-      name
-      description
-      boutique {
-        id
-        name
-        address
-        city
-        category
-      }
-    }
     boutique_id {
-      id
-      name
-      address
-      city
-      code
-      category
-      contact
-      expire_date
-      stars
-      main_image
-      images
-    }
-    boutique {
       id
       name
       address
@@ -403,7 +368,7 @@ query GetOnSaleProducts($boutiqueId: GraphQLStringOrFloat, $categoryId: GraphQLS
       id
       name
     }
-    boutique {
+    boutique_id {
       id
       name
       address
@@ -449,7 +414,7 @@ query SearchProducts($search: String!, $boutiqueId: GraphQLStringOrFloat, $categ
       id
       name
     }
-    boutique {
+    boutique_id {
       id
       name
     }

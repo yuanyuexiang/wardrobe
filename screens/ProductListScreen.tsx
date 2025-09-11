@@ -46,7 +46,18 @@ const ProductListScreen: React.FC = () => {
     // 不指定client，使用默认的主GraphQL端点
   });
   
-  const boutique = boutiqueData?.boutiques?.[0]; // 假设一个用户只有一个商家
+  const boutique = boutiqueData?.boutiques?.[0]; // 取用户的第一个店铺
+  
+  // 调试信息：记录店铺信息
+  useEffect(() => {
+    if (boutiqueData?.boutiques && boutiqueData.boutiques.length > 0) {
+      logger.info('ProductListScreen', '用户店铺信息:', {
+        totalBoutiques: boutiqueData.boutiques.length,
+        currentBoutique: boutique ? { id: boutique.id, name: boutique.name } : null,
+        allBoutiques: boutiqueData.boutiques.map(b => ({ id: b.id, name: b.name }))
+      });
+    }
+  }, [boutiqueData, boutique]);
   
   // 构建查询变量
   const buildQueryVariables = () => {
@@ -54,6 +65,20 @@ const ProductListScreen: React.FC = () => {
     
     // 构建动态 filter 对象
     const filters: any[] = [];
+    
+    // 添加用户过滤器 - 只显示当前用户创建的商品
+    if (currentUser?.id) {
+      filters.push({
+        user_created: { id: { _eq: currentUser.id } }
+      });
+    }
+
+    // 添加店铺过滤器 - 只显示当前店铺的商品
+    if (boutique?.id) {
+      filters.push({
+        boutique_id: { id: { _eq: boutique.id } }
+      });
+    }
     
     // 处理推荐商品分类（获取最新上架的5个商品）
     if (selectedCategory === "recommended") {
@@ -94,16 +119,48 @@ const ProductListScreen: React.FC = () => {
     return variables;
   };
   
+  // 打印查询变量，便于调试
+  const queryVariables = buildQueryVariables();
+  useEffect(() => {
+    logger.info('ProductListScreen', '商品查询变量:', JSON.stringify(queryVariables, null, 2));
+  }, [selectedCategory, search, boutique, currentUser]);
+
   const { data: productData, loading: productLoading, error: productError, refetch } = useGetProductsQuery({
-    variables: buildQueryVariables(),
+    variables: queryVariables,
   });
 
-  // 获取所有商品用于轮播
+  // 获取所有商品用于轮播 - 同样应用用户和店铺过滤器
   const { data: allProductsData } = useGetProductsQuery({
     variables: {
+      filter: (() => {
+        const carouselFilters: any[] = [];
+        
+        // 添加用户过滤器
+        if (currentUser?.id) {
+          carouselFilters.push({
+            user_created: { id: { _eq: currentUser.id } }
+          });
+        }
+        
+        // 添加店铺过滤器
+        if (boutique?.id) {
+          carouselFilters.push({
+            boutique_id: { id: { _eq: boutique.id } }
+          });
+        }
+        
+        if (carouselFilters.length === 0) {
+          return undefined;
+        } else if (carouselFilters.length === 1) {
+          return carouselFilters[0];
+        } else {
+          return { _and: carouselFilters };
+        }
+      })(),
       limit: 1000, // 获取所有商品
       sort: ["-created_at"] // 按创建时间排序
     },
+    skip: !currentUser?.id || !boutique?.id, // 只有在有用户和店铺信息时才查询
   });
 
   // 调试信息 - 使用结构化日志
