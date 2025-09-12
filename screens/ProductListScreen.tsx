@@ -53,7 +53,16 @@ const ProductListScreen: React.FC = () => {
   }, []);
   
   // 使用真实的API
-  const { data: categoryData, loading: categoryLoading, error: categoryError } = useGetCategoriesQuery();
+  const { data: categoryData, loading: categoryLoading, error: categoryError } = useGetCategoriesQuery({
+    variables: {
+      userId: currentUser?.id || "",
+      boutiqueId: currentConfig.selectedBoutiqueId || "",
+      filter: {},
+      limit: 100,
+      offset: 0
+    },
+    skip: !currentUser?.id || !currentConfig.selectedBoutiqueId,
+  });
   
   // 获取店铺信息 - 根据配置中的selectedBoutiqueId获取特定店铺
   const { data: boutiqueData, loading: boutiqueLoading, error: boutiqueError } = useGetMyBoutiqueQuery({

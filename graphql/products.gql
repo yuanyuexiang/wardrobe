@@ -1,7 +1,11 @@
 # Categories 查询
-query GetCategories($filter: categories_filter, $limit: Int, $offset: Int, $sort: [String]) {
+query GetCategories($userId: ID!, $boutiqueId: GraphQLStringOrFloat!, $filter: categories_filter, $limit: Int, $offset: Int, $sort: [String]) {
   categories(
-    filter: $filter
+    filter: { 
+      user_created: { id: { _eq: $userId } }
+      boutique_id: { id: { _eq: $boutiqueId } }
+      _and: [$filter]
+    }
     limit: $limit
     offset: $offset
     sort: $sort
@@ -18,7 +22,7 @@ query GetCategories($filter: categories_filter, $limit: Int, $offset: Int, $sort
   }
 }
 
-query GetCategoryDetail($id: ID!) {
+query GetCategoryDetail($userId: ID!, $boutiqueId: GraphQLStringOrFloat!, $id: ID!) {
   categories_by_id(id: $id) {
     id
     name

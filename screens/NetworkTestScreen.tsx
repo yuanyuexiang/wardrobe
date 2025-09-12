@@ -1,16 +1,40 @@
 import React, { useState } from 'react';
 import { Button, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
-import { useGetCategoriesQuery, useGetProductsQuery } from '../generated/graphql';
+import { useGetCategoriesQuery, useGetProductsByUserAndBoutiqueQuery } from '../generated/graphql';
 import { API_CONFIG } from '../config/api';
 import { configManager } from '../utils/configManager';
+import { useCurrentUser } from '../hooks/useCurrentUser';
 
 const NetworkTestScreen = () => {
   const [testResults, setTestResults] = useState<string[]>([]);
   const router = useRouter();
   
-  const { data: categoriesData, loading: categoriesLoading, error: categoriesError } = useGetCategoriesQuery();
-  const { data: productsData, loading: productsLoading, error: productsError } = useGetProductsQuery();
+  // 获取当前用户和配置
+  const { user: currentUser } = useCurrentUser();
+  const currentConfig = configManager.getConfig();
+  
+  const { data: categoriesData, loading: categoriesLoading, error: categoriesError } = useGetCategoriesQuery({
+    variables: {
+      userId: currentUser?.id || "",
+      boutiqueId: currentConfig.selectedBoutiqueId || "",
+      filter: {},
+      limit: 100,
+      offset: 0
+    },
+    skip: !currentUser?.id || !currentConfig.selectedBoutiqueId,
+  });
+  
+  const { data: productsData, loading: productsLoading, error: productsError } = useGetProductsByUserAndBoutiqueQuery({
+    variables: {
+      userId: currentUser?.id || "",
+      boutiqueId: currentConfig.selectedBoutiqueId || "",
+      filter: {},
+      limit: 100,
+      offset: 0
+    },
+    skip: !currentUser?.id || !currentConfig.selectedBoutiqueId,
+  });
 
   const addTestResult = (result: string) => {
     setTestResults(prev => [...prev, `${new Date().toLocaleTimeString()}: ${result}`]);

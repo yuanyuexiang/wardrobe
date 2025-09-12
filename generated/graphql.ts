@@ -3726,6 +3726,8 @@ export type GetBoutiqueCategoriesQueryVariables = Exact<{
 export type GetBoutiqueCategoriesQuery = { __typename?: 'Query', categories: Array<{ __typename?: 'categories', id: string, name: string, description?: string | null, date_created?: any | null, date_updated?: any | null }> };
 
 export type GetAllCategoriesQueryVariables = Exact<{
+  userId: Scalars['ID']['input'];
+  boutiqueId: Scalars['GraphQLStringOrFloat']['input'];
   filter?: InputMaybe<Categories_Filter>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -3736,6 +3738,8 @@ export type GetAllCategoriesQueryVariables = Exact<{
 export type GetAllCategoriesQuery = { __typename?: 'Query', categories: Array<{ __typename?: 'categories', id: string, name: string, description?: string | null, date_created?: any | null, date_updated?: any | null, boutique?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null, city?: string | null, category?: string | null } | null }> };
 
 export type GetCategoryByIdQueryVariables = Exact<{
+  userId: Scalars['ID']['input'];
+  boutiqueId: Scalars['GraphQLStringOrFloat']['input'];
   id: Scalars['ID']['input'];
 }>;
 
@@ -3743,6 +3747,8 @@ export type GetCategoryByIdQueryVariables = Exact<{
 export type GetCategoryByIdQuery = { __typename?: 'Query', categories_by_id?: { __typename?: 'categories', id: string, name: string, description?: string | null, date_created?: any | null, date_updated?: any | null, boutique?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null, city?: string | null, code?: string | null, category?: string | null, contact?: string | null, expire_date?: any | null, stars?: number | null, main_image?: string | null, images?: any | null } | null } | null };
 
 export type GetProductsByCategoryQueryVariables = Exact<{
+  userId: Scalars['ID']['input'];
+  boutiqueId: Scalars['GraphQLStringOrFloat']['input'];
   categoryId: Scalars['GraphQLStringOrFloat']['input'];
   filter?: InputMaybe<Products_Filter>;
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -3754,6 +3760,8 @@ export type GetProductsByCategoryQueryVariables = Exact<{
 export type GetProductsByCategoryQuery = { __typename?: 'Query', products: Array<{ __typename?: 'products', id: string, name: string, subtitle?: string | null, description?: string | null, price: number, market_price?: number | null, stock?: number | null, main_image?: string | null, images?: any | null, video_url?: string | null, is_on_sale?: boolean | null, status?: string | null, total_sales_volume?: number | null, rating_avg?: number | null, total_reviews?: number | null, brand?: string | null, created_at?: any | null, updated_at?: any | null, boutique?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null, city?: string | null, category?: string | null } | null }> };
 
 export type GetCategoriesAggregatedQueryVariables = Exact<{
+  userId: Scalars['ID']['input'];
+  boutiqueId: Scalars['GraphQLStringOrFloat']['input'];
   filter?: InputMaybe<Categories_Filter>;
   groupBy?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>> | InputMaybe<Scalars['String']['input']>>;
 }>;
@@ -3787,6 +3795,8 @@ export type UpsertCustomerMutationVariables = Exact<{
 export type UpsertCustomerMutation = { __typename?: 'Mutation', create_customers_item?: { __typename?: 'customers', id: string, open_id: string, nick_name?: string | null, avatar?: string | null, type?: string | null, sex?: number | null, status?: string | null, date_created?: any | null } | null };
 
 export type GetCategoriesQueryVariables = Exact<{
+  userId: Scalars['ID']['input'];
+  boutiqueId: Scalars['GraphQLStringOrFloat']['input'];
   filter?: InputMaybe<Categories_Filter>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -3797,6 +3807,8 @@ export type GetCategoriesQueryVariables = Exact<{
 export type GetCategoriesQuery = { __typename?: 'Query', categories: Array<{ __typename?: 'categories', id: string, name: string, description?: string | null, date_created?: any | null, date_updated?: any | null, boutique_id?: { __typename?: 'boutiques', id: string, name?: string | null } | null }> };
 
 export type GetCategoryDetailQueryVariables = Exact<{
+  userId: Scalars['ID']['input'];
+  boutiqueId: Scalars['GraphQLStringOrFloat']['input'];
   id: Scalars['ID']['input'];
 }>;
 
@@ -4179,8 +4191,13 @@ export type GetBoutiqueCategoriesLazyQueryHookResult = ReturnType<typeof useGetB
 export type GetBoutiqueCategoriesSuspenseQueryHookResult = ReturnType<typeof useGetBoutiqueCategoriesSuspenseQuery>;
 export type GetBoutiqueCategoriesQueryResult = ApolloReactCommon.QueryResult<GetBoutiqueCategoriesQuery, GetBoutiqueCategoriesQueryVariables>;
 export const GetAllCategoriesDocument = gql`
-    query GetAllCategories($filter: categories_filter, $limit: Int, $offset: Int, $sort: [String]) {
-  categories(filter: $filter, limit: $limit, offset: $offset, sort: $sort) {
+    query GetAllCategories($userId: ID!, $boutiqueId: GraphQLStringOrFloat!, $filter: categories_filter, $limit: Int, $offset: Int, $sort: [String]) {
+  categories(
+    filter: {user_created: {id: {_eq: $userId}}, boutique_id: {id: {_eq: $boutiqueId}}, _and: [$filter]}
+    limit: $limit
+    offset: $offset
+    sort: $sort
+  ) {
     id
     name
     description
@@ -4209,6 +4226,8 @@ export const GetAllCategoriesDocument = gql`
  * @example
  * const { data, loading, error } = useGetAllCategoriesQuery({
  *   variables: {
+ *      userId: // value for 'userId'
+ *      boutiqueId: // value for 'boutiqueId'
  *      filter: // value for 'filter'
  *      limit: // value for 'limit'
  *      offset: // value for 'offset'
@@ -4216,7 +4235,7 @@ export const GetAllCategoriesDocument = gql`
  *   },
  * });
  */
-export function useGetAllCategoriesQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetAllCategoriesQuery, GetAllCategoriesQueryVariables>) {
+export function useGetAllCategoriesQuery(baseOptions: ApolloReactHooks.QueryHookOptions<GetAllCategoriesQuery, GetAllCategoriesQueryVariables> & ({ variables: GetAllCategoriesQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
         const options = {...defaultOptions, ...baseOptions}
         return ApolloReactHooks.useQuery<GetAllCategoriesQuery, GetAllCategoriesQueryVariables>(GetAllCategoriesDocument, options);
       }
@@ -4233,7 +4252,7 @@ export type GetAllCategoriesLazyQueryHookResult = ReturnType<typeof useGetAllCat
 export type GetAllCategoriesSuspenseQueryHookResult = ReturnType<typeof useGetAllCategoriesSuspenseQuery>;
 export type GetAllCategoriesQueryResult = ApolloReactCommon.QueryResult<GetAllCategoriesQuery, GetAllCategoriesQueryVariables>;
 export const GetCategoryByIdDocument = gql`
-    query GetCategoryById($id: ID!) {
+    query GetCategoryById($userId: ID!, $boutiqueId: GraphQLStringOrFloat!, $id: ID!) {
   categories_by_id(id: $id) {
     id
     name
@@ -4269,6 +4288,8 @@ export const GetCategoryByIdDocument = gql`
  * @example
  * const { data, loading, error } = useGetCategoryByIdQuery({
  *   variables: {
+ *      userId: // value for 'userId'
+ *      boutiqueId: // value for 'boutiqueId'
  *      id: // value for 'id'
  *   },
  * });
@@ -4290,9 +4311,9 @@ export type GetCategoryByIdLazyQueryHookResult = ReturnType<typeof useGetCategor
 export type GetCategoryByIdSuspenseQueryHookResult = ReturnType<typeof useGetCategoryByIdSuspenseQuery>;
 export type GetCategoryByIdQueryResult = ApolloReactCommon.QueryResult<GetCategoryByIdQuery, GetCategoryByIdQueryVariables>;
 export const GetProductsByCategoryDocument = gql`
-    query GetProductsByCategory($categoryId: GraphQLStringOrFloat!, $filter: products_filter, $limit: Int, $offset: Int, $sort: [String]) {
+    query GetProductsByCategory($userId: ID!, $boutiqueId: GraphQLStringOrFloat!, $categoryId: GraphQLStringOrFloat!, $filter: products_filter, $limit: Int, $offset: Int, $sort: [String]) {
   products(
-    filter: {category_id: {id: {_eq: $categoryId}}}
+    filter: {user_created: {id: {_eq: $userId}}, boutique_id: {id: {_eq: $boutiqueId}}, category_id: {id: {_eq: $categoryId}}, _and: [$filter]}
     limit: $limit
     offset: $offset
     sort: $sort
@@ -4338,6 +4359,8 @@ export const GetProductsByCategoryDocument = gql`
  * @example
  * const { data, loading, error } = useGetProductsByCategoryQuery({
  *   variables: {
+ *      userId: // value for 'userId'
+ *      boutiqueId: // value for 'boutiqueId'
  *      categoryId: // value for 'categoryId'
  *      filter: // value for 'filter'
  *      limit: // value for 'limit'
@@ -4363,8 +4386,11 @@ export type GetProductsByCategoryLazyQueryHookResult = ReturnType<typeof useGetP
 export type GetProductsByCategorySuspenseQueryHookResult = ReturnType<typeof useGetProductsByCategorySuspenseQuery>;
 export type GetProductsByCategoryQueryResult = ApolloReactCommon.QueryResult<GetProductsByCategoryQuery, GetProductsByCategoryQueryVariables>;
 export const GetCategoriesAggregatedDocument = gql`
-    query GetCategoriesAggregated($filter: categories_filter, $groupBy: [String]) {
-  categories_aggregated(filter: $filter, groupBy: $groupBy) {
+    query GetCategoriesAggregated($userId: ID!, $boutiqueId: GraphQLStringOrFloat!, $filter: categories_filter, $groupBy: [String]) {
+  categories_aggregated(
+    filter: {user_created: {id: {_eq: $userId}}, boutique_id: {id: {_eq: $boutiqueId}}, _and: [$filter]}
+    groupBy: $groupBy
+  ) {
     group
     countAll
   }
@@ -4383,12 +4409,14 @@ export const GetCategoriesAggregatedDocument = gql`
  * @example
  * const { data, loading, error } = useGetCategoriesAggregatedQuery({
  *   variables: {
+ *      userId: // value for 'userId'
+ *      boutiqueId: // value for 'boutiqueId'
  *      filter: // value for 'filter'
  *      groupBy: // value for 'groupBy'
  *   },
  * });
  */
-export function useGetCategoriesAggregatedQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetCategoriesAggregatedQuery, GetCategoriesAggregatedQueryVariables>) {
+export function useGetCategoriesAggregatedQuery(baseOptions: ApolloReactHooks.QueryHookOptions<GetCategoriesAggregatedQuery, GetCategoriesAggregatedQueryVariables> & ({ variables: GetCategoriesAggregatedQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
         const options = {...defaultOptions, ...baseOptions}
         return ApolloReactHooks.useQuery<GetCategoriesAggregatedQuery, GetCategoriesAggregatedQueryVariables>(GetCategoriesAggregatedDocument, options);
       }
@@ -4548,8 +4576,13 @@ export type UpsertCustomerMutationHookResult = ReturnType<typeof useUpsertCustom
 export type UpsertCustomerMutationResult = ApolloReactCommon.MutationResult<UpsertCustomerMutation>;
 export type UpsertCustomerMutationOptions = ApolloReactCommon.BaseMutationOptions<UpsertCustomerMutation, UpsertCustomerMutationVariables>;
 export const GetCategoriesDocument = gql`
-    query GetCategories($filter: categories_filter, $limit: Int, $offset: Int, $sort: [String]) {
-  categories(filter: $filter, limit: $limit, offset: $offset, sort: $sort) {
+    query GetCategories($userId: ID!, $boutiqueId: GraphQLStringOrFloat!, $filter: categories_filter, $limit: Int, $offset: Int, $sort: [String]) {
+  categories(
+    filter: {user_created: {id: {_eq: $userId}}, boutique_id: {id: {_eq: $boutiqueId}}, _and: [$filter]}
+    limit: $limit
+    offset: $offset
+    sort: $sort
+  ) {
     id
     name
     description
@@ -4575,6 +4608,8 @@ export const GetCategoriesDocument = gql`
  * @example
  * const { data, loading, error } = useGetCategoriesQuery({
  *   variables: {
+ *      userId: // value for 'userId'
+ *      boutiqueId: // value for 'boutiqueId'
  *      filter: // value for 'filter'
  *      limit: // value for 'limit'
  *      offset: // value for 'offset'
@@ -4582,7 +4617,7 @@ export const GetCategoriesDocument = gql`
  *   },
  * });
  */
-export function useGetCategoriesQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetCategoriesQuery, GetCategoriesQueryVariables>) {
+export function useGetCategoriesQuery(baseOptions: ApolloReactHooks.QueryHookOptions<GetCategoriesQuery, GetCategoriesQueryVariables> & ({ variables: GetCategoriesQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
         const options = {...defaultOptions, ...baseOptions}
         return ApolloReactHooks.useQuery<GetCategoriesQuery, GetCategoriesQueryVariables>(GetCategoriesDocument, options);
       }
@@ -4599,7 +4634,7 @@ export type GetCategoriesLazyQueryHookResult = ReturnType<typeof useGetCategorie
 export type GetCategoriesSuspenseQueryHookResult = ReturnType<typeof useGetCategoriesSuspenseQuery>;
 export type GetCategoriesQueryResult = ApolloReactCommon.QueryResult<GetCategoriesQuery, GetCategoriesQueryVariables>;
 export const GetCategoryDetailDocument = gql`
-    query GetCategoryDetail($id: ID!) {
+    query GetCategoryDetail($userId: ID!, $boutiqueId: GraphQLStringOrFloat!, $id: ID!) {
   categories_by_id(id: $id) {
     id
     name
@@ -4629,6 +4664,8 @@ export const GetCategoryDetailDocument = gql`
  * @example
  * const { data, loading, error } = useGetCategoryDetailQuery({
  *   variables: {
+ *      userId: // value for 'userId'
+ *      boutiqueId: // value for 'boutiqueId'
  *      id: // value for 'id'
  *   },
  * });

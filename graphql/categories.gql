@@ -1,8 +1,12 @@
 # Categories 分类相关查询
 
-query GetAllCategories($filter: categories_filter, $limit: Int, $offset: Int, $sort: [String]) {
+query GetAllCategories($userId: ID!, $boutiqueId: GraphQLStringOrFloat!, $filter: categories_filter, $limit: Int, $offset: Int, $sort: [String]) {
   categories(
-    filter: $filter
+    filter: { 
+      user_created: { id: { _eq: $userId } }
+      boutique_id: { id: { _eq: $boutiqueId } }
+      _and: [$filter]
+    }
     limit: $limit
     offset: $offset
     sort: $sort
@@ -22,7 +26,7 @@ query GetAllCategories($filter: categories_filter, $limit: Int, $offset: Int, $s
   }
 }
 
-query GetCategoryById($id: ID!) {
+query GetCategoryById($userId: ID!, $boutiqueId: GraphQLStringOrFloat!, $id: ID!) {
   categories_by_id(id: $id) {
     id
     name
@@ -46,10 +50,13 @@ query GetCategoryById($id: ID!) {
 }
 
 # 获取分类下的产品
-query GetProductsByCategory($categoryId: GraphQLStringOrFloat!, $filter: products_filter, $limit: Int, $offset: Int, $sort: [String]) {
+query GetProductsByCategory($userId: ID!, $boutiqueId: GraphQLStringOrFloat!, $categoryId: GraphQLStringOrFloat!, $filter: products_filter, $limit: Int, $offset: Int, $sort: [String]) {
   products(
     filter: { 
+      user_created: { id: { _eq: $userId } }
+      boutique_id: { id: { _eq: $boutiqueId } }
       category_id: { id: { _eq: $categoryId } }
+      _and: [$filter]
     }
     limit: $limit
     offset: $offset
@@ -84,9 +91,13 @@ query GetProductsByCategory($categoryId: GraphQLStringOrFloat!, $filter: product
 }
 
 # 聚合查询 - 获取分类统计信息
-query GetCategoriesAggregated($filter: categories_filter, $groupBy: [String]) {
+query GetCategoriesAggregated($userId: ID!, $boutiqueId: GraphQLStringOrFloat!, $filter: categories_filter, $groupBy: [String]) {
   categories_aggregated(
-    filter: $filter
+    filter: { 
+      user_created: { id: { _eq: $userId } }
+      boutique_id: { id: { _eq: $boutiqueId } }
+      _and: [$filter]
+    }
     groupBy: $groupBy
   ) {
     group
