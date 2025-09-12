@@ -452,13 +452,13 @@ const styles = StyleSheet.create({
   },
   productList: {
     flex: 1,
-    paddingVertical: 8, // 添加上下内边距
+    // 移除paddingVertical，这会在水平滚动中造成上下空白
   },
   productContainer: {
     paddingHorizontal: 16,
-    paddingBottom: BOTTOM_PADDING, // 使用动态计算的底部内边距
+    // 移除paddingBottom，在水平滚动中不需要
     alignItems: 'stretch', // 允许项目填充可用高度
-    minHeight: '100%', // 确保容器充满可用空间
+    // 移除minHeight，让flex自然处理
   },
   loadingContainer: {
     flex: 1,

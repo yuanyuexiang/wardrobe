@@ -1,20 +1,14 @@
 import { useRouter } from 'expo-router';
 import React from 'react';
-import { Dimensions, ImageBackground, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ImageBackground, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { GetProductsQuery } from '../generated/graphql';
 import { getDirectusThumbnailUrl } from '../utils/directus';
-import { getCardWidth, TAB_BAR_HEIGHT } from '../utils/constants';
 
 export type Product = GetProductsQuery['products'][0];
 
 interface ProductCardProps {
   product: Product;
 }
-
-// 使用统一的卡片宽度计算
-const cardWidth = getCardWidth();
-// 计算安全的卡片高度，确保不会被底部导航栏遮挡
-const cardHeight = cardWidth * 1.2; // 调整比例，从 /0.75 (1.33) 改为 *1.2
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const router = useRouter();
@@ -32,15 +26,9 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         <ImageBackground 
           source={{ uri: imageUrl }} 
           style={styles.backgroundImage} 
-          resizeMode="cover" // 恢复cover模式，但确保容器正确
+          resizeMode="cover"
         >
-          {/* 使用flex布局：上半部分空白，下半部分是文字区域 */}
           <View style={styles.cardContent}>
-            {/* 上半部分：空白区域让图片显示 */}
-            <View style={styles.imageArea}>
-            </View>
-            
-            {/* 下半部分：文字区域 */}
             <View style={styles.textArea}>
               <Text style={styles.name} numberOfLines={2}>
                 {product.name || '商品名称'}
@@ -58,18 +46,22 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         </ImageBackground>
       ) : (
         <View style={styles.placeholderCard}>
-          <Text style={styles.placeholderText}>暂无图片</Text>
-          <Text style={[styles.name, { color: '#333', textShadowColor: 'transparent' }]} numberOfLines={2}>
-            {product.name || '商品名称'}
-          </Text>
-          {product.subtitle && (
-            <Text style={[styles.desc, { color: '#666', textShadowColor: 'transparent' }]} numberOfLines={1}>
-              {product.subtitle}
+          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            <Text style={styles.placeholderText}>暂无图片</Text>
+          </View>
+          <View style={[styles.textArea, { backgroundColor: 'rgba(255, 255, 255, 0.9)' }]}>
+            <Text style={[styles.name, { color: '#333', textShadowColor: 'transparent' }]} numberOfLines={2}>
+              {product.name || '商品名称'}
             </Text>
-          )}
-          <Text style={[styles.price, { color: '#ff6b35', textShadowColor: 'transparent' }]}>
-            ￥{product.price !== undefined ? product.price : '价格'}
-          </Text>
+            {product.subtitle && (
+              <Text style={[styles.desc, { color: '#666', textShadowColor: 'transparent' }]} numberOfLines={1}>
+                {product.subtitle}
+              </Text>
+            )}
+            <Text style={[styles.price, { color: '#ff6b35', textShadowColor: 'transparent' }]}>
+              ￥{product.price !== undefined ? product.price : '价格'}
+            </Text>
+          </View>
         </View>
       )}
     </TouchableOpacity>
@@ -79,7 +71,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 const styles = StyleSheet.create({
   card: {
     borderRadius: 12,
-    marginBottom: 12,
+    marginHorizontal: 8,
     // iOS 阴影
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
@@ -91,82 +83,66 @@ const styles = StyleSheet.create({
     ...(typeof window !== 'undefined' && {
       boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)',
     }),
-    width: cardWidth, // 使用动态计算的宽度
-    height: cardHeight, // 使用安全的高度，确保不被导航栏遮挡
+    // 简单的flex布局，让卡片填充可用空间
+    flex: 1,
+    width: 280,
     overflow: 'hidden',
   },
   backgroundImage: {
-    width: '100%',
-    height: '100%',
-    position: 'absolute', // 确保图片覆盖整个卡片
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
+    flex: 1, // 充满整个容器
   },
   cardContent: {
     flex: 1,
-    flexDirection: 'column', // 垂直排列
-    position: 'relative', // 确保内容在图片之上
-    zIndex: 1,
+    justifyContent: 'flex-end', // 内容对齐到底部
   },
   imageArea: {
-    flex: 2, // 减少图片区域比例，从3改为2
-    justifyContent: 'center',
-    alignItems: 'center',
+    // 移除固定 flex，让图片自然显示
   },
   textArea: {
-    flex: 1, // 减少文字区域比例，从2改为1，更紧凑
-    backgroundColor: 'rgba(0, 0, 0, 0.75)', // 增加不透明度，从0.3改为0.75
-    padding: 12, // 减少内边距，从16改为12
-    justifyContent: 'flex-start', 
-    minHeight: 80, // 减少最小高度，从100改为80
+    backgroundColor: 'rgba(0, 0, 0, 0.75)',
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    justifyContent: 'flex-start',
+    // 移除最大高度限制，让文本区域自然适应内容
   },
   placeholderCard: {
-    width: '100%',
-    height: '100%',
+    flex: 1,
     backgroundColor: '#f0f0f0',
-    justifyContent: 'flex-end', // 改为底部对齐，与背景图片保持一致
+    justifyContent: 'space-between', // 改为space-between，让内容分布更均匀
     alignItems: 'stretch',
-    position: 'relative',
-    padding: 16,
+    padding: 12,
   },
   placeholderText: {
-    fontSize: 16, // 从14增加到16，与标题保持一致
+    fontSize: 16,
     color: '#999',
     textAlign: 'center',
-    marginBottom: 16,
-    position: 'absolute',
-    top: '40%',
-    left: 0,
-    right: 0,
   },
   name: {
-    fontSize: 16, // 减少字体大小，从20改为16，更紧凑
+    fontSize: 16,
     fontWeight: 'bold',
     color: '#ffffff',
-    lineHeight: 20, // 调整行高
-    marginBottom: 6, // 减少间距
+    lineHeight: 20,
+    marginBottom: 4, // 固定间距
     textShadowColor: 'rgba(0, 0, 0, 1)',
-    textShadowOffset: { width: 2, height: 2 },
-    textShadowRadius: 4,
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 3,
   },
   desc: {
-    fontSize: 13, // 减少字体大小，从16改为13
+    fontSize: 13,
     color: '#f5f5f5',
-    lineHeight: 16, // 调整行高
-    marginBottom: 6, // 减少间距，从10改为6
+    lineHeight: 16,
+    marginBottom: 4, // 固定间距
     textShadowColor: 'rgba(0, 0, 0, 1)',
-    textShadowOffset: { width: 2, height: 2 },
-    textShadowRadius: 4,
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 3,
   },
   price: {
-    fontSize: 18, // 减少字体大小，从24改为18，但保持醒目
+    fontSize: 18,
     color: '#FFD700',
     fontWeight: 'bold',
     textShadowColor: 'rgba(0, 0, 0, 1)',
-    textShadowOffset: { width: 2, height: 2 },
-    textShadowRadius: 4,
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 3,
   },
 });
 
