@@ -10,6 +10,7 @@ import {
     TouchableOpacity,
     TouchableWithoutFeedback,
     View,
+    StatusBar,
 } from 'react-native';
 import { getDirectusImageUrl } from '../utils/directus';
 import { logger } from '../utils/logger';
@@ -20,7 +21,7 @@ interface CarouselModalProps {
   products: any[];
 }
 
-const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
+const { width: screenWidth, height: screenHeight } = Dimensions.get('screen'); // 使用 'screen' 而不是 'window' 来获取包含状态栏的完整屏幕尺寸
 
 const CarouselModal: React.FC<CarouselModalProps> = ({ visible, onClose, products }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -131,6 +132,7 @@ const CarouselModal: React.FC<CarouselModalProps> = ({ visible, onClose, product
       statusBarTranslucent
       onRequestClose={onClose}
     >
+      <StatusBar hidden />
       <TouchableWithoutFeedback onPress={resetHideTimer}>
         <View style={styles.modalContainer}>
           {/* 关闭按钮 */}
@@ -190,9 +192,9 @@ const CarouselModal: React.FC<CarouselModalProps> = ({ visible, onClose, product
               <Text style={styles.overlayProductName} numberOfLines={2}>
                 {currentProduct.name || '商品名称'}
               </Text>
-              <Text style={styles.overlayProductPrice}>
+              {/* <Text style={styles.overlayProductPrice}>
                 ¥{currentProduct.price || '0.00'}
-              </Text>
+              </Text> */}
             </View>
           )}
         </View>
@@ -235,7 +237,7 @@ const styles = StyleSheet.create({
   },
   closeButton: {
     position: 'absolute',
-    top: 50,
+    top: 40, // 减少顶部距离，从50改为40，考虑状态栏隐藏
     right: 20,
     zIndex: 1000,
     width: 50,
@@ -247,7 +249,7 @@ const styles = StyleSheet.create({
   },
   counter: {
     position: 'absolute',
-    top: 50,
+    top: 40, // 减少顶部距离，从50改为40，考虑状态栏隐藏
     left: 20,
     zIndex: 1000,
     backgroundColor: 'rgba(0,0,0,0.5)',
@@ -308,7 +310,7 @@ const styles = StyleSheet.create({
   },
   overlayInfo: {
     position: 'absolute',
-    bottom: 120,
+    bottom: 80, // 减少底部距离，从120改为80
     left: 0,
     right: 0,
     backgroundColor: 'rgba(0,0,0,0.7)',
@@ -337,7 +339,7 @@ const styles = StyleSheet.create({
   indicators: {
     flexDirection: 'row',
     position: 'absolute',
-    bottom: 60,
+    bottom: 40, // 减少底部距离，从60改为40
     alignSelf: 'center',
   },
   indicator: {
@@ -348,7 +350,7 @@ const styles = StyleSheet.create({
   },
   autoPlayIndicator: {
     position: 'absolute',
-    bottom: 20,
+    bottom: 10, // 减少底部距离，从20改为10
     right: 20,
     flexDirection: 'row',
     alignItems: 'center',

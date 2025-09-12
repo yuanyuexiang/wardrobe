@@ -3,7 +3,7 @@ import React from 'react';
 import { Dimensions, ImageBackground, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { GetProductsQuery } from '../generated/graphql';
 import { getDirectusThumbnailUrl } from '../utils/directus';
-import { getCardWidth } from '../utils/constants';
+import { getCardWidth, TAB_BAR_HEIGHT } from '../utils/constants';
 
 export type Product = GetProductsQuery['products'][0];
 
@@ -13,6 +13,8 @@ interface ProductCardProps {
 
 // 使用统一的卡片宽度计算
 const cardWidth = getCardWidth();
+// 计算安全的卡片高度，确保不会被底部导航栏遮挡
+const cardHeight = cardWidth * 1.2; // 调整比例，从 /0.75 (1.33) 改为 *1.2
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const router = useRouter();
@@ -90,7 +92,7 @@ const styles = StyleSheet.create({
       boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)',
     }),
     width: cardWidth, // 使用动态计算的宽度
-    height: cardWidth / 0.75, // 明确设置高度，确保4:3比例
+    height: cardHeight, // 使用安全的高度，确保不被导航栏遮挡
     overflow: 'hidden',
   },
   backgroundImage: {
@@ -109,16 +111,16 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   imageArea: {
-    flex: 3, // 增加到3，给图片更多空间
+    flex: 2, // 减少图片区域比例，从3改为2
     justifyContent: 'center',
     alignItems: 'center',
   },
   textArea: {
-    flex: 2, // 增加到2，给文字更多空间
-    backgroundColor: 'rgba(0, 0, 0, 0.3)', // 增加不透明度
-    padding: 16,
-    justifyContent: 'flex-start', // 改为从顶部开始排列
-    minHeight: 100, // 添加最小高度确保可见
+    flex: 1, // 减少文字区域比例，从2改为1，更紧凑
+    backgroundColor: 'rgba(0, 0, 0, 0.75)', // 增加不透明度，从0.3改为0.75
+    padding: 12, // 减少内边距，从16改为12
+    justifyContent: 'flex-start', 
+    minHeight: 80, // 减少最小高度，从100改为80
   },
   placeholderCard: {
     width: '100%',
@@ -140,31 +142,31 @@ const styles = StyleSheet.create({
     right: 0,
   },
   name: {
-    fontSize: 20, // 增加到20px，确保移动端可见
+    fontSize: 16, // 减少字体大小，从20改为16，更紧凑
     fontWeight: 'bold',
     color: '#ffffff',
-    lineHeight: 24,
-    marginBottom: 8,
+    lineHeight: 20, // 调整行高
+    marginBottom: 6, // 减少间距
     textShadowColor: 'rgba(0, 0, 0, 1)',
-    textShadowOffset: { width: 2, height: 2 }, // 增强阴影
-    textShadowRadius: 4, // 增强阴影
+    textShadowOffset: { width: 2, height: 2 },
+    textShadowRadius: 4,
   },
   desc: {
-    fontSize: 16, // 增加到16px，确保移动端可见
-    color: '#f5f5f5', // 更亮的颜色
-    lineHeight: 20,
-    marginBottom: 10,
+    fontSize: 13, // 减少字体大小，从16改为13
+    color: '#f5f5f5',
+    lineHeight: 16, // 调整行高
+    marginBottom: 6, // 减少间距，从10改为6
     textShadowColor: 'rgba(0, 0, 0, 1)',
-    textShadowOffset: { width: 2, height: 2 }, // 增强阴影
-    textShadowRadius: 4, // 增强阴影
+    textShadowOffset: { width: 2, height: 2 },
+    textShadowRadius: 4,
   },
   price: {
-    fontSize: 24, // 增加到24px，确保价格醒目
-    color: '#FFD700', // 金色价格
+    fontSize: 18, // 减少字体大小，从24改为18，但保持醒目
+    color: '#FFD700',
     fontWeight: 'bold',
     textShadowColor: 'rgba(0, 0, 0, 1)',
-    textShadowOffset: { width: 2, height: 2 }, // 增强阴影
-    textShadowRadius: 4, // 增强阴影
+    textShadowOffset: { width: 2, height: 2 },
+    textShadowRadius: 4,
   },
 });
 
