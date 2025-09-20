@@ -20,6 +20,8 @@ import { configManager, AppConfig, DEFAULT_CONFIG } from '../utils/configManager
 import { ApolloClient, createHttpLink, InMemoryCache, gql } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 import { GetCurrentUserData } from '../types/systemApi';
+import DeviceInfo, { DeviceInfoData } from '../components/DeviceInfo';
+import { useTerminals } from '../hooks/useTerminals';
 
 interface Boutique {
   id: string;
@@ -79,6 +81,16 @@ export default function ConfigScreen() {
   const [boutiques, setBoutiques] = useState<Boutique[]>([]);
   const [selectedBoutique, setSelectedBoutique] = useState<Boutique | null>(null);
   const [isReconfiguring, setIsReconfiguring] = useState(false);
+  const [deviceInfo, setDeviceInfo] = useState<DeviceInfoData>({});
+  
+  // 使用terminals hook
+  const { terminals, currentTerminal, syncDeviceInfo } = useTerminals(config.userId);
+
+  // 处理设备信息就绪
+  const handleDeviceInfoReady = (info: DeviceInfoData) => {
+    setDeviceInfo(info);
+    logger.info('ConfigScreen', '设备信息就绪', JSON.stringify(info));
+  };
 
   // 加载保存的配置
   useEffect(() => {
@@ -265,7 +277,18 @@ export default function ConfigScreen() {
       };
       
       await configManager.saveConfig(configToSave);
-      console.log('配置保存成功，准备跳转...');
+      console.log('配置保存成功，开始同步设备信息...');
+      
+      // 同步设备信息到服务器
+      if (Object.keys(deviceInfo).length > 0 && config.userId) {
+        try {
+          await syncDeviceInfo(deviceInfo, config.userId);
+          console.log('设备信息同步成功');
+        } catch (deviceError) {
+          console.warn('设备信息同步失败，但不影响主流程:', deviceError);
+          // 设备信息同步失败不阻止配置完成
+        }
+      }
       
       // 验证配置是否真的保存成功
       const savedConfig = configManager.getConfig();
@@ -585,6 +608,41 @@ export default function ConfigScreen() {
         )}
       </View>
 
+      {/* 设备信息 */}
+      <View style={styles.form}>
+        <DeviceInfo 
+          onDeviceInfoReady={handleDeviceInfoReady} 
+          showDetails={true} 
+        />
+        
+        {/* 显示已注册的终端设备 */}
+        {terminals && terminals.length > 0 && (
+          <View style={styles.terminalsSection}>
+            <Text style={styles.sectionTitle}>已注册的设备 ({terminals.length})</Text>
+            {terminals.slice(0, 3).map((terminal, index) => (
+              <View key={terminal.id || index} style={styles.terminalItem}>
+                <View style={styles.terminalInfo}>
+                  <Text style={styles.terminalName}>
+                    {terminal.deviceName || `${terminal.brand || ''} ${terminal.modelName || ''}`.trim() || '未知设备'}
+                  </Text>
+                  <Text style={styles.terminalDetails}>
+                    {terminal.osName} {terminal.osVersion} • {terminal.deviceType}
+                  </Text>
+                </View>
+                {terminal.id === currentTerminal?.id && (
+                  <View style={styles.currentDeviceIndicator}>
+                    <Text style={styles.currentDeviceText}>当前</Text>
+                  </View>
+                )}
+              </View>
+            ))}
+            {terminals.length > 3 && (
+              <Text style={styles.moreDevicesText}>还有 {terminals.length - 3} 个设备...</Text>
+            )}
+          </View>
+        )}
+      </View>
+
       {/* 操作按钮 */}
       <View style={styles.buttonContainer}>
         <TouchableOpacity
@@ -862,5 +920,55 @@ const styles = StyleSheet.create({
     color: '#666',
     marginTop: 8,
     textAlign: 'center',
+  },
+
+  // 设备信息样式
+  terminalsSection: {
+    marginTop: 20,
+    paddingTop: 20,
+    borderTopWidth: 1,
+    borderTopColor: '#E5E5EA',
+  },
+  terminalItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: 12,
+    backgroundColor: '#fff',
+    borderRadius: 6,
+    marginBottom: 8,
+    borderWidth: 1,
+    borderColor: '#E5E5EA',
+  },
+  terminalInfo: {
+    flex: 1,
+  },
+  terminalName: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: '#333',
+    marginBottom: 2,
+  },
+  terminalDetails: {
+    fontSize: 12,
+    color: '#666',
+  },
+  currentDeviceIndicator: {
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    backgroundColor: '#34C759',
+    borderRadius: 4,
+  },
+  currentDeviceText: {
+    fontSize: 10,
+    fontWeight: '600',
+    color: '#fff',
+  },
+  moreDevicesText: {
+    fontSize: 12,
+    color: '#666',
+    textAlign: 'center',
+    fontStyle: 'italic',
+    marginTop: 8,
   },
 });

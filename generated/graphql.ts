@@ -42,24 +42,32 @@ export type Mutation = {
   create_categories_items: Array<Categories>;
   create_customers_item?: Maybe<Customers>;
   create_customers_items: Array<Customers>;
-  create_order_items_item?: Maybe<Order_Items>;
-  create_order_items_items: Array<Order_Items>;
   create_orders_item?: Maybe<Orders>;
   create_orders_items: Array<Orders>;
   create_products_item?: Maybe<Products>;
   create_products_items: Array<Products>;
+  create_terminals_item?: Maybe<Terminals>;
+  create_terminals_items: Array<Terminals>;
+  create_views_item?: Maybe<Views>;
+  create_views_items: Array<Views>;
+  create_visits_item?: Maybe<Visits>;
+  create_visits_items: Array<Visits>;
   delete_boutiques_item?: Maybe<Delete_One>;
   delete_boutiques_items?: Maybe<Delete_Many>;
   delete_categories_item?: Maybe<Delete_One>;
   delete_categories_items?: Maybe<Delete_Many>;
   delete_customers_item?: Maybe<Delete_One>;
   delete_customers_items?: Maybe<Delete_Many>;
-  delete_order_items_item?: Maybe<Delete_One>;
-  delete_order_items_items?: Maybe<Delete_Many>;
   delete_orders_item?: Maybe<Delete_One>;
   delete_orders_items?: Maybe<Delete_Many>;
   delete_products_item?: Maybe<Delete_One>;
   delete_products_items?: Maybe<Delete_Many>;
+  delete_terminals_item?: Maybe<Delete_One>;
+  delete_terminals_items?: Maybe<Delete_Many>;
+  delete_views_item?: Maybe<Delete_One>;
+  delete_views_items?: Maybe<Delete_Many>;
+  delete_visits_item?: Maybe<Delete_One>;
+  delete_visits_items?: Maybe<Delete_Many>;
   update_boutiques_batch: Array<Boutiques>;
   update_boutiques_item?: Maybe<Boutiques>;
   update_boutiques_items: Array<Boutiques>;
@@ -69,15 +77,21 @@ export type Mutation = {
   update_customers_batch: Array<Customers>;
   update_customers_item?: Maybe<Customers>;
   update_customers_items: Array<Customers>;
-  update_order_items_batch: Array<Order_Items>;
-  update_order_items_item?: Maybe<Order_Items>;
-  update_order_items_items: Array<Order_Items>;
   update_orders_batch: Array<Orders>;
   update_orders_item?: Maybe<Orders>;
   update_orders_items: Array<Orders>;
   update_products_batch: Array<Products>;
   update_products_item?: Maybe<Products>;
   update_products_items: Array<Products>;
+  update_terminals_batch: Array<Terminals>;
+  update_terminals_item?: Maybe<Terminals>;
+  update_terminals_items: Array<Terminals>;
+  update_views_batch: Array<Views>;
+  update_views_item?: Maybe<Views>;
+  update_views_items: Array<Views>;
+  update_visits_batch: Array<Visits>;
+  update_visits_item?: Maybe<Visits>;
+  update_visits_items: Array<Visits>;
 };
 
 
@@ -129,22 +143,6 @@ export type MutationCreate_Customers_ItemsArgs = {
 };
 
 
-export type MutationCreate_Order_Items_ItemArgs = {
-  data: Create_Order_Items_Input;
-};
-
-
-export type MutationCreate_Order_Items_ItemsArgs = {
-  data?: InputMaybe<Array<Create_Order_Items_Input>>;
-  filter?: InputMaybe<Order_Items_Filter>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  page?: InputMaybe<Scalars['Int']['input']>;
-  search?: InputMaybe<Scalars['String']['input']>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-};
-
-
 export type MutationCreate_Orders_ItemArgs = {
   data: Create_Orders_Input;
 };
@@ -169,6 +167,54 @@ export type MutationCreate_Products_ItemArgs = {
 export type MutationCreate_Products_ItemsArgs = {
   data?: InputMaybe<Array<Create_Products_Input>>;
   filter?: InputMaybe<Products_Filter>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+
+export type MutationCreate_Terminals_ItemArgs = {
+  data: Create_Terminals_Input;
+};
+
+
+export type MutationCreate_Terminals_ItemsArgs = {
+  data?: InputMaybe<Array<Create_Terminals_Input>>;
+  filter?: InputMaybe<Terminals_Filter>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+
+export type MutationCreate_Views_ItemArgs = {
+  data: Create_Views_Input;
+};
+
+
+export type MutationCreate_Views_ItemsArgs = {
+  data?: InputMaybe<Array<Create_Views_Input>>;
+  filter?: InputMaybe<Views_Filter>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+
+export type MutationCreate_Visits_ItemArgs = {
+  data: Create_Visits_Input;
+};
+
+
+export type MutationCreate_Visits_ItemsArgs = {
+  data?: InputMaybe<Array<Create_Visits_Input>>;
+  filter?: InputMaybe<Visits_Filter>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   page?: InputMaybe<Scalars['Int']['input']>;
@@ -207,16 +253,6 @@ export type MutationDelete_Customers_ItemsArgs = {
 };
 
 
-export type MutationDelete_Order_Items_ItemArgs = {
-  id: Scalars['ID']['input'];
-};
-
-
-export type MutationDelete_Order_Items_ItemsArgs = {
-  ids: Array<InputMaybe<Scalars['ID']['input']>>;
-};
-
-
 export type MutationDelete_Orders_ItemArgs = {
   id: Scalars['ID']['input'];
 };
@@ -233,6 +269,36 @@ export type MutationDelete_Products_ItemArgs = {
 
 
 export type MutationDelete_Products_ItemsArgs = {
+  ids: Array<InputMaybe<Scalars['ID']['input']>>;
+};
+
+
+export type MutationDelete_Terminals_ItemArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type MutationDelete_Terminals_ItemsArgs = {
+  ids: Array<InputMaybe<Scalars['ID']['input']>>;
+};
+
+
+export type MutationDelete_Views_ItemArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type MutationDelete_Views_ItemsArgs = {
+  ids: Array<InputMaybe<Scalars['ID']['input']>>;
+};
+
+
+export type MutationDelete_Visits_ItemArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type MutationDelete_Visits_ItemsArgs = {
   ids: Array<InputMaybe<Scalars['ID']['input']>>;
 };
 
@@ -324,35 +390,6 @@ export type MutationUpdate_Customers_ItemsArgs = {
 };
 
 
-export type MutationUpdate_Order_Items_BatchArgs = {
-  data?: InputMaybe<Array<Update_Order_Items_Input>>;
-  filter?: InputMaybe<Order_Items_Filter>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  page?: InputMaybe<Scalars['Int']['input']>;
-  search?: InputMaybe<Scalars['String']['input']>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-};
-
-
-export type MutationUpdate_Order_Items_ItemArgs = {
-  data: Update_Order_Items_Input;
-  id: Scalars['ID']['input'];
-};
-
-
-export type MutationUpdate_Order_Items_ItemsArgs = {
-  data: Update_Order_Items_Input;
-  filter?: InputMaybe<Order_Items_Filter>;
-  ids: Array<InputMaybe<Scalars['ID']['input']>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  page?: InputMaybe<Scalars['Int']['input']>;
-  search?: InputMaybe<Scalars['String']['input']>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-};
-
-
 export type MutationUpdate_Orders_BatchArgs = {
   data?: InputMaybe<Array<Update_Orders_Input>>;
   filter?: InputMaybe<Orders_Filter>;
@@ -410,6 +447,93 @@ export type MutationUpdate_Products_ItemsArgs = {
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
 };
 
+
+export type MutationUpdate_Terminals_BatchArgs = {
+  data?: InputMaybe<Array<Update_Terminals_Input>>;
+  filter?: InputMaybe<Terminals_Filter>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+
+export type MutationUpdate_Terminals_ItemArgs = {
+  data: Update_Terminals_Input;
+  id: Scalars['ID']['input'];
+};
+
+
+export type MutationUpdate_Terminals_ItemsArgs = {
+  data: Update_Terminals_Input;
+  filter?: InputMaybe<Terminals_Filter>;
+  ids: Array<InputMaybe<Scalars['ID']['input']>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+
+export type MutationUpdate_Views_BatchArgs = {
+  data?: InputMaybe<Array<Update_Views_Input>>;
+  filter?: InputMaybe<Views_Filter>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+
+export type MutationUpdate_Views_ItemArgs = {
+  data: Update_Views_Input;
+  id: Scalars['ID']['input'];
+};
+
+
+export type MutationUpdate_Views_ItemsArgs = {
+  data: Update_Views_Input;
+  filter?: InputMaybe<Views_Filter>;
+  ids: Array<InputMaybe<Scalars['ID']['input']>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+
+export type MutationUpdate_Visits_BatchArgs = {
+  data?: InputMaybe<Array<Update_Visits_Input>>;
+  filter?: InputMaybe<Visits_Filter>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+
+export type MutationUpdate_Visits_ItemArgs = {
+  data: Update_Visits_Input;
+  id: Scalars['ID']['input'];
+};
+
+
+export type MutationUpdate_Visits_ItemsArgs = {
+  data: Update_Visits_Input;
+  filter?: InputMaybe<Visits_Filter>;
+  ids: Array<InputMaybe<Scalars['ID']['input']>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
 export type Query = {
   __typename?: 'Query';
   boutiques: Array<Boutiques>;
@@ -424,10 +548,6 @@ export type Query = {
   customers_aggregated: Array<Customers_Aggregated>;
   customers_by_id?: Maybe<Customers>;
   customers_by_version?: Maybe<Version_Customers>;
-  order_items: Array<Order_Items>;
-  order_items_aggregated: Array<Order_Items_Aggregated>;
-  order_items_by_id?: Maybe<Order_Items>;
-  order_items_by_version?: Maybe<Version_Order_Items>;
   orders: Array<Orders>;
   orders_aggregated: Array<Orders_Aggregated>;
   orders_by_id?: Maybe<Orders>;
@@ -436,6 +556,18 @@ export type Query = {
   products_aggregated: Array<Products_Aggregated>;
   products_by_id?: Maybe<Products>;
   products_by_version?: Maybe<Version_Products>;
+  terminals: Array<Terminals>;
+  terminals_aggregated: Array<Terminals_Aggregated>;
+  terminals_by_id?: Maybe<Terminals>;
+  terminals_by_version?: Maybe<Version_Terminals>;
+  views: Array<Views>;
+  views_aggregated: Array<Views_Aggregated>;
+  views_by_id?: Maybe<Views>;
+  views_by_version?: Maybe<Version_Views>;
+  visits: Array<Visits>;
+  visits_aggregated: Array<Visits_Aggregated>;
+  visits_by_id?: Maybe<Visits>;
+  visits_by_version?: Maybe<Version_Visits>;
 };
 
 
@@ -538,39 +670,6 @@ export type QueryCustomers_By_VersionArgs = {
 };
 
 
-export type QueryOrder_ItemsArgs = {
-  filter?: InputMaybe<Order_Items_Filter>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  page?: InputMaybe<Scalars['Int']['input']>;
-  search?: InputMaybe<Scalars['String']['input']>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-};
-
-
-export type QueryOrder_Items_AggregatedArgs = {
-  filter?: InputMaybe<Order_Items_Filter>;
-  groupBy?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  page?: InputMaybe<Scalars['Int']['input']>;
-  search?: InputMaybe<Scalars['String']['input']>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-};
-
-
-export type QueryOrder_Items_By_IdArgs = {
-  id: Scalars['ID']['input'];
-  version?: InputMaybe<Scalars['String']['input']>;
-};
-
-
-export type QueryOrder_Items_By_VersionArgs = {
-  id: Scalars['ID']['input'];
-  version: Scalars['String']['input'];
-};
-
-
 export type QueryOrdersArgs = {
   filter?: InputMaybe<Orders_Filter>;
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -636,6 +735,105 @@ export type QueryProducts_By_VersionArgs = {
   version: Scalars['String']['input'];
 };
 
+
+export type QueryTerminalsArgs = {
+  filter?: InputMaybe<Terminals_Filter>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+
+export type QueryTerminals_AggregatedArgs = {
+  filter?: InputMaybe<Terminals_Filter>;
+  groupBy?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+
+export type QueryTerminals_By_IdArgs = {
+  id: Scalars['ID']['input'];
+  version?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type QueryTerminals_By_VersionArgs = {
+  id: Scalars['ID']['input'];
+  version: Scalars['String']['input'];
+};
+
+
+export type QueryViewsArgs = {
+  filter?: InputMaybe<Views_Filter>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+
+export type QueryViews_AggregatedArgs = {
+  filter?: InputMaybe<Views_Filter>;
+  groupBy?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+
+export type QueryViews_By_IdArgs = {
+  id: Scalars['ID']['input'];
+  version?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type QueryViews_By_VersionArgs = {
+  id: Scalars['ID']['input'];
+  version: Scalars['String']['input'];
+};
+
+
+export type QueryVisitsArgs = {
+  filter?: InputMaybe<Visits_Filter>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+
+export type QueryVisits_AggregatedArgs = {
+  filter?: InputMaybe<Visits_Filter>;
+  groupBy?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+
+export type QueryVisits_By_IdArgs = {
+  id: Scalars['ID']['input'];
+  version?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type QueryVisits_By_VersionArgs = {
+  id: Scalars['ID']['input'];
+  version: Scalars['String']['input'];
+};
+
 export type Subscription = {
   __typename?: 'Subscription';
   boutiques_mutated?: Maybe<Boutiques_Mutated>;
@@ -662,9 +860,11 @@ export type Subscription = {
   directus_users_mutated?: Maybe<Directus_Users_Mutated>;
   directus_versions_mutated?: Maybe<Directus_Versions_Mutated>;
   directus_webhooks_mutated?: Maybe<Directus_Webhooks_Mutated>;
-  order_items_mutated?: Maybe<Order_Items_Mutated>;
   orders_mutated?: Maybe<Orders_Mutated>;
   products_mutated?: Maybe<Products_Mutated>;
+  terminals_mutated?: Maybe<Terminals_Mutated>;
+  views_mutated?: Maybe<Views_Mutated>;
+  visits_mutated?: Maybe<Visits_Mutated>;
 };
 
 
@@ -788,17 +988,27 @@ export type SubscriptionDirectus_Webhooks_MutatedArgs = {
 };
 
 
-export type SubscriptionOrder_Items_MutatedArgs = {
-  event?: InputMaybe<EventEnum>;
-};
-
-
 export type SubscriptionOrders_MutatedArgs = {
   event?: InputMaybe<EventEnum>;
 };
 
 
 export type SubscriptionProducts_MutatedArgs = {
+  event?: InputMaybe<EventEnum>;
+};
+
+
+export type SubscriptionTerminals_MutatedArgs = {
+  event?: InputMaybe<EventEnum>;
+};
+
+
+export type SubscriptionViews_MutatedArgs = {
+  event?: InputMaybe<EventEnum>;
+};
+
+
+export type SubscriptionVisits_MutatedArgs = {
   event?: InputMaybe<EventEnum>;
 };
 
@@ -1097,6 +1307,7 @@ export type Create_Categories_Input = {
 
 export type Create_Customers_Input = {
   avatar?: InputMaybe<Scalars['String']['input']>;
+  boutique?: InputMaybe<Create_Boutiques_Input>;
   date_created?: InputMaybe<Scalars['Date']['input']>;
   date_updated?: InputMaybe<Scalars['Date']['input']>;
   id?: InputMaybe<Scalars['ID']['input']>;
@@ -1221,21 +1432,13 @@ export type Create_Directus_Users_Input = {
   token?: InputMaybe<Scalars['Hash']['input']>;
 };
 
-export type Create_Order_Items_Input = {
-  id?: InputMaybe<Scalars['ID']['input']>;
-  order_id?: InputMaybe<Create_Orders_Input>;
-  price?: InputMaybe<Scalars['Float']['input']>;
-  product_id?: InputMaybe<Create_Products_Input>;
-  quantity?: InputMaybe<Scalars['Int']['input']>;
-};
-
 export type Create_Orders_Input = {
   boutique?: InputMaybe<Create_Boutiques_Input>;
-  boutique_id?: InputMaybe<Create_Boutiques_Input>;
-  customers_id?: InputMaybe<Create_Customers_Input>;
+  customer?: InputMaybe<Create_Customers_Input>;
   date_created?: InputMaybe<Scalars['Date']['input']>;
   date_updated?: InputMaybe<Scalars['Date']['input']>;
   id?: InputMaybe<Scalars['ID']['input']>;
+  product?: InputMaybe<Create_Products_Input>;
   status?: InputMaybe<Scalars['String']['input']>;
   total_price?: InputMaybe<Scalars['Float']['input']>;
   user_created?: InputMaybe<Create_Directus_Users_Input>;
@@ -1272,9 +1475,50 @@ export type Create_Products_Input = {
   video_url?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type Create_Terminals_Input = {
+  android_id?: InputMaybe<Scalars['String']['input']>;
+  authorized_boutique?: InputMaybe<Create_Boutiques_Input>;
+  brand?: InputMaybe<Scalars['String']['input']>;
+  date_created?: InputMaybe<Scalars['Date']['input']>;
+  date_updated?: InputMaybe<Scalars['Date']['input']>;
+  device_name?: InputMaybe<Scalars['String']['input']>;
+  device_type?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+  manufacturer?: InputMaybe<Scalars['String']['input']>;
+  model_name?: InputMaybe<Scalars['String']['input']>;
+  os_name?: InputMaybe<Scalars['String']['input']>;
+  os_version?: InputMaybe<Scalars['String']['input']>;
+  supported_cpu_architectures?: InputMaybe<Scalars['String']['input']>;
+  total_memory?: InputMaybe<Scalars['String']['input']>;
+  user_created?: InputMaybe<Create_Directus_Users_Input>;
+  user_updated?: InputMaybe<Create_Directus_Users_Input>;
+};
+
+export type Create_Views_Input = {
+  boutique?: InputMaybe<Create_Boutiques_Input>;
+  customer?: InputMaybe<Create_Customers_Input>;
+  date_created?: InputMaybe<Scalars['Date']['input']>;
+  date_updated?: InputMaybe<Scalars['Date']['input']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+  product?: InputMaybe<Create_Products_Input>;
+  user_created?: InputMaybe<Create_Directus_Users_Input>;
+  user_updated?: InputMaybe<Create_Directus_Users_Input>;
+};
+
+export type Create_Visits_Input = {
+  boutique?: InputMaybe<Create_Boutiques_Input>;
+  customer?: InputMaybe<Create_Customers_Input>;
+  date_created?: InputMaybe<Scalars['Date']['input']>;
+  date_updated?: InputMaybe<Scalars['Date']['input']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+  user_created?: InputMaybe<Create_Directus_Users_Input>;
+  user_updated?: InputMaybe<Create_Directus_Users_Input>;
+};
+
 export type Customers = {
   __typename?: 'customers';
   avatar?: Maybe<Scalars['String']['output']>;
+  boutique?: Maybe<Boutiques>;
   date_created?: Maybe<Scalars['Date']['output']>;
   date_created_func?: Maybe<Datetime_Functions>;
   date_updated?: Maybe<Scalars['Date']['output']>;
@@ -1288,6 +1532,16 @@ export type Customers = {
   type?: Maybe<Scalars['String']['output']>;
   user_created?: Maybe<Directus_Users>;
   user_updated?: Maybe<Directus_Users>;
+};
+
+
+export type CustomersBoutiqueArgs = {
+  filter?: InputMaybe<Boutiques_Filter>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
 };
 
 
@@ -1327,6 +1581,7 @@ export type Customers_Aggregated = {
 export type Customers_Aggregated_Count = {
   __typename?: 'customers_aggregated_count';
   avatar?: Maybe<Scalars['Int']['output']>;
+  boutique?: Maybe<Scalars['Int']['output']>;
   date_created?: Maybe<Scalars['Int']['output']>;
   date_updated?: Maybe<Scalars['Int']['output']>;
   id?: Maybe<Scalars['Int']['output']>;
@@ -1342,6 +1597,7 @@ export type Customers_Aggregated_Count = {
 
 export type Customers_Aggregated_Fields = {
   __typename?: 'customers_aggregated_fields';
+  boutique?: Maybe<Scalars['Float']['output']>;
   id?: Maybe<Scalars['Float']['output']>;
   sex?: Maybe<Scalars['Float']['output']>;
   sort?: Maybe<Scalars['Float']['output']>;
@@ -1351,6 +1607,7 @@ export type Customers_Filter = {
   _and?: InputMaybe<Array<InputMaybe<Customers_Filter>>>;
   _or?: InputMaybe<Array<InputMaybe<Customers_Filter>>>;
   avatar?: InputMaybe<String_Filter_Operators>;
+  boutique?: InputMaybe<Boutiques_Filter>;
   date_created?: InputMaybe<Date_Filter_Operators>;
   date_created_func?: InputMaybe<Datetime_Function_Filter_Operators>;
   date_updated?: InputMaybe<Date_Filter_Operators>;
@@ -2953,94 +3210,16 @@ export type Number_Filter_Operators = {
   _null?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
-export type Order_Items = {
-  __typename?: 'order_items';
-  id: Scalars['ID']['output'];
-  order_id?: Maybe<Orders>;
-  price?: Maybe<Scalars['Float']['output']>;
-  product_id?: Maybe<Products>;
-  quantity?: Maybe<Scalars['Int']['output']>;
-};
-
-
-export type Order_ItemsOrder_IdArgs = {
-  filter?: InputMaybe<Orders_Filter>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  page?: InputMaybe<Scalars['Int']['input']>;
-  search?: InputMaybe<Scalars['String']['input']>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-};
-
-
-export type Order_ItemsProduct_IdArgs = {
-  filter?: InputMaybe<Products_Filter>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  page?: InputMaybe<Scalars['Int']['input']>;
-  search?: InputMaybe<Scalars['String']['input']>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-};
-
-export type Order_Items_Aggregated = {
-  __typename?: 'order_items_aggregated';
-  avg?: Maybe<Order_Items_Aggregated_Fields>;
-  avgDistinct?: Maybe<Order_Items_Aggregated_Fields>;
-  count?: Maybe<Order_Items_Aggregated_Count>;
-  countAll?: Maybe<Scalars['Int']['output']>;
-  countDistinct?: Maybe<Order_Items_Aggregated_Count>;
-  group?: Maybe<Scalars['JSON']['output']>;
-  max?: Maybe<Order_Items_Aggregated_Fields>;
-  min?: Maybe<Order_Items_Aggregated_Fields>;
-  sum?: Maybe<Order_Items_Aggregated_Fields>;
-  sumDistinct?: Maybe<Order_Items_Aggregated_Fields>;
-};
-
-export type Order_Items_Aggregated_Count = {
-  __typename?: 'order_items_aggregated_count';
-  id?: Maybe<Scalars['Int']['output']>;
-  order_id?: Maybe<Scalars['Int']['output']>;
-  price?: Maybe<Scalars['Int']['output']>;
-  product_id?: Maybe<Scalars['Int']['output']>;
-  quantity?: Maybe<Scalars['Int']['output']>;
-};
-
-export type Order_Items_Aggregated_Fields = {
-  __typename?: 'order_items_aggregated_fields';
-  id?: Maybe<Scalars['Float']['output']>;
-  order_id?: Maybe<Scalars['Float']['output']>;
-  price?: Maybe<Scalars['Float']['output']>;
-  product_id?: Maybe<Scalars['Float']['output']>;
-  quantity?: Maybe<Scalars['Float']['output']>;
-};
-
-export type Order_Items_Filter = {
-  _and?: InputMaybe<Array<InputMaybe<Order_Items_Filter>>>;
-  _or?: InputMaybe<Array<InputMaybe<Order_Items_Filter>>>;
-  id?: InputMaybe<Number_Filter_Operators>;
-  order_id?: InputMaybe<Orders_Filter>;
-  price?: InputMaybe<Number_Filter_Operators>;
-  product_id?: InputMaybe<Products_Filter>;
-  quantity?: InputMaybe<Number_Filter_Operators>;
-};
-
-export type Order_Items_Mutated = {
-  __typename?: 'order_items_mutated';
-  data?: Maybe<Order_Items>;
-  event?: Maybe<EventEnum>;
-  key: Scalars['ID']['output'];
-};
-
 export type Orders = {
   __typename?: 'orders';
   boutique?: Maybe<Boutiques>;
-  boutique_id?: Maybe<Boutiques>;
-  customers_id?: Maybe<Customers>;
+  customer?: Maybe<Customers>;
   date_created?: Maybe<Scalars['Date']['output']>;
   date_created_func?: Maybe<Datetime_Functions>;
   date_updated?: Maybe<Scalars['Date']['output']>;
   date_updated_func?: Maybe<Datetime_Functions>;
   id: Scalars['ID']['output'];
+  product?: Maybe<Products>;
   status?: Maybe<Scalars['String']['output']>;
   total_price?: Maybe<Scalars['Float']['output']>;
   user_created?: Maybe<Directus_Users>;
@@ -3058,8 +3237,8 @@ export type OrdersBoutiqueArgs = {
 };
 
 
-export type OrdersBoutique_IdArgs = {
-  filter?: InputMaybe<Boutiques_Filter>;
+export type OrdersCustomerArgs = {
+  filter?: InputMaybe<Customers_Filter>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   page?: InputMaybe<Scalars['Int']['input']>;
@@ -3068,8 +3247,8 @@ export type OrdersBoutique_IdArgs = {
 };
 
 
-export type OrdersCustomers_IdArgs = {
-  filter?: InputMaybe<Customers_Filter>;
+export type OrdersProductArgs = {
+  filter?: InputMaybe<Products_Filter>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   page?: InputMaybe<Scalars['Int']['input']>;
@@ -3113,11 +3292,12 @@ export type Orders_Aggregated = {
 
 export type Orders_Aggregated_Count = {
   __typename?: 'orders_aggregated_count';
-  boutique_id?: Maybe<Scalars['Int']['output']>;
-  customers_id?: Maybe<Scalars['Int']['output']>;
+  boutique?: Maybe<Scalars['Int']['output']>;
+  customer?: Maybe<Scalars['Int']['output']>;
   date_created?: Maybe<Scalars['Int']['output']>;
   date_updated?: Maybe<Scalars['Int']['output']>;
   id?: Maybe<Scalars['Int']['output']>;
+  product?: Maybe<Scalars['Int']['output']>;
   status?: Maybe<Scalars['Int']['output']>;
   total_price?: Maybe<Scalars['Int']['output']>;
   user_created?: Maybe<Scalars['Int']['output']>;
@@ -3126,9 +3306,10 @@ export type Orders_Aggregated_Count = {
 
 export type Orders_Aggregated_Fields = {
   __typename?: 'orders_aggregated_fields';
-  boutique_id?: Maybe<Scalars['Float']['output']>;
-  customers_id?: Maybe<Scalars['Float']['output']>;
+  boutique?: Maybe<Scalars['Float']['output']>;
+  customer?: Maybe<Scalars['Float']['output']>;
   id?: Maybe<Scalars['Float']['output']>;
+  product?: Maybe<Scalars['Float']['output']>;
   total_price?: Maybe<Scalars['Float']['output']>;
 };
 
@@ -3136,13 +3317,13 @@ export type Orders_Filter = {
   _and?: InputMaybe<Array<InputMaybe<Orders_Filter>>>;
   _or?: InputMaybe<Array<InputMaybe<Orders_Filter>>>;
   boutique?: InputMaybe<Boutiques_Filter>;
-  boutique_id?: InputMaybe<Boutiques_Filter>;
-  customers_id?: InputMaybe<Customers_Filter>;
+  customer?: InputMaybe<Customers_Filter>;
   date_created?: InputMaybe<Date_Filter_Operators>;
   date_created_func?: InputMaybe<Datetime_Function_Filter_Operators>;
   date_updated?: InputMaybe<Date_Filter_Operators>;
   date_updated_func?: InputMaybe<Datetime_Function_Filter_Operators>;
   id?: InputMaybe<Number_Filter_Operators>;
+  product?: InputMaybe<Products_Filter>;
   status?: InputMaybe<String_Filter_Operators>;
   total_price?: InputMaybe<Number_Filter_Operators>;
   user_created?: InputMaybe<Directus_Users_Filter>;
@@ -3366,6 +3547,128 @@ export type String_Filter_Operators = {
   _starts_with?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type Terminals = {
+  __typename?: 'terminals';
+  android_id?: Maybe<Scalars['String']['output']>;
+  authorized_boutique?: Maybe<Boutiques>;
+  brand?: Maybe<Scalars['String']['output']>;
+  date_created?: Maybe<Scalars['Date']['output']>;
+  date_created_func?: Maybe<Datetime_Functions>;
+  date_updated?: Maybe<Scalars['Date']['output']>;
+  date_updated_func?: Maybe<Datetime_Functions>;
+  device_name?: Maybe<Scalars['String']['output']>;
+  device_type?: Maybe<Scalars['String']['output']>;
+  id: Scalars['ID']['output'];
+  manufacturer?: Maybe<Scalars['String']['output']>;
+  model_name?: Maybe<Scalars['String']['output']>;
+  os_name?: Maybe<Scalars['String']['output']>;
+  os_version?: Maybe<Scalars['String']['output']>;
+  supported_cpu_architectures?: Maybe<Scalars['String']['output']>;
+  total_memory?: Maybe<Scalars['String']['output']>;
+  user_created?: Maybe<Directus_Users>;
+  user_updated?: Maybe<Directus_Users>;
+};
+
+
+export type TerminalsAuthorized_BoutiqueArgs = {
+  filter?: InputMaybe<Boutiques_Filter>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+
+export type TerminalsUser_CreatedArgs = {
+  filter?: InputMaybe<Directus_Users_Filter>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+
+export type TerminalsUser_UpdatedArgs = {
+  filter?: InputMaybe<Directus_Users_Filter>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+export type Terminals_Aggregated = {
+  __typename?: 'terminals_aggregated';
+  avg?: Maybe<Terminals_Aggregated_Fields>;
+  avgDistinct?: Maybe<Terminals_Aggregated_Fields>;
+  count?: Maybe<Terminals_Aggregated_Count>;
+  countAll?: Maybe<Scalars['Int']['output']>;
+  countDistinct?: Maybe<Terminals_Aggregated_Count>;
+  group?: Maybe<Scalars['JSON']['output']>;
+  max?: Maybe<Terminals_Aggregated_Fields>;
+  min?: Maybe<Terminals_Aggregated_Fields>;
+  sum?: Maybe<Terminals_Aggregated_Fields>;
+  sumDistinct?: Maybe<Terminals_Aggregated_Fields>;
+};
+
+export type Terminals_Aggregated_Count = {
+  __typename?: 'terminals_aggregated_count';
+  android_id?: Maybe<Scalars['Int']['output']>;
+  authorized_boutique?: Maybe<Scalars['Int']['output']>;
+  brand?: Maybe<Scalars['Int']['output']>;
+  date_created?: Maybe<Scalars['Int']['output']>;
+  date_updated?: Maybe<Scalars['Int']['output']>;
+  device_name?: Maybe<Scalars['Int']['output']>;
+  device_type?: Maybe<Scalars['Int']['output']>;
+  id?: Maybe<Scalars['Int']['output']>;
+  manufacturer?: Maybe<Scalars['Int']['output']>;
+  model_name?: Maybe<Scalars['Int']['output']>;
+  os_name?: Maybe<Scalars['Int']['output']>;
+  os_version?: Maybe<Scalars['Int']['output']>;
+  supported_cpu_architectures?: Maybe<Scalars['Int']['output']>;
+  total_memory?: Maybe<Scalars['Int']['output']>;
+  user_created?: Maybe<Scalars['Int']['output']>;
+  user_updated?: Maybe<Scalars['Int']['output']>;
+};
+
+export type Terminals_Aggregated_Fields = {
+  __typename?: 'terminals_aggregated_fields';
+  authorized_boutique?: Maybe<Scalars['Float']['output']>;
+  id?: Maybe<Scalars['Float']['output']>;
+};
+
+export type Terminals_Filter = {
+  _and?: InputMaybe<Array<InputMaybe<Terminals_Filter>>>;
+  _or?: InputMaybe<Array<InputMaybe<Terminals_Filter>>>;
+  android_id?: InputMaybe<String_Filter_Operators>;
+  authorized_boutique?: InputMaybe<Boutiques_Filter>;
+  brand?: InputMaybe<String_Filter_Operators>;
+  date_created?: InputMaybe<Date_Filter_Operators>;
+  date_created_func?: InputMaybe<Datetime_Function_Filter_Operators>;
+  date_updated?: InputMaybe<Date_Filter_Operators>;
+  date_updated_func?: InputMaybe<Datetime_Function_Filter_Operators>;
+  device_name?: InputMaybe<String_Filter_Operators>;
+  device_type?: InputMaybe<String_Filter_Operators>;
+  id?: InputMaybe<Number_Filter_Operators>;
+  manufacturer?: InputMaybe<String_Filter_Operators>;
+  model_name?: InputMaybe<String_Filter_Operators>;
+  os_name?: InputMaybe<String_Filter_Operators>;
+  os_version?: InputMaybe<String_Filter_Operators>;
+  supported_cpu_architectures?: InputMaybe<String_Filter_Operators>;
+  total_memory?: InputMaybe<String_Filter_Operators>;
+  user_created?: InputMaybe<Directus_Users_Filter>;
+  user_updated?: InputMaybe<Directus_Users_Filter>;
+};
+
+export type Terminals_Mutated = {
+  __typename?: 'terminals_mutated';
+  data?: Maybe<Terminals>;
+  event?: Maybe<EventEnum>;
+  key: Scalars['ID']['output'];
+};
+
 export type Update_Boutiques_Input = {
   address?: InputMaybe<Scalars['String']['input']>;
   category?: InputMaybe<Scalars['String']['input']>;
@@ -3400,6 +3703,7 @@ export type Update_Categories_Input = {
 
 export type Update_Customers_Input = {
   avatar?: InputMaybe<Scalars['String']['input']>;
+  boutique?: InputMaybe<Update_Boutiques_Input>;
   date_created?: InputMaybe<Scalars['Date']['input']>;
   date_updated?: InputMaybe<Scalars['Date']['input']>;
   id?: InputMaybe<Scalars['ID']['input']>;
@@ -3524,21 +3828,13 @@ export type Update_Directus_Users_Input = {
   token?: InputMaybe<Scalars['Hash']['input']>;
 };
 
-export type Update_Order_Items_Input = {
-  id?: InputMaybe<Scalars['ID']['input']>;
-  order_id?: InputMaybe<Update_Orders_Input>;
-  price?: InputMaybe<Scalars['Float']['input']>;
-  product_id?: InputMaybe<Update_Products_Input>;
-  quantity?: InputMaybe<Scalars['Int']['input']>;
-};
-
 export type Update_Orders_Input = {
   boutique?: InputMaybe<Update_Boutiques_Input>;
-  boutique_id?: InputMaybe<Update_Boutiques_Input>;
-  customers_id?: InputMaybe<Update_Customers_Input>;
+  customer?: InputMaybe<Update_Customers_Input>;
   date_created?: InputMaybe<Scalars['Date']['input']>;
   date_updated?: InputMaybe<Scalars['Date']['input']>;
   id?: InputMaybe<Scalars['ID']['input']>;
+  product?: InputMaybe<Update_Products_Input>;
   status?: InputMaybe<Scalars['String']['input']>;
   total_price?: InputMaybe<Scalars['Float']['input']>;
   user_created?: InputMaybe<Update_Directus_Users_Input>;
@@ -3573,6 +3869,46 @@ export type Update_Products_Input = {
   user_created?: InputMaybe<Update_Directus_Users_Input>;
   user_updated?: InputMaybe<Update_Directus_Users_Input>;
   video_url?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type Update_Terminals_Input = {
+  android_id?: InputMaybe<Scalars['String']['input']>;
+  authorized_boutique?: InputMaybe<Update_Boutiques_Input>;
+  brand?: InputMaybe<Scalars['String']['input']>;
+  date_created?: InputMaybe<Scalars['Date']['input']>;
+  date_updated?: InputMaybe<Scalars['Date']['input']>;
+  device_name?: InputMaybe<Scalars['String']['input']>;
+  device_type?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+  manufacturer?: InputMaybe<Scalars['String']['input']>;
+  model_name?: InputMaybe<Scalars['String']['input']>;
+  os_name?: InputMaybe<Scalars['String']['input']>;
+  os_version?: InputMaybe<Scalars['String']['input']>;
+  supported_cpu_architectures?: InputMaybe<Scalars['String']['input']>;
+  total_memory?: InputMaybe<Scalars['String']['input']>;
+  user_created?: InputMaybe<Update_Directus_Users_Input>;
+  user_updated?: InputMaybe<Update_Directus_Users_Input>;
+};
+
+export type Update_Views_Input = {
+  boutique?: InputMaybe<Update_Boutiques_Input>;
+  customer?: InputMaybe<Update_Customers_Input>;
+  date_created?: InputMaybe<Scalars['Date']['input']>;
+  date_updated?: InputMaybe<Scalars['Date']['input']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+  product?: InputMaybe<Update_Products_Input>;
+  user_created?: InputMaybe<Update_Directus_Users_Input>;
+  user_updated?: InputMaybe<Update_Directus_Users_Input>;
+};
+
+export type Update_Visits_Input = {
+  boutique?: InputMaybe<Update_Boutiques_Input>;
+  customer?: InputMaybe<Update_Customers_Input>;
+  date_created?: InputMaybe<Scalars['Date']['input']>;
+  date_updated?: InputMaybe<Scalars['Date']['input']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+  user_created?: InputMaybe<Update_Directus_Users_Input>;
+  user_updated?: InputMaybe<Update_Directus_Users_Input>;
 };
 
 export type Version_Boutiques = {
@@ -3612,6 +3948,7 @@ export type Version_Categories = {
 export type Version_Customers = {
   __typename?: 'version_customers';
   avatar?: Maybe<Scalars['String']['output']>;
+  boutique?: Maybe<Scalars['JSON']['output']>;
   date_created?: Maybe<Scalars['Date']['output']>;
   date_updated?: Maybe<Scalars['Date']['output']>;
   id?: Maybe<Scalars['ID']['output']>;
@@ -3625,23 +3962,14 @@ export type Version_Customers = {
   user_updated?: Maybe<Scalars['JSON']['output']>;
 };
 
-export type Version_Order_Items = {
-  __typename?: 'version_order_items';
-  id?: Maybe<Scalars['ID']['output']>;
-  order_id?: Maybe<Scalars['JSON']['output']>;
-  price?: Maybe<Scalars['Float']['output']>;
-  product_id?: Maybe<Scalars['JSON']['output']>;
-  quantity?: Maybe<Scalars['Int']['output']>;
-};
-
 export type Version_Orders = {
   __typename?: 'version_orders';
   boutique?: Maybe<Scalars['JSON']['output']>;
-  boutique_id?: Maybe<Scalars['JSON']['output']>;
-  customers_id?: Maybe<Scalars['JSON']['output']>;
+  customer?: Maybe<Scalars['JSON']['output']>;
   date_created?: Maybe<Scalars['Date']['output']>;
   date_updated?: Maybe<Scalars['Date']['output']>;
   id?: Maybe<Scalars['ID']['output']>;
+  product?: Maybe<Scalars['JSON']['output']>;
   status?: Maybe<Scalars['String']['output']>;
   total_price?: Maybe<Scalars['Float']['output']>;
   user_created?: Maybe<Scalars['JSON']['output']>;
@@ -3677,6 +4005,275 @@ export type Version_Products = {
   user_created?: Maybe<Scalars['JSON']['output']>;
   user_updated?: Maybe<Scalars['JSON']['output']>;
   video_url?: Maybe<Scalars['String']['output']>;
+};
+
+export type Version_Terminals = {
+  __typename?: 'version_terminals';
+  android_id?: Maybe<Scalars['String']['output']>;
+  authorized_boutique?: Maybe<Scalars['JSON']['output']>;
+  brand?: Maybe<Scalars['String']['output']>;
+  date_created?: Maybe<Scalars['Date']['output']>;
+  date_updated?: Maybe<Scalars['Date']['output']>;
+  device_name?: Maybe<Scalars['String']['output']>;
+  device_type?: Maybe<Scalars['String']['output']>;
+  id?: Maybe<Scalars['ID']['output']>;
+  manufacturer?: Maybe<Scalars['String']['output']>;
+  model_name?: Maybe<Scalars['String']['output']>;
+  os_name?: Maybe<Scalars['String']['output']>;
+  os_version?: Maybe<Scalars['String']['output']>;
+  supported_cpu_architectures?: Maybe<Scalars['String']['output']>;
+  total_memory?: Maybe<Scalars['String']['output']>;
+  user_created?: Maybe<Scalars['JSON']['output']>;
+  user_updated?: Maybe<Scalars['JSON']['output']>;
+};
+
+export type Version_Views = {
+  __typename?: 'version_views';
+  boutique?: Maybe<Scalars['JSON']['output']>;
+  customer?: Maybe<Scalars['JSON']['output']>;
+  date_created?: Maybe<Scalars['Date']['output']>;
+  date_updated?: Maybe<Scalars['Date']['output']>;
+  id?: Maybe<Scalars['ID']['output']>;
+  product?: Maybe<Scalars['JSON']['output']>;
+  user_created?: Maybe<Scalars['JSON']['output']>;
+  user_updated?: Maybe<Scalars['JSON']['output']>;
+};
+
+export type Version_Visits = {
+  __typename?: 'version_visits';
+  boutique?: Maybe<Scalars['JSON']['output']>;
+  customer?: Maybe<Scalars['JSON']['output']>;
+  date_created?: Maybe<Scalars['Date']['output']>;
+  date_updated?: Maybe<Scalars['Date']['output']>;
+  id?: Maybe<Scalars['ID']['output']>;
+  user_created?: Maybe<Scalars['JSON']['output']>;
+  user_updated?: Maybe<Scalars['JSON']['output']>;
+};
+
+export type Views = {
+  __typename?: 'views';
+  boutique?: Maybe<Boutiques>;
+  customer?: Maybe<Customers>;
+  date_created?: Maybe<Scalars['Date']['output']>;
+  date_created_func?: Maybe<Datetime_Functions>;
+  date_updated?: Maybe<Scalars['Date']['output']>;
+  date_updated_func?: Maybe<Datetime_Functions>;
+  id: Scalars['ID']['output'];
+  product?: Maybe<Products>;
+  user_created?: Maybe<Directus_Users>;
+  user_updated?: Maybe<Directus_Users>;
+};
+
+
+export type ViewsBoutiqueArgs = {
+  filter?: InputMaybe<Boutiques_Filter>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+
+export type ViewsCustomerArgs = {
+  filter?: InputMaybe<Customers_Filter>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+
+export type ViewsProductArgs = {
+  filter?: InputMaybe<Products_Filter>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+
+export type ViewsUser_CreatedArgs = {
+  filter?: InputMaybe<Directus_Users_Filter>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+
+export type ViewsUser_UpdatedArgs = {
+  filter?: InputMaybe<Directus_Users_Filter>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+export type Views_Aggregated = {
+  __typename?: 'views_aggregated';
+  avg?: Maybe<Views_Aggregated_Fields>;
+  avgDistinct?: Maybe<Views_Aggregated_Fields>;
+  count?: Maybe<Views_Aggregated_Count>;
+  countAll?: Maybe<Scalars['Int']['output']>;
+  countDistinct?: Maybe<Views_Aggregated_Count>;
+  group?: Maybe<Scalars['JSON']['output']>;
+  max?: Maybe<Views_Aggregated_Fields>;
+  min?: Maybe<Views_Aggregated_Fields>;
+  sum?: Maybe<Views_Aggregated_Fields>;
+  sumDistinct?: Maybe<Views_Aggregated_Fields>;
+};
+
+export type Views_Aggregated_Count = {
+  __typename?: 'views_aggregated_count';
+  boutique?: Maybe<Scalars['Int']['output']>;
+  customer?: Maybe<Scalars['Int']['output']>;
+  date_created?: Maybe<Scalars['Int']['output']>;
+  date_updated?: Maybe<Scalars['Int']['output']>;
+  id?: Maybe<Scalars['Int']['output']>;
+  product?: Maybe<Scalars['Int']['output']>;
+  user_created?: Maybe<Scalars['Int']['output']>;
+  user_updated?: Maybe<Scalars['Int']['output']>;
+};
+
+export type Views_Aggregated_Fields = {
+  __typename?: 'views_aggregated_fields';
+  boutique?: Maybe<Scalars['Float']['output']>;
+  customer?: Maybe<Scalars['Float']['output']>;
+  id?: Maybe<Scalars['Float']['output']>;
+  product?: Maybe<Scalars['Float']['output']>;
+};
+
+export type Views_Filter = {
+  _and?: InputMaybe<Array<InputMaybe<Views_Filter>>>;
+  _or?: InputMaybe<Array<InputMaybe<Views_Filter>>>;
+  boutique?: InputMaybe<Boutiques_Filter>;
+  customer?: InputMaybe<Customers_Filter>;
+  date_created?: InputMaybe<Date_Filter_Operators>;
+  date_created_func?: InputMaybe<Datetime_Function_Filter_Operators>;
+  date_updated?: InputMaybe<Date_Filter_Operators>;
+  date_updated_func?: InputMaybe<Datetime_Function_Filter_Operators>;
+  id?: InputMaybe<Number_Filter_Operators>;
+  product?: InputMaybe<Products_Filter>;
+  user_created?: InputMaybe<Directus_Users_Filter>;
+  user_updated?: InputMaybe<Directus_Users_Filter>;
+};
+
+export type Views_Mutated = {
+  __typename?: 'views_mutated';
+  data?: Maybe<Views>;
+  event?: Maybe<EventEnum>;
+  key: Scalars['ID']['output'];
+};
+
+export type Visits = {
+  __typename?: 'visits';
+  boutique?: Maybe<Boutiques>;
+  customer?: Maybe<Customers>;
+  date_created?: Maybe<Scalars['Date']['output']>;
+  date_created_func?: Maybe<Datetime_Functions>;
+  date_updated?: Maybe<Scalars['Date']['output']>;
+  date_updated_func?: Maybe<Datetime_Functions>;
+  id: Scalars['ID']['output'];
+  user_created?: Maybe<Directus_Users>;
+  user_updated?: Maybe<Directus_Users>;
+};
+
+
+export type VisitsBoutiqueArgs = {
+  filter?: InputMaybe<Boutiques_Filter>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+
+export type VisitsCustomerArgs = {
+  filter?: InputMaybe<Customers_Filter>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+
+export type VisitsUser_CreatedArgs = {
+  filter?: InputMaybe<Directus_Users_Filter>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+
+export type VisitsUser_UpdatedArgs = {
+  filter?: InputMaybe<Directus_Users_Filter>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+export type Visits_Aggregated = {
+  __typename?: 'visits_aggregated';
+  avg?: Maybe<Visits_Aggregated_Fields>;
+  avgDistinct?: Maybe<Visits_Aggregated_Fields>;
+  count?: Maybe<Visits_Aggregated_Count>;
+  countAll?: Maybe<Scalars['Int']['output']>;
+  countDistinct?: Maybe<Visits_Aggregated_Count>;
+  group?: Maybe<Scalars['JSON']['output']>;
+  max?: Maybe<Visits_Aggregated_Fields>;
+  min?: Maybe<Visits_Aggregated_Fields>;
+  sum?: Maybe<Visits_Aggregated_Fields>;
+  sumDistinct?: Maybe<Visits_Aggregated_Fields>;
+};
+
+export type Visits_Aggregated_Count = {
+  __typename?: 'visits_aggregated_count';
+  boutique?: Maybe<Scalars['Int']['output']>;
+  customer?: Maybe<Scalars['Int']['output']>;
+  date_created?: Maybe<Scalars['Int']['output']>;
+  date_updated?: Maybe<Scalars['Int']['output']>;
+  id?: Maybe<Scalars['Int']['output']>;
+  user_created?: Maybe<Scalars['Int']['output']>;
+  user_updated?: Maybe<Scalars['Int']['output']>;
+};
+
+export type Visits_Aggregated_Fields = {
+  __typename?: 'visits_aggregated_fields';
+  boutique?: Maybe<Scalars['Float']['output']>;
+  customer?: Maybe<Scalars['Float']['output']>;
+  id?: Maybe<Scalars['Float']['output']>;
+};
+
+export type Visits_Filter = {
+  _and?: InputMaybe<Array<InputMaybe<Visits_Filter>>>;
+  _or?: InputMaybe<Array<InputMaybe<Visits_Filter>>>;
+  boutique?: InputMaybe<Boutiques_Filter>;
+  customer?: InputMaybe<Customers_Filter>;
+  date_created?: InputMaybe<Date_Filter_Operators>;
+  date_created_func?: InputMaybe<Datetime_Function_Filter_Operators>;
+  date_updated?: InputMaybe<Date_Filter_Operators>;
+  date_updated_func?: InputMaybe<Datetime_Function_Filter_Operators>;
+  id?: InputMaybe<Number_Filter_Operators>;
+  user_created?: InputMaybe<Directus_Users_Filter>;
+  user_updated?: InputMaybe<Directus_Users_Filter>;
+};
+
+export type Visits_Mutated = {
+  __typename?: 'visits_mutated';
+  data?: Maybe<Visits>;
+  event?: Maybe<EventEnum>;
+  key: Scalars['ID']['output'];
 };
 
 export type GetBoutiquesQueryVariables = Exact<{
@@ -3899,6 +4496,42 @@ export type SearchProductsQueryVariables = Exact<{
 
 
 export type SearchProductsQuery = { __typename?: 'Query', products: Array<{ __typename?: 'products', id: string, name: string, subtitle?: string | null, description?: string | null, price: number, market_price?: number | null, stock?: number | null, main_image?: string | null, images?: any | null, is_on_sale?: boolean | null, rating_avg?: number | null, total_reviews?: number | null, brand?: string | null, created_at?: any | null, category_id?: { __typename?: 'categories', id: string, name: string } | null, boutique_id?: { __typename?: 'boutiques', id: string, name?: string | null } | null }> };
+
+export type GetCurrentUserTerminalsQueryVariables = Exact<{
+  boutiqueId: Scalars['GraphQLStringOrFloat']['input'];
+}>;
+
+
+export type GetCurrentUserTerminalsQuery = { __typename?: 'Query', terminals: Array<{ __typename?: 'terminals', id: string, android_id?: string | null, brand?: string | null, manufacturer?: string | null, model_name?: string | null, device_type?: string | null, device_name?: string | null, os_name?: string | null, os_version?: string | null, supported_cpu_architectures?: string | null, total_memory?: string | null, date_created?: any | null, date_updated?: any | null, authorized_boutique?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null, city?: string | null, category?: string | null, status?: string | null } | null }> };
+
+export type GetTerminalByAndroidIdQueryVariables = Exact<{
+  androidId: Scalars['String']['input'];
+}>;
+
+
+export type GetTerminalByAndroidIdQuery = { __typename?: 'Query', terminals: Array<{ __typename?: 'terminals', id: string, android_id?: string | null, brand?: string | null, manufacturer?: string | null, model_name?: string | null, device_type?: string | null, device_name?: string | null, os_name?: string | null, os_version?: string | null, supported_cpu_architectures?: string | null, total_memory?: string | null, date_created?: any | null, date_updated?: any | null, authorized_boutique?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null, city?: string | null, category?: string | null, status?: string | null } | null }> };
+
+export type CreateOrUpdateTerminalMutationVariables = Exact<{
+  data: Create_Terminals_Input;
+}>;
+
+
+export type CreateOrUpdateTerminalMutation = { __typename?: 'Mutation', create_terminals_item?: { __typename?: 'terminals', id: string, android_id?: string | null, brand?: string | null, manufacturer?: string | null, model_name?: string | null, device_type?: string | null, device_name?: string | null, os_name?: string | null, os_version?: string | null, supported_cpu_architectures?: string | null, total_memory?: string | null, date_created?: any | null, date_updated?: any | null } | null };
+
+export type UpdateTerminalMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+  data: Update_Terminals_Input;
+}>;
+
+
+export type UpdateTerminalMutation = { __typename?: 'Mutation', update_terminals_item?: { __typename?: 'terminals', id: string, android_id?: string | null, brand?: string | null, manufacturer?: string | null, model_name?: string | null, device_type?: string | null, device_name?: string | null, os_name?: string | null, os_version?: string | null, supported_cpu_architectures?: string | null, total_memory?: string | null, date_updated?: any | null } | null };
+
+export type DeleteTerminalMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type DeleteTerminalMutation = { __typename?: 'Mutation', delete_terminals_item?: { __typename?: 'delete_one', id: string } | null };
 
 
 export const GetBoutiquesDocument = gql`
@@ -5328,3 +5961,246 @@ export type SearchProductsQueryHookResult = ReturnType<typeof useSearchProductsQ
 export type SearchProductsLazyQueryHookResult = ReturnType<typeof useSearchProductsLazyQuery>;
 export type SearchProductsSuspenseQueryHookResult = ReturnType<typeof useSearchProductsSuspenseQuery>;
 export type SearchProductsQueryResult = ApolloReactCommon.QueryResult<SearchProductsQuery, SearchProductsQueryVariables>;
+export const GetCurrentUserTerminalsDocument = gql`
+    query GetCurrentUserTerminals($boutiqueId: GraphQLStringOrFloat!) {
+  terminals(filter: {authorized_boutique: {id: {_eq: $boutiqueId}}}) {
+    id
+    android_id
+    brand
+    manufacturer
+    model_name
+    device_type
+    device_name
+    os_name
+    os_version
+    supported_cpu_architectures
+    total_memory
+    date_created
+    date_updated
+    authorized_boutique {
+      id
+      name
+      address
+      city
+      category
+      status
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetCurrentUserTerminalsQuery__
+ *
+ * To run a query within a React component, call `useGetCurrentUserTerminalsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCurrentUserTerminalsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCurrentUserTerminalsQuery({
+ *   variables: {
+ *      boutiqueId: // value for 'boutiqueId'
+ *   },
+ * });
+ */
+export function useGetCurrentUserTerminalsQuery(baseOptions: ApolloReactHooks.QueryHookOptions<GetCurrentUserTerminalsQuery, GetCurrentUserTerminalsQueryVariables> & ({ variables: GetCurrentUserTerminalsQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetCurrentUserTerminalsQuery, GetCurrentUserTerminalsQueryVariables>(GetCurrentUserTerminalsDocument, options);
+      }
+export function useGetCurrentUserTerminalsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetCurrentUserTerminalsQuery, GetCurrentUserTerminalsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetCurrentUserTerminalsQuery, GetCurrentUserTerminalsQueryVariables>(GetCurrentUserTerminalsDocument, options);
+        }
+export function useGetCurrentUserTerminalsSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetCurrentUserTerminalsQuery, GetCurrentUserTerminalsQueryVariables>) {
+          const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetCurrentUserTerminalsQuery, GetCurrentUserTerminalsQueryVariables>(GetCurrentUserTerminalsDocument, options);
+        }
+export type GetCurrentUserTerminalsQueryHookResult = ReturnType<typeof useGetCurrentUserTerminalsQuery>;
+export type GetCurrentUserTerminalsLazyQueryHookResult = ReturnType<typeof useGetCurrentUserTerminalsLazyQuery>;
+export type GetCurrentUserTerminalsSuspenseQueryHookResult = ReturnType<typeof useGetCurrentUserTerminalsSuspenseQuery>;
+export type GetCurrentUserTerminalsQueryResult = ApolloReactCommon.QueryResult<GetCurrentUserTerminalsQuery, GetCurrentUserTerminalsQueryVariables>;
+export const GetTerminalByAndroidIdDocument = gql`
+    query GetTerminalByAndroidId($androidId: String!) {
+  terminals(filter: {android_id: {_eq: $androidId}}) {
+    id
+    android_id
+    brand
+    manufacturer
+    model_name
+    device_type
+    device_name
+    os_name
+    os_version
+    supported_cpu_architectures
+    total_memory
+    date_created
+    date_updated
+    authorized_boutique {
+      id
+      name
+      address
+      city
+      category
+      status
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetTerminalByAndroidIdQuery__
+ *
+ * To run a query within a React component, call `useGetTerminalByAndroidIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTerminalByAndroidIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetTerminalByAndroidIdQuery({
+ *   variables: {
+ *      androidId: // value for 'androidId'
+ *   },
+ * });
+ */
+export function useGetTerminalByAndroidIdQuery(baseOptions: ApolloReactHooks.QueryHookOptions<GetTerminalByAndroidIdQuery, GetTerminalByAndroidIdQueryVariables> & ({ variables: GetTerminalByAndroidIdQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetTerminalByAndroidIdQuery, GetTerminalByAndroidIdQueryVariables>(GetTerminalByAndroidIdDocument, options);
+      }
+export function useGetTerminalByAndroidIdLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetTerminalByAndroidIdQuery, GetTerminalByAndroidIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetTerminalByAndroidIdQuery, GetTerminalByAndroidIdQueryVariables>(GetTerminalByAndroidIdDocument, options);
+        }
+export function useGetTerminalByAndroidIdSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetTerminalByAndroidIdQuery, GetTerminalByAndroidIdQueryVariables>) {
+          const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetTerminalByAndroidIdQuery, GetTerminalByAndroidIdQueryVariables>(GetTerminalByAndroidIdDocument, options);
+        }
+export type GetTerminalByAndroidIdQueryHookResult = ReturnType<typeof useGetTerminalByAndroidIdQuery>;
+export type GetTerminalByAndroidIdLazyQueryHookResult = ReturnType<typeof useGetTerminalByAndroidIdLazyQuery>;
+export type GetTerminalByAndroidIdSuspenseQueryHookResult = ReturnType<typeof useGetTerminalByAndroidIdSuspenseQuery>;
+export type GetTerminalByAndroidIdQueryResult = ApolloReactCommon.QueryResult<GetTerminalByAndroidIdQuery, GetTerminalByAndroidIdQueryVariables>;
+export const CreateOrUpdateTerminalDocument = gql`
+    mutation CreateOrUpdateTerminal($data: create_terminals_input!) {
+  create_terminals_item(data: $data) {
+    id
+    android_id
+    brand
+    manufacturer
+    model_name
+    device_type
+    device_name
+    os_name
+    os_version
+    supported_cpu_architectures
+    total_memory
+    date_created
+    date_updated
+  }
+}
+    `;
+export type CreateOrUpdateTerminalMutationFn = ApolloReactCommon.MutationFunction<CreateOrUpdateTerminalMutation, CreateOrUpdateTerminalMutationVariables>;
+
+/**
+ * __useCreateOrUpdateTerminalMutation__
+ *
+ * To run a mutation, you first call `useCreateOrUpdateTerminalMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateOrUpdateTerminalMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createOrUpdateTerminalMutation, { data, loading, error }] = useCreateOrUpdateTerminalMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useCreateOrUpdateTerminalMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreateOrUpdateTerminalMutation, CreateOrUpdateTerminalMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<CreateOrUpdateTerminalMutation, CreateOrUpdateTerminalMutationVariables>(CreateOrUpdateTerminalDocument, options);
+      }
+export type CreateOrUpdateTerminalMutationHookResult = ReturnType<typeof useCreateOrUpdateTerminalMutation>;
+export type CreateOrUpdateTerminalMutationResult = ApolloReactCommon.MutationResult<CreateOrUpdateTerminalMutation>;
+export type CreateOrUpdateTerminalMutationOptions = ApolloReactCommon.BaseMutationOptions<CreateOrUpdateTerminalMutation, CreateOrUpdateTerminalMutationVariables>;
+export const UpdateTerminalDocument = gql`
+    mutation UpdateTerminal($id: ID!, $data: update_terminals_input!) {
+  update_terminals_item(id: $id, data: $data) {
+    id
+    android_id
+    brand
+    manufacturer
+    model_name
+    device_type
+    device_name
+    os_name
+    os_version
+    supported_cpu_architectures
+    total_memory
+    date_updated
+  }
+}
+    `;
+export type UpdateTerminalMutationFn = ApolloReactCommon.MutationFunction<UpdateTerminalMutation, UpdateTerminalMutationVariables>;
+
+/**
+ * __useUpdateTerminalMutation__
+ *
+ * To run a mutation, you first call `useUpdateTerminalMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateTerminalMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateTerminalMutation, { data, loading, error }] = useUpdateTerminalMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useUpdateTerminalMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateTerminalMutation, UpdateTerminalMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<UpdateTerminalMutation, UpdateTerminalMutationVariables>(UpdateTerminalDocument, options);
+      }
+export type UpdateTerminalMutationHookResult = ReturnType<typeof useUpdateTerminalMutation>;
+export type UpdateTerminalMutationResult = ApolloReactCommon.MutationResult<UpdateTerminalMutation>;
+export type UpdateTerminalMutationOptions = ApolloReactCommon.BaseMutationOptions<UpdateTerminalMutation, UpdateTerminalMutationVariables>;
+export const DeleteTerminalDocument = gql`
+    mutation DeleteTerminal($id: ID!) {
+  delete_terminals_item(id: $id) {
+    id
+  }
+}
+    `;
+export type DeleteTerminalMutationFn = ApolloReactCommon.MutationFunction<DeleteTerminalMutation, DeleteTerminalMutationVariables>;
+
+/**
+ * __useDeleteTerminalMutation__
+ *
+ * To run a mutation, you first call `useDeleteTerminalMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteTerminalMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteTerminalMutation, { data, loading, error }] = useDeleteTerminalMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteTerminalMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeleteTerminalMutation, DeleteTerminalMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<DeleteTerminalMutation, DeleteTerminalMutationVariables>(DeleteTerminalDocument, options);
+      }
+export type DeleteTerminalMutationHookResult = ReturnType<typeof useDeleteTerminalMutation>;
+export type DeleteTerminalMutationResult = ApolloReactCommon.MutationResult<DeleteTerminalMutation>;
+export type DeleteTerminalMutationOptions = ApolloReactCommon.BaseMutationOptions<DeleteTerminalMutation, DeleteTerminalMutationVariables>;

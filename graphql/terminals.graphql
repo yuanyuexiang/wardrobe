@@ -1,0 +1,97 @@
+# 获取当前用户的终端设备信息
+query GetCurrentUserTerminals($boutiqueId: GraphQLStringOrFloat!) {
+  terminals(filter: { authorized_boutique: { id: { _eq: $boutiqueId } } }) {
+    id
+    android_id
+    brand
+    manufacturer
+    model_name
+    device_type
+    device_name
+    os_name
+    os_version
+    supported_cpu_architectures
+    total_memory
+    date_created
+    date_updated
+    authorized_boutique {
+      id
+      name
+      address
+      city
+      category
+      status
+    }
+  }
+}
+
+# 根据 android_id 查询设备信息
+query GetTerminalByAndroidId($androidId: String!) {
+  terminals(filter: { android_id: { _eq: $androidId } }) {
+    id
+    android_id
+    brand
+    manufacturer
+    model_name
+    device_type
+    device_name
+    os_name
+    os_version
+    supported_cpu_architectures
+    total_memory
+    date_created
+    date_updated
+    authorized_boutique {
+      id
+      name
+      address
+      city
+      category
+      status
+    }
+  }
+}
+
+# 创建或更新终端设备信息
+mutation CreateOrUpdateTerminal($data: create_terminals_input!) {
+  create_terminals_item(data: $data) {
+    id
+    android_id
+    brand
+    manufacturer
+    model_name
+    device_type
+    device_name
+    os_name
+    os_version
+    supported_cpu_architectures
+    total_memory
+    date_created
+    date_updated
+  }
+}
+
+# 更新终端设备信息
+mutation UpdateTerminal($id: ID!, $data: update_terminals_input!) {
+  update_terminals_item(id: $id, data: $data) {
+    id
+    android_id
+    brand
+    manufacturer
+    model_name
+    device_type
+    device_name
+    os_name
+    os_version
+    supported_cpu_architectures
+    total_memory
+    date_updated
+  }
+}
+
+# 删除终端设备信息
+mutation DeleteTerminal($id: ID!) {
+  delete_terminals_item(id: $id) {
+    id
+  }
+}

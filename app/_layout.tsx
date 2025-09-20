@@ -4,13 +4,13 @@ import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import React, { useEffect, useState } from 'react';
-import { View, ActivityIndicator } from 'react-native';
+import { View, ActivityIndicator, Text } from 'react-native';
 import 'react-native-reanimated';
 import FullscreenConfig from '../components/FullscreenConfig';
 import WardrobeApolloProvider from '../components/WardrobeApolloProvider';
 import ErrorBoundary from '../components/ErrorBoundary';
 import { logger } from '../utils/logger';
-import { configManager } from '../utils/configManager';
+import { deviceStartupManager, AppStartupState, TerminalInfo, DeviceStartupInfo } from '../utils/deviceStartupManager';
 
 import { useColorScheme } from '../hooks/useColorScheme';
 
@@ -22,9 +22,10 @@ export default function RootLayout() {
   const [loaded] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
   });
-  const [configLoaded, setConfigLoaded] = useState(false);
-  const [isConfigured, setIsConfigured] = useState(false);
-  const [splashReady, setSplashReady] = useState(false); // 启动屏准备状态
+  const [startupState, setStartupState] = useState<AppStartupState>('loading');
+  const [terminalInfo, setTerminalInfo] = useState<TerminalInfo | null>(null);
+  const [deviceInfo, setDeviceInfo] = useState<DeviceStartupInfo | null>(null);
+  const [splashReady, setSplashReady] = useState(false);
 
   // 启动屏控制：确保显示至少3秒
   useEffect(() => {
@@ -32,69 +33,57 @@ export default function RootLayout() {
     const startTime = Date.now();
 
     const hideSplashWhenReady = async () => {
-      // 等待字体加载和配置加载完成
-      if (loaded && configLoaded) {
+      // 等待字体加载和启动检查完成
+      if (loaded && startupState !== 'loading') {
         const elapsedTime = Date.now() - startTime;
         const remainingTime = Math.max(0, minSplashTime - elapsedTime);
         
         logger.info('RootLayout', `启动屏控制 - 已用时: ${elapsedTime}ms, 剩余等待: ${remainingTime}ms`);
         
-        // 如果还没到5秒，继续等待
         if (remainingTime > 0) {
           setTimeout(async () => {
             await SplashScreen.hideAsync();
             setSplashReady(true);
-            logger.info('RootLayout', '启动屏已隐藏（等待5秒完成）');
+            logger.info('RootLayout', '启动屏已隐藏（等待完成）');
           }, remainingTime);
         } else {
-          // 已经超过5秒了，立即隐藏
           await SplashScreen.hideAsync();
           setSplashReady(true);
-          logger.info('RootLayout', '启动屏已隐藏（配置加载完成）');
+          logger.info('RootLayout', '启动屏已隐藏（检查完成）');
         }
       }
     };
 
     hideSplashWhenReady();
-  }, [loaded, configLoaded]);
+  }, [loaded, startupState]);
 
-  // 加载配置
+  // 检查应用启动状态
   useEffect(() => {
-    const loadConfig = async () => {
+    const checkStartup = async () => {
       try {
-        // 添加小延迟确保所有依赖都已初始化
-        await new Promise(resolve => setTimeout(resolve, 100));
-        console.log('RootLayout: 开始加载配置');
-        const config = await configManager.loadConfig();
-        console.log('RootLayout: 配置加载完成', { 
-          isConfigured: config.isConfigured,
-          selectedBoutiqueId: config.selectedBoutiqueId,
-          selectedBoutiqueName: config.selectedBoutiqueName
+        logger.info('RootLayout', '开始检查应用启动状态');
+        const result = await deviceStartupManager.checkStartupState();
+        
+        setStartupState(result.state);
+        setTerminalInfo(result.terminalInfo || null);
+        setDeviceInfo(result.deviceInfo || null);
+        
+        logger.info('RootLayout', '启动状态检查完成', { 
+          state: result.state, 
+          hasTerminal: !!result.terminalInfo,
+          hasAuthorizedBoutique: !!result.terminalInfo?.authorized_boutique
         });
-        setIsConfigured(config.isConfigured);
-        logger.info('RootLayout', '配置加载完成', { isConfigured: config.isConfigured });
       } catch (error) {
-        console.error('RootLayout: 配置加载失败', error);
-        logger.error('RootLayout', '配置加载失败', error);
-        // 如果配置加载失败，默认为未配置状态
-        setIsConfigured(false);
-      } finally {
-        setConfigLoaded(true);
+        logger.error('RootLayout', '启动状态检查失败', String(error));
+        setStartupState('error');
       }
     };
 
-    loadConfig();
-  }, []);
-
-  // 配置变化监听
-  useEffect(() => {
-    const unsubscribe = configManager.addListener((config) => {
-      setIsConfigured(config.isConfigured);
-      logger.info('RootLayout', '配置状态更新', { isConfigured: config.isConfigured });
-    });
-
-    return unsubscribe;
-  }, []);
+    // 只有字体加载完成后才开始检查
+    if (loaded) {
+      checkStartup();
+    }
+  }, [loaded]);
 
   // 忽略浏览器扩展错误（仅在 Web 环境中）
   useEffect(() => {
@@ -133,12 +122,20 @@ export default function RootLayout() {
     return null;
   }
 
-  // 配置检查逻辑：如果未配置，先显示配置页
-  if (!isConfigured) {
-    console.log('RootLayout: 应用未配置，显示配置页面', { isConfigured, configLoaded });
-    logger.info('RootLayout', '应用未配置，显示配置页面');
-    // 直接导入并渲染配置组件
-    const ConfigScreen = require('../screens/ConfigScreen').default;
+  // 根据启动状态渲染不同界面
+  if (startupState === 'loading') {
+    // 正在检查启动状态
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#f8f9fa' }}>
+        <ActivityIndicator size="large" color="#007AFF" />
+        <Text style={{ marginTop: 16, fontSize: 16, color: '#666' }}>正在检查设备状态...</Text>
+      </View>
+    );
+  }
+
+  if (startupState === 'first_time') {
+    // 第一次使用，显示设备注册界面
+    const DeviceRegistrationScreen = require('../screens/DeviceRegistrationScreen').default;
     return (
       <ErrorBoundary 
         onError={(error, errorInfo) => {
@@ -148,11 +145,72 @@ export default function RootLayout() {
         <WardrobeApolloProvider>
           <FullscreenConfig />
           <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-            <ConfigScreen />
+            <DeviceRegistrationScreen deviceInfo={deviceInfo} />
             <StatusBar style="auto" />
           </ThemeProvider>
         </WardrobeApolloProvider>
       </ErrorBoundary>
+    );
+  }
+
+  if (startupState === 'pending_approval') {
+    // 设备等待审批
+    const PendingApprovalScreen = require('../screens/PendingApprovalScreen').default;
+    return (
+      <ErrorBoundary 
+        onError={(error, errorInfo) => {
+          logger.error('App', '应用级错误', { error: error.message, errorInfo });
+        }}
+      >
+        <WardrobeApolloProvider>
+          <FullscreenConfig />
+          <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+            <PendingApprovalScreen terminalInfo={terminalInfo} deviceInfo={deviceInfo} />
+            <StatusBar style="auto" />
+          </ThemeProvider>
+        </WardrobeApolloProvider>
+      </ErrorBoundary>
+    );
+  }
+
+  if (startupState === 'error') {
+    // 检查过程出错
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#f8f9fa', padding: 20 }}>
+        <Text style={{ fontSize: 18, color: '#dc2626', fontWeight: '600', marginBottom: 8 }}>启动检查失败</Text>
+        <Text style={{ fontSize: 14, color: '#666', textAlign: 'center', marginBottom: 20 }}>
+          无法检查设备状态，请检查网络连接或联系管理员
+        </Text>
+        
+        <View style={{ flexDirection: 'row', gap: 16, marginBottom: 20 }}>
+          <Text 
+            style={{ fontSize: 16, color: '#007AFF', textDecorationLine: 'underline', paddingHorizontal: 16, paddingVertical: 8 }}
+            onPress={() => {
+              // 重新检查启动状态
+              setStartupState('loading');
+              deviceStartupManager.checkStartupState().then(result => {
+                setStartupState(result.state);
+                setTerminalInfo(result.terminalInfo || null);
+                setDeviceInfo(result.deviceInfo || null);
+              }).catch(() => {
+                setStartupState('error');
+              });
+            }}
+          >
+            重试
+          </Text>
+          
+          <Text 
+            style={{ fontSize: 16, color: '#34C759', textDecorationLine: 'underline', paddingHorizontal: 16, paddingVertical: 8 }}
+            onPress={() => {
+              // 跳过设备检查，直接进入配置
+              setStartupState('first_time');
+            }}
+          >
+            进入配置
+          </Text>
+        </View>
+      </View>
     );
   }
 
