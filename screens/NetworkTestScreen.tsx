@@ -1,32 +1,50 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useGetCategoriesQuery, useGetProductsByBoutiqueQuery } from '../generated/graphql';
 import { API_CONFIG } from '../config/api';
 import { configManager } from '../utils/configManager';
 import { useCurrentUser } from '../hooks/useCurrentUser';
+import { deviceStartupManager } from '../utils/deviceStartupManager';
 
 const NetworkTestScreen = () => {
   const [testResults, setTestResults] = useState<string[]>([]);
+  const [boutiqueId, setBoutiqueId] = useState<string>('');
   const router = useRouter();
   
   // 获取当前用户和配置
   const { user: currentUser } = useCurrentUser();
   const currentConfig = configManager.getConfig();
   
+  // 获取设备信息以确定授权的店铺
+  useEffect(() => {
+    const loadBoutiqueInfo = async () => {
+      try {
+        const startupInfo = await deviceStartupManager.checkStartupState();
+        if (startupInfo.state === 'approved' && startupInfo.terminalInfo?.authorized_boutique) {
+          setBoutiqueId(startupInfo.terminalInfo.authorized_boutique.id);
+        }
+      } catch (error) {
+        console.error('获取店铺信息失败:', error);
+      }
+    };
+    
+    loadBoutiqueInfo();
+  }, []);
+  
   const { data: categoriesData, loading: categoriesLoading, error: categoriesError } = useGetCategoriesQuery({
     variables: {
-      boutiqueId: currentConfig.selectedBoutiqueId || "",
+      boutiqueId: boutiqueId || "",
       filter: {},
       limit: 100,
       offset: 0
     },
-    skip: !currentConfig.selectedBoutiqueId,
+    skip: !boutiqueId,
   });
   
   const { data: productsData, loading: productsLoading, error: productsError } = useGetProductsByBoutiqueQuery({
     variables: {
-      boutiqueId: currentConfig.selectedBoutiqueId || "",
+      boutiqueId: boutiqueId || "",
       filter: {},
       limit: 100,
       offset: 0

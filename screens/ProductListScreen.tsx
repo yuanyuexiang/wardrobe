@@ -6,12 +6,12 @@ import CarouselModal from '../components/CarouselModal';
 import ProductCard from '../components/ProductCard';
 import Tab from '../components/Tab';
 import { useGetCategoriesQuery, useGetProductsQuery } from '../generated/graphql';
-import { useCurrentUser } from '../hooks/useCurrentUser';
 import { logger } from '../utils/logger';
 import { LAYOUT, getCardWidth, getBottomPadding } from '../utils/constants';
 import { imageCache } from '../utils/imageCache';
 import { getDirectusThumbnailUrl } from '../utils/directus';
 import { configManager } from '../utils/configManager';
+import { deviceStartupManager } from '../utils/deviceStartupManager';
 
 // 使用统一的布局常量
 const cardWidth = getCardWidth();
@@ -25,19 +25,9 @@ const ProductListScreen: React.FC = () => {
   const [carouselVisible, setCarouselVisible] = useState(false);
   const flatListRef = useRef<FlatList>(null);
   const [currentConfig, setCurrentConfig] = useState(configManager.getConfig());
+  const [boutiqueId, setBoutiqueId] = useState<string>('');
   
-  // 使用新的用户状态管理hook
-  const { user: currentUser, loading: userLoading, error: userError } = useCurrentUser();
-  
-  // 记录用户状态
-  useEffect(() => {
-    if (currentUser) {
-      logger.info('ProductListScreen', `用户信息加载成功 - ID: ${currentUser.id}, 姓名: ${currentUser.first_name} ${currentUser.last_name}`);
-    }
-    if (userError) {
-      logger.error('ProductListScreen', `用户信息加载失败: ${userError}`);
-    }
-  }, [currentUser, userError]);
+  // 设备授权系统不需要用户状态
 
   // 监听配置变化
   useEffect(() => {
@@ -52,36 +42,42 @@ const ProductListScreen: React.FC = () => {
     return unsubscribe;
   }, []);
   
+  // 获取设备信息以确定授权的店铺
+  useEffect(() => {
+    const loadBoutiqueInfo = async () => {
+      try {
+        const startupInfo = await deviceStartupManager.checkStartupState();
+        if (startupInfo.state === 'approved' && startupInfo.terminalInfo?.authorized_boutique) {
+          setBoutiqueId(startupInfo.terminalInfo.authorized_boutique.id);
+        }
+      } catch (error) {
+        logger.error('ProductListScreen', '获取店铺信息失败', error);
+      }
+    };
+    
+    loadBoutiqueInfo();
+  }, []);
+
   // 使用真实的API - 不再需要 userId 参数
   const { data: categoryData, loading: categoryLoading, error: categoryError } = useGetCategoriesQuery({
     variables: {
-      boutiqueId: currentConfig.selectedBoutiqueId || "",
+      boutiqueId: boutiqueId || "",
       filter: {},
       limit: 100,
       offset: 0
     },
-    skip: !currentConfig.selectedBoutiqueId,
+    skip: !boutiqueId,
   });
   
   // 获取店铺信息 - 不再使用用户依赖的查询
-  // 直接从配置中获取已选择的店铺ID
-  const boutiqueId = currentConfig.selectedBoutiqueId;
-  
-  // 构建查询变量
+  // 直接使用从设备启动管理器获取的店铺ID  // 构建查询变量
   const buildQueryVariables = () => {
     const variables: any = {};
     
     // 构建动态 filter 对象
     const filters: any[] = [];
     
-    // 添加用户过滤器 - 只显示当前用户创建的商品
-    if (currentUser?.id) {
-      filters.push({
-        user_created: { id: { _eq: currentUser.id } }
-      });
-    }
-
-    // 添加店铺过滤器 - 只显示当前店铺的商品
+    // 只使用店铺过滤器 - 显示当前店铺的所有商品
     if (boutiqueId) {
       filters.push({
         boutique_id: { id: { _eq: boutiqueId } }
@@ -131,44 +127,22 @@ const ProductListScreen: React.FC = () => {
   const queryVariables = buildQueryVariables();
   useEffect(() => {
     logger.info('ProductListScreen', '商品查询变量:', JSON.stringify(queryVariables, null, 2));
-  }, [selectedCategory, search, boutiqueId, currentUser]);
+  }, [selectedCategory, search, boutiqueId]);
 
   const { data: productData, loading: productLoading, error: productError, refetch } = useGetProductsQuery({
     variables: queryVariables,
   });
 
-  // 获取所有商品用于轮播 - 同样应用用户和店铺过滤器
+  // 获取所有商品用于轮播 - 只使用店铺过滤器
   const { data: allProductsData } = useGetProductsQuery({
     variables: {
-      filter: (() => {
-        const carouselFilters: any[] = [];
-        
-        // 添加用户过滤器
-        if (currentUser?.id) {
-          carouselFilters.push({
-            user_created: { id: { _eq: currentUser.id } }
-          });
-        }
-        
-        // 添加店铺过滤器
-        if (boutiqueId) {
-          carouselFilters.push({
-            boutique_id: { id: { _eq: boutiqueId } }
-          });
-        }
-        
-        if (carouselFilters.length === 0) {
-          return undefined;
-        } else if (carouselFilters.length === 1) {
-          return carouselFilters[0];
-        } else {
-          return { _and: carouselFilters };
-        }
-      })(),
+      filter: boutiqueId ? {
+        boutique_id: { id: { _eq: boutiqueId } }
+      } : undefined,
       limit: 1000, // 获取所有商品
       sort: ["-created_at"] // 按创建时间排序
     },
-    skip: !currentUser?.id || !boutiqueId, // 只有在有用户和店铺信息时才查询
+    skip: !boutiqueId, // 只有在有店铺信息时才查询
   });
 
   // 调试信息 - 使用结构化日志

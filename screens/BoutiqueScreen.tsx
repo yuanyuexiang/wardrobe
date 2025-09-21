@@ -19,6 +19,7 @@ import { logger } from '../utils/logger';
 import { useImagePreload } from '../utils/imageCache';
 import { LAYOUT } from '../utils/constants';
 import { configManager } from '../utils/configManager';
+import { deviceStartupManager } from '../utils/deviceStartupManager';
 
 const { screenWidth } = LAYOUT;
 
@@ -53,13 +54,30 @@ const BoutiqueScreen: React.FC = () => {
   };
 
   const [currentConfig] = useState(configManager.getConfig());
+  const [boutiqueId, setBoutiqueId] = useState<string>('');
+  
+  // 获取设备信息以确定授权的店铺
+  useEffect(() => {
+    const loadBoutiqueInfo = async () => {
+      try {
+        const startupInfo = await deviceStartupManager.checkStartupState();
+        if (startupInfo.state === 'approved' && startupInfo.terminalInfo?.authorized_boutique) {
+          setBoutiqueId(startupInfo.terminalInfo.authorized_boutique.id);
+        }
+      } catch (error) {
+        logger.error('BoutiqueScreen', '获取店铺信息失败', error);
+      }
+    };
+    
+    loadBoutiqueInfo();
+  }, []);
   
   const { data, error } = useGetBoutiquesQuery({
     variables: { 
-      filter: { id: { _eq: currentConfig.selectedBoutiqueId } },
+      filter: { id: { _eq: boutiqueId } },
       limit: 1
     },
-    skip: !currentConfig.selectedBoutiqueId
+    skip: !boutiqueId
   });
 
   const boutique = data?.boutiques?.[0]; // 假设一个用户只有一个商家
