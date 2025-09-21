@@ -55,6 +55,7 @@ query GetProducts($filter: products_filter, $limit: Int, $offset: Int, $sort: [S
     stock
     main_image
     images
+    carousel
     video_url
     is_on_sale
     status
@@ -106,6 +107,7 @@ query GetProductsByBoutique($boutiqueId: GraphQLStringOrFloat!, $filter: product
     stock
     main_image
     images
+    carousel
     video_url
     is_on_sale
     status
@@ -166,6 +168,7 @@ query GetProductsByBoutique(
     stock
     main_image
     images
+    carousel
     video_url
     is_on_sale
     status

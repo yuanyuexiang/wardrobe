@@ -30,14 +30,37 @@ const CarouselModal: React.FC<CarouselModalProps> = ({ visible, onClose, product
   const intervalRef = useRef<number | null>(null);
   const hideControlsTimeoutRef = useRef<number | null>(null);
 
-  // 过滤出有主图的商品
-  const validProducts = products.filter(product => product.main_image);
+  // 过滤出参与轮播的商品（carousel为"in"）并展开所有images
+  const carouselItems = products
+    .filter(product => product.carousel === "in") // 只包含参与轮播的商品
+    .flatMap(product => {
+      // 解析images字段
+      let imageIds: string[] = [];
+      if (product.images) {
+        try {
+          imageIds = Array.isArray(product.images) 
+            ? product.images 
+            : JSON.parse(product.images);
+        } catch (e) {
+          console.warn('解析商品images失败:', e);
+          imageIds = [];
+        }
+      }
+      
+      // 为每个图片创建一个轮播项，包含商品信息
+      return imageIds.map(imageId => ({
+        imageId,
+        productName: product.name,
+        productId: product.id,
+        // 可以添加其他需要的商品信息
+      }));
+    });
 
   useEffect(() => {
-    if (visible && validProducts.length > 0) {
+    if (visible && carouselItems.length > 0) {
       // 开始自动轮播
       intervalRef.current = setInterval(() => {
-        setCurrentIndex((prevIndex) => (prevIndex + 1) % validProducts.length);
+        setCurrentIndex((prevIndex) => (prevIndex + 1) % carouselItems.length);
       }, 5000); // 每5秒切换
     }
 
@@ -46,7 +69,7 @@ const CarouselModal: React.FC<CarouselModalProps> = ({ visible, onClose, product
         clearInterval(intervalRef.current);
       }
     };
-  }, [visible, validProducts.length]);
+  }, [visible, carouselItems.length]);
 
   useEffect(() => {
     if (visible) {
@@ -100,22 +123,22 @@ const CarouselModal: React.FC<CarouselModalProps> = ({ visible, onClose, product
 
   const goToPrevious = () => {
     setCurrentIndex((prevIndex) => 
-      prevIndex === 0 ? validProducts.length - 1 : prevIndex - 1
+      prevIndex === 0 ? carouselItems.length - 1 : prevIndex - 1
     );
   };
 
   const goToNext = () => {
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % validProducts.length);
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % carouselItems.length);
   };
 
-  if (!visible || validProducts.length === 0) {
+  if (!visible || carouselItems.length === 0) {
     return null;
   }
 
-  const currentProduct = validProducts[currentIndex];
-  const imageUrl = currentProduct.main_image 
+  const currentItem = carouselItems[currentIndex];
+  const imageUrl = currentItem?.imageId 
     ? getDirectusImageUrl(
-        currentProduct.main_image, 
+        currentItem.imageId, 
         Math.round(screenWidth), 
         Math.round(screenHeight),
         90 // 高质量
@@ -123,7 +146,7 @@ const CarouselModal: React.FC<CarouselModalProps> = ({ visible, onClose, product
     : null;
 
   // 结构化日志
-  logger.debug('CarouselModal', `轮播状态更新 - 当前索引: ${currentIndex}, 商品: ${currentProduct?.name}, 总数: ${validProducts.length}`);
+  logger.debug('CarouselModal', `轮播状态更新 - 当前索引: ${currentIndex}, 商品: ${currentItem?.productName}, 总数: ${carouselItems.length}`);
 
   return (
     <Modal
@@ -146,7 +169,7 @@ const CarouselModal: React.FC<CarouselModalProps> = ({ visible, onClose, product
           {controlsVisible && (
             <View style={styles.counter}>
               <Text style={styles.counterText}>
-                {currentIndex + 1} / {validProducts.length}
+                {currentIndex + 1} / {carouselItems.length}
               </Text>
             </View>
           )}
@@ -190,7 +213,7 @@ const CarouselModal: React.FC<CarouselModalProps> = ({ visible, onClose, product
           {controlsVisible && (
             <View style={styles.overlayInfo}>
               <Text style={styles.overlayProductName} numberOfLines={2}>
-                {currentProduct.name || '商品名称'}
+                {currentItem?.productName || '商品名称'}
               </Text>
               {/* <Text style={styles.overlayProductPrice}>
                 ¥{currentProduct.price || '0.00'}
@@ -202,7 +225,7 @@ const CarouselModal: React.FC<CarouselModalProps> = ({ visible, onClose, product
         {/* 底部指示器 */}
         {controlsVisible && (
           <View style={styles.indicators}>
-            {validProducts.map((_, index) => (
+            {carouselItems.map((_, index) => (
               <TouchableOpacity
                 key={index}
                 style={[
