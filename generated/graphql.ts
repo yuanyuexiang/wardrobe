@@ -4428,7 +4428,7 @@ export type GetProductDetailQueryVariables = Exact<{
 }>;
 
 
-export type GetProductDetailQuery = { __typename?: 'Query', products_by_id?: { __typename?: 'products', id: string, name: string, subtitle?: string | null, description?: string | null, price: number, market_price?: number | null, stock?: number | null, main_image?: string | null, images?: any | null, video_url?: string | null, is_on_sale?: boolean | null, status?: string | null, total_sales_volume?: number | null, rating_avg?: number | null, total_reviews?: number | null, brand?: string | null, barcode?: string | null, seller_id?: number | null, created_at?: any | null, updated_at?: any | null, date_created?: any | null, date_updated?: any | null, boutique_id?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null, city?: string | null, code?: string | null, category?: string | null, contact?: string | null, expire_date?: any | null, stars?: number | null, main_image?: string | null, images?: any | null } | null, user_created?: { __typename?: 'directus_users', id: string, first_name?: string | null, last_name?: string | null, email?: string | null } | null } | null };
+export type GetProductDetailQuery = { __typename?: 'Query', products_by_id?: { __typename?: 'products', id: string, name: string, subtitle?: string | null, description?: string | null, price: number, market_price?: number | null, stock?: number | null, main_image?: string | null, images?: any | null, video_url?: string | null, is_on_sale?: boolean | null, status?: string | null, total_sales_volume?: number | null, rating_avg?: number | null, total_reviews?: number | null, brand?: string | null, barcode?: string | null, seller_id?: number | null, created_at?: any | null, updated_at?: any | null, date_created?: any | null, date_updated?: any | null, boutique_id?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null, city?: string | null, code?: string | null, category?: string | null, contact?: string | null, expire_date?: any | null, stars?: number | null, main_image?: string | null, images?: any | null } | null, user_created?: { __typename?: 'directus_users', id: string, first_name?: string | null, last_name?: string | null, email?: string | null } | null, category_id?: { __typename?: 'categories', id: string, name: string, description?: string | null } | null } | null };
 
 export type GetMyProductsQueryVariables = Exact<{
   userId: Scalars['ID']['input'];
@@ -5435,6 +5435,11 @@ export const GetProductDetailDocument = gql`
       first_name
       last_name
       email
+    }
+    category_id {
+      id
+      name
+      description
     }
     created_at
     updated_at

@@ -239,6 +239,11 @@ query GetProductDetail($id: ID!) {
       last_name
       email
     }
+    category_id {
+      id
+      name
+      description
+    }
     created_at
     updated_at
     date_created

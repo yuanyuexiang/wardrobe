@@ -38,9 +38,6 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                   {product.subtitle}
                 </Text>
               )}
-              {/* <Text style={styles.price}>
-                ￥{product.price !== undefined ? product.price : '价格'}
-              </Text> */}
             </View>
           </View>
         </ImageBackground>
@@ -58,9 +55,6 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                 {product.subtitle}
               </Text>
             )}
-            <Text style={[styles.price, { color: '#ff6b35', textShadowColor: 'transparent' }]}>
-              ￥{product.price !== undefined ? product.price : '价格'}
-            </Text>
           </View>
         </View>
       )}
@@ -132,14 +126,6 @@ const styles = StyleSheet.create({
     color: '#f5f5f5',
     lineHeight: 16,
     marginBottom: 4, // 固定间距
-    textShadowColor: 'rgba(0, 0, 0, 1)',
-    textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 3,
-  },
-  price: {
-    fontSize: 18,
-    color: '#FFD700',
-    fontWeight: 'bold',
     textShadowColor: 'rgba(0, 0, 0, 1)',
     textShadowOffset: { width: 1, height: 1 },
     textShadowRadius: 3,
