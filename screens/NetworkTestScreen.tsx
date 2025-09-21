@@ -169,14 +169,6 @@ const NetworkTestScreen = () => {
         <Button title="清除结果" onPress={clearResults} color="#ff6b6b" />
       </View>
       
-      <View style={styles.configSection}>
-        <Text style={styles.configTitle}>⚙️ 配置管理</Text>
-        <View style={styles.buttonContainer}>
-          <Button title="进入配置页面" onPress={goToConfig} color="#007AFF" />
-          <Button title="重置并重新配置" onPress={resetConfigAndGoToConfig} color="#FF9500" />
-        </View>
-      </View>
-      
       <Text style={styles.subtitle}>状态信息:</Text>
       <View style={styles.statusContainer}>
         <Text style={styles.statusText}>

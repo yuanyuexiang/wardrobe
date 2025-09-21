@@ -199,16 +199,6 @@ export default function RootLayout() {
           >
             重试
           </Text>
-          
-          <Text 
-            style={{ fontSize: 16, color: '#34C759', textDecorationLine: 'underline', paddingHorizontal: 16, paddingVertical: 8 }}
-            onPress={() => {
-              // 跳过设备检查，直接进入配置
-              setStartupState('first_time');
-            }}
-          >
-            进入配置
-          </Text>
         </View>
       </View>
     );
@@ -231,14 +221,6 @@ export default function RootLayout() {
                 title: '商品详情',
                 headerShown: true,
                 presentation: 'card'
-              }} 
-            />
-            <Stack.Screen 
-              name="config" 
-              options={{ 
-                title: '应用配置',
-                headerShown: false,
-                presentation: 'modal'
               }} 
             />
             <Stack.Screen name="+not-found" />
