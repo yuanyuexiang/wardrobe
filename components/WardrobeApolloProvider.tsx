@@ -83,6 +83,7 @@ const WardrobeApolloProvider: React.FC<{ children: React.ReactNode }> = ({ child
       );
       
       setClient(apolloClient);
+      
       logger.info('WardrobeApolloProvider', '使用配置初始化Apollo Client', {
         apiBaseUrl: config.apiBaseUrl,
         authToken: config.authToken.substring(0, 8) + '...'

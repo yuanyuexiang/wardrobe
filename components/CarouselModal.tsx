@@ -12,6 +12,8 @@ import {
     View,
     StatusBar,
 } from 'react-native';
+import { useQuery } from '@apollo/client';
+import { GetProductsByBoutiqueDocument } from '../generated/graphql';
 import { getDirectusImageUrl } from '../utils/directus';
 import { logger } from '../utils/logger';
 
@@ -19,19 +21,85 @@ interface CarouselModalProps {
   visible: boolean;
   onClose: () => void;
   products: any[];
+  boutiqueId?: string;
 }
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('screen'); // 使用 'screen' 而不是 'window' 来获取包含状态栏的完整屏幕尺寸
 
-const CarouselModal: React.FC<CarouselModalProps> = ({ visible, onClose, products }) => {
+const CarouselModal: React.FC<CarouselModalProps> = ({ visible, onClose, products, boutiqueId }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(true);
   const [controlsVisible, setControlsVisible] = useState(true);
+  const [localProducts, setLocalProducts] = useState(products);
   const intervalRef = useRef<number | null>(null);
   const hideControlsTimeoutRef = useRef<number | null>(null);
+  const updateIntervalRef = useRef<number | null>(null);
+
+  // GraphQL查询，用于定时更新
+  const { data: queryData, refetch } = useQuery(GetProductsByBoutiqueDocument, {
+    variables: { 
+      boutiqueId: boutiqueId || '', 
+      filter: { carousel: { _eq: "in" } }
+    },
+    skip: !boutiqueId || !visible,
+    fetchPolicy: 'cache-first',
+  });
+
+  // 定时更新数据（测试模式 - 10秒）
+  useEffect(() => {
+    if (!visible || !boutiqueId) return;
+
+    // 立即更新一次
+    if (refetch) {
+      logger.info('CarouselModal', '轮播启动，立即更新数据');
+      refetch().catch(error => {
+        logger.error('CarouselModal', '数据刷新失败', error);
+      });
+    }
+
+    // 递归设置定时更新
+    const scheduleNextUpdate = () => {
+      updateIntervalRef.current = setTimeout(() => {
+        logger.info('CarouselModal', '定时更新商品数据');
+        if (refetch) {
+          refetch()
+            .then(() => {
+              logger.info('CarouselModal', '定时更新成功');
+              scheduleNextUpdate(); // 成功后安排下次更新
+            })
+            .catch(error => {
+              logger.error('CarouselModal', '定时数据刷新失败', error);
+              scheduleNextUpdate(); // 失败后也安排下次更新
+            });
+        }
+      }, 10 * 1000); // 10秒测试间隔
+    };
+
+    // 开始定时更新
+    scheduleNextUpdate();
+
+    return () => {
+      if (updateIntervalRef.current) {
+        clearTimeout(updateIntervalRef.current);
+        updateIntervalRef.current = null;
+      }
+    };
+  }, [visible, boutiqueId, refetch]);
+
+  // 更新本地产品数据
+  useEffect(() => {
+    if (queryData?.products) {
+      setLocalProducts(queryData.products);
+      logger.info('CarouselModal', '产品数据已更新', { 
+        count: queryData.products.length 
+      });
+    } else if (products) {
+      setLocalProducts(products);
+    }
+  }, [queryData?.products, products]);
 
   // 过滤出参与轮播的商品（carousel为"in"）并展开所有images
-  const carouselItems = products
+  const carouselItems = localProducts
     .filter(product => product.carousel === "in") // 只包含参与轮播的商品
     .flatMap(product => {
       // 解析images字段

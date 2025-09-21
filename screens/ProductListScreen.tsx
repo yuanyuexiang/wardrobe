@@ -30,6 +30,7 @@ const ProductListScreen: React.FC = () => {
   const [isCarouselDevice, setIsCarouselDevice] = useState(false); // 是否为轮播设备
   const flatListRef = useRef<FlatList>(null);
   const [currentConfig, setCurrentConfig] = useState(configManager.getConfig());
+  const updateIntervalRef = useRef<number | null>(null); // 定时更新引用
   
   // 使用共享的商家信息
   const { boutiqueId, boutique, loading: boutiqueLoading } = useBoutiqueInfo();
@@ -145,7 +146,7 @@ const ProductListScreen: React.FC = () => {
   });
 
   // 获取所有商品用于轮播 - 只使用店铺过滤器
-  const { data: allProductsData } = useGetProductsQuery({
+  const { data: allProductsData, refetch: refetchAllProducts } = useGetProductsQuery({
     variables: {
       filter: boutiqueId ? {
         boutique_id: { id: { _eq: boutiqueId } }
@@ -165,6 +166,39 @@ const ProductListScreen: React.FC = () => {
       logger.error('ProductListScreen', '商品加载错误', productError.message);
     }
   }, [categoryError, productError]);
+
+  // 定时更新商品数据（测试模式 - 30秒）
+  useEffect(() => {
+    if (!boutiqueId) return;
+
+    // 递归设置定时更新
+    const scheduleNextUpdate = () => {
+      updateIntervalRef.current = setTimeout(() => {
+        logger.info('ProductListScreen', '定时更新主商品列表');
+        
+        // 只更新主商品列表，轮播数据由CarouselModal自己管理
+        refetch?.()
+          .then(() => {
+            logger.info('ProductListScreen', '主商品列表更新成功');
+            scheduleNextUpdate(); // 成功后安排下次更新
+          })
+          .catch(error => {
+            logger.error('ProductListScreen', '主商品列表更新失败', error);
+            scheduleNextUpdate(); // 失败后也安排下次更新
+          });
+      }, 30 * 1000); // 30秒测试间隔
+    };
+
+    // 开始定时更新
+    scheduleNextUpdate();
+
+    return () => {
+      if (updateIntervalRef.current) {
+        clearTimeout(updateIntervalRef.current);
+        updateIntervalRef.current = null;
+      }
+    };
+  }, [boutiqueId, refetch]);
 
   // 图像预加载优化
   useEffect(() => {
@@ -363,6 +397,7 @@ const ProductListScreen: React.FC = () => {
         visible={carouselVisible}
         onClose={() => setCarouselVisible(false)}
         products={allProductsData?.products || []}
+        boutiqueId={boutiqueId}
       />
 
       {/* 浮动二维码 */}
