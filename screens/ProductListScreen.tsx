@@ -5,6 +5,7 @@ import { router } from 'expo-router';
 import CarouselModal from '../components/CarouselModal';
 import ProductCard from '../components/ProductCard';
 import Tab from '../components/Tab';
+import FloatingQRCode from '../components/FloatingQRCode';
 import { useGetCategoriesQuery, useGetProductsQuery } from '../generated/graphql';
 import { logger } from '../utils/logger';
 import { LAYOUT, getCardWidth, getBottomPadding } from '../utils/constants';
@@ -23,6 +24,7 @@ const ProductListScreen: React.FC = () => {
   const [search, setSearch] = useState('');
   const [currentIndex, setCurrentIndex] = useState(0);
   const [carouselVisible, setCarouselVisible] = useState(false);
+  const [qrCodeVisible, setQrCodeVisible] = useState(true); // 默认显示二维码
   const flatListRef = useRef<FlatList>(null);
   const [currentConfig, setCurrentConfig] = useState(configManager.getConfig());
   const [boutiqueId, setBoutiqueId] = useState<string>('');
@@ -283,6 +285,13 @@ const ProductListScreen: React.FC = () => {
         visible={carouselVisible}
         onClose={() => setCarouselVisible(false)}
         products={allProductsData?.products || []}
+      />
+
+      {/* 浮动二维码 */}
+      <FloatingQRCode
+        boutiqueId={boutiqueId}
+        visible={qrCodeVisible && !!boutiqueId}
+        onClose={() => setQrCodeVisible(false)}
       />
     </SafeAreaView>
   );

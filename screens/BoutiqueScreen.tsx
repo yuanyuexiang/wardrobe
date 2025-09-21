@@ -20,6 +20,7 @@ import { useImagePreload } from '../utils/imageCache';
 import { LAYOUT } from '../utils/constants';
 import { configManager } from '../utils/configManager';
 import { deviceStartupManager } from '../utils/deviceStartupManager';
+import FloatingQRCode from '../components/FloatingQRCode';
 
 const { screenWidth } = LAYOUT;
 
@@ -34,6 +35,7 @@ const BoutiqueScreen: React.FC = () => {
   const [previewVisible, setPreviewVisible] = useState(false);
   const [previewImageUrl, setPreviewImageUrl] = useState<string>('');
   const [previewImageSource, setPreviewImageSource] = useState<{uri: string, cache?: 'force-cache'} | null>(null);
+  const [qrCodeVisible, setQrCodeVisible] = useState(true); // 浮动二维码状态
 
   // 打开图片预览
   const openImagePreview = (imageId: string) => {
@@ -315,6 +317,13 @@ const BoutiqueScreen: React.FC = () => {
           </SafeAreaView>
         </TouchableOpacity>
       </Modal>
+
+      {/* 浮动二维码 */}
+      <FloatingQRCode
+        boutiqueId={boutiqueId}
+        visible={qrCodeVisible && !!boutiqueId}
+        onClose={() => setQrCodeVisible(false)}
+      />
     </SafeAreaView>
   );
 };
