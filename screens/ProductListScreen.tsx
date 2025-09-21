@@ -7,6 +7,7 @@ import ProductCard from '../components/ProductCard';
 import Tab from '../components/Tab';
 import FloatingQRCode from '../components/FloatingQRCode';
 import { useGetCategoriesQuery, useGetProductsQuery } from '../generated/graphql';
+import { useBoutiqueInfo } from '../hooks/useBoutiqueInfo';
 import { logger } from '../utils/logger';
 import { LAYOUT, getCardWidth, getBottomPadding } from '../utils/constants';
 import { imageCache } from '../utils/imageCache';
@@ -28,7 +29,9 @@ const ProductListScreen: React.FC = () => {
   const [isGridLayout, setIsGridLayout] = useState(false); // 布局切换状态: false=单层水平, true=双层网格
   const flatListRef = useRef<FlatList>(null);
   const [currentConfig, setCurrentConfig] = useState(configManager.getConfig());
-  const [boutiqueId, setBoutiqueId] = useState<string>('');
+  
+  // 使用共享的商家信息
+  const { boutiqueId, boutique, loading: boutiqueLoading } = useBoutiqueInfo();
   
   // 设备授权系统不需要用户状态
 
@@ -43,22 +46,6 @@ const ProductListScreen: React.FC = () => {
     });
     
     return unsubscribe;
-  }, []);
-  
-  // 获取设备信息以确定授权的店铺
-  useEffect(() => {
-    const loadBoutiqueInfo = async () => {
-      try {
-        const startupInfo = await deviceStartupManager.checkStartupState();
-        if (startupInfo.state === 'approved' && startupInfo.terminalInfo?.authorized_boutique) {
-          setBoutiqueId(startupInfo.terminalInfo.authorized_boutique.id);
-        }
-      } catch (error) {
-        logger.error('ProductListScreen', '获取店铺信息失败', error);
-      }
-    };
-    
-    loadBoutiqueInfo();
   }, []);
 
   // 使用真实的API - 不再需要 userId 参数

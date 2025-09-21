@@ -12,21 +12,18 @@ import {
   View
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useGetBoutiquesQuery } from '../generated/graphql';
-import { useCurrentUser } from '../hooks/useCurrentUser';
+import { useBoutiqueInfo } from '../hooks/useBoutiqueInfo';
 import { getDirectusImageUrl } from '../utils/directus';
 import { logger } from '../utils/logger';
 import { useImagePreload } from '../utils/imageCache';
 import { LAYOUT } from '../utils/constants';
-import { configManager } from '../utils/configManager';
-import { deviceStartupManager } from '../utils/deviceStartupManager';
 import FloatingQRCode from '../components/FloatingQRCode';
 
 const { screenWidth } = LAYOUT;
 
 const BoutiqueScreen: React.FC = () => {
-  // 使用全局用户状态管理
-  const { user, loading: userLoading, error: userError } = useCurrentUser();
+  // 使用共享的商家信息
+  const { boutiqueId, boutique, loading: boutiqueLoading, error } = useBoutiqueInfo();
   
   // 使用图片缓存优化
   const { preload, preloadBatch, getImageUrl, getThumbnailUrl } = useImagePreload();
@@ -54,35 +51,6 @@ const BoutiqueScreen: React.FC = () => {
     setPreviewVisible(false);
     logger.debug('BoutiqueScreen', '关闭图片预览');
   };
-
-  const [currentConfig] = useState(configManager.getConfig());
-  const [boutiqueId, setBoutiqueId] = useState<string>('');
-  
-  // 获取设备信息以确定授权的店铺
-  useEffect(() => {
-    const loadBoutiqueInfo = async () => {
-      try {
-        const startupInfo = await deviceStartupManager.checkStartupState();
-        if (startupInfo.state === 'approved' && startupInfo.terminalInfo?.authorized_boutique) {
-          setBoutiqueId(startupInfo.terminalInfo.authorized_boutique.id);
-        }
-      } catch (error) {
-        logger.error('BoutiqueScreen', '获取店铺信息失败', error);
-      }
-    };
-    
-    loadBoutiqueInfo();
-  }, []);
-  
-  const { data, error } = useGetBoutiquesQuery({
-    variables: { 
-      filter: { id: { _eq: boutiqueId } },
-      limit: 1
-    },
-    skip: !boutiqueId
-  });
-
-  const boutique = data?.boutiques?.[0]; // 假设一个用户只有一个商家
 
   // 预加载主图片和相册图片到缓存
   useEffect(() => {
@@ -112,17 +80,26 @@ const BoutiqueScreen: React.FC = () => {
     }
   }, [boutique?.main_image, boutique?.images, preload, preloadBatch]);
 
+  // 如果正在加载中，不显示任何内容（或者显示一个简单的加载指示器）
+  if (boutiqueLoading) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <StatusBar barStyle="dark-content" backgroundColor="#f5f5f5" />
+        <View style={styles.errorContainer}>
+          {/* 可以选择不显示任何内容，或者显示一个简单的加载指示器 */}
+        </View>
+      </SafeAreaView>
+    );
+  }
+
   if (error || !boutique) {
     return (
       <SafeAreaView style={styles.container}>
         <StatusBar barStyle="dark-content" backgroundColor="#f5f5f5" />
         <View style={styles.errorContainer}>
           <Text style={styles.errorText}>
-            {error ? `加载失败：${error.message}` : '暂无商家信息'}
+            {error ? `加载失败：${error.message}` : '商家信息不可用'}
           </Text>
-          <TouchableOpacity style={styles.createButton}>
-            <Text style={styles.createButtonText}>创建商家</Text>
-          </TouchableOpacity>
         </View>
       </SafeAreaView>
     );
