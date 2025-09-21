@@ -4293,13 +4293,6 @@ export type GetBoutiqueDetailQueryVariables = Exact<{
 
 export type GetBoutiqueDetailQuery = { __typename?: 'Query', boutiques_by_id?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null, city?: string | null, code?: string | null, category?: string | null, contact?: string | null, expire_date?: any | null, main_image?: string | null, images?: any | null, status?: string | null, stars?: number | null, sort?: number | null, date_created?: any | null, date_updated?: any | null } | null };
 
-export type GetMyBoutiqueQueryVariables = Exact<{
-  userId: Scalars['ID']['input'];
-}>;
-
-
-export type GetMyBoutiqueQuery = { __typename?: 'Query', boutiques: Array<{ __typename?: 'boutiques', id: string, name?: string | null, address?: string | null, city?: string | null, code?: string | null, category?: string | null, contact?: string | null, expire_date?: any | null, main_image?: string | null, images?: any | null, status?: string | null, stars?: number | null, sort?: number | null, date_created?: any | null, date_updated?: any | null }> };
-
 export type GetBoutiqueProductsQueryVariables = Exact<{
   boutiqueId: Scalars['GraphQLStringOrFloat']['input'];
   filter?: InputMaybe<Products_Filter>;
@@ -4323,7 +4316,6 @@ export type GetBoutiqueCategoriesQueryVariables = Exact<{
 export type GetBoutiqueCategoriesQuery = { __typename?: 'Query', categories: Array<{ __typename?: 'categories', id: string, name: string, description?: string | null, date_created?: any | null, date_updated?: any | null }> };
 
 export type GetAllCategoriesQueryVariables = Exact<{
-  userId: Scalars['ID']['input'];
   boutiqueId: Scalars['GraphQLStringOrFloat']['input'];
   filter?: InputMaybe<Categories_Filter>;
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -4335,7 +4327,6 @@ export type GetAllCategoriesQueryVariables = Exact<{
 export type GetAllCategoriesQuery = { __typename?: 'Query', categories: Array<{ __typename?: 'categories', id: string, name: string, description?: string | null, date_created?: any | null, date_updated?: any | null, boutique?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null, city?: string | null, category?: string | null } | null }> };
 
 export type GetCategoryByIdQueryVariables = Exact<{
-  userId: Scalars['ID']['input'];
   boutiqueId: Scalars['GraphQLStringOrFloat']['input'];
   id: Scalars['ID']['input'];
 }>;
@@ -4392,7 +4383,6 @@ export type UpsertCustomerMutationVariables = Exact<{
 export type UpsertCustomerMutation = { __typename?: 'Mutation', create_customers_item?: { __typename?: 'customers', id: string, open_id: string, nick_name?: string | null, avatar?: string | null, type?: string | null, sex?: number | null, status?: string | null, date_created?: any | null } | null };
 
 export type GetCategoriesQueryVariables = Exact<{
-  userId: Scalars['ID']['input'];
   boutiqueId: Scalars['GraphQLStringOrFloat']['input'];
   filter?: InputMaybe<Categories_Filter>;
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -4422,17 +4412,6 @@ export type GetProductsQueryVariables = Exact<{
 
 export type GetProductsQuery = { __typename?: 'Query', products: Array<{ __typename?: 'products', id: string, name: string, subtitle?: string | null, description?: string | null, price: number, market_price?: number | null, stock?: number | null, main_image?: string | null, images?: any | null, video_url?: string | null, is_on_sale?: boolean | null, status?: string | null, total_sales_volume?: number | null, rating_avg?: number | null, total_reviews?: number | null, brand?: string | null, barcode?: string | null, seller_id?: number | null, created_at?: any | null, updated_at?: any | null, date_created?: any | null, date_updated?: any | null, category_id?: { __typename?: 'categories', id: string, name: string, description?: string | null } | null, boutique_id?: { __typename?: 'boutiques', id: string, name?: string | null } | null, user_created?: { __typename?: 'directus_users', id: string, first_name?: string | null, last_name?: string | null, email?: string | null } | null }> };
 
-export type GetProductsByUserQueryVariables = Exact<{
-  userId: Scalars['ID']['input'];
-  filter?: InputMaybe<Products_Filter>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>> | InputMaybe<Scalars['String']['input']>>;
-}>;
-
-
-export type GetProductsByUserQuery = { __typename?: 'Query', products: Array<{ __typename?: 'products', id: string, name: string, subtitle?: string | null, description?: string | null, price: number, market_price?: number | null, stock?: number | null, main_image?: string | null, images?: any | null, video_url?: string | null, is_on_sale?: boolean | null, status?: string | null, total_sales_volume?: number | null, rating_avg?: number | null, total_reviews?: number | null, brand?: string | null, barcode?: string | null, seller_id?: number | null, created_at?: any | null, updated_at?: any | null, date_created?: any | null, date_updated?: any | null, category_id?: { __typename?: 'categories', id: string, name: string, description?: string | null } | null, boutique_id?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null, city?: string | null, category?: string | null } | null, user_created?: { __typename?: 'directus_users', id: string, first_name?: string | null, last_name?: string | null, email?: string | null } | null }> };
-
 export type GetProductsByBoutiqueQueryVariables = Exact<{
   boutiqueId: Scalars['GraphQLStringOrFloat']['input'];
   filter?: InputMaybe<Products_Filter>;
@@ -4443,18 +4422,6 @@ export type GetProductsByBoutiqueQueryVariables = Exact<{
 
 
 export type GetProductsByBoutiqueQuery = { __typename?: 'Query', products: Array<{ __typename?: 'products', id: string, name: string, subtitle?: string | null, description?: string | null, price: number, market_price?: number | null, stock?: number | null, main_image?: string | null, images?: any | null, video_url?: string | null, is_on_sale?: boolean | null, status?: string | null, total_sales_volume?: number | null, rating_avg?: number | null, total_reviews?: number | null, brand?: string | null, barcode?: string | null, seller_id?: number | null, created_at?: any | null, updated_at?: any | null, date_created?: any | null, date_updated?: any | null, category_id?: { __typename?: 'categories', id: string, name: string, description?: string | null } | null, boutique_id?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null, city?: string | null, category?: string | null } | null, user_created?: { __typename?: 'directus_users', id: string, first_name?: string | null, last_name?: string | null, email?: string | null } | null }> };
-
-export type GetProductsByUserAndBoutiqueQueryVariables = Exact<{
-  userId: Scalars['ID']['input'];
-  boutiqueId: Scalars['GraphQLStringOrFloat']['input'];
-  filter?: InputMaybe<Products_Filter>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>> | InputMaybe<Scalars['String']['input']>>;
-}>;
-
-
-export type GetProductsByUserAndBoutiqueQuery = { __typename?: 'Query', products: Array<{ __typename?: 'products', id: string, name: string, subtitle?: string | null, description?: string | null, price: number, market_price?: number | null, stock?: number | null, main_image?: string | null, images?: any | null, video_url?: string | null, is_on_sale?: boolean | null, status?: string | null, total_sales_volume?: number | null, rating_avg?: number | null, total_reviews?: number | null, brand?: string | null, barcode?: string | null, seller_id?: number | null, created_at?: any | null, updated_at?: any | null, date_created?: any | null, date_updated?: any | null, category_id?: { __typename?: 'categories', id: string, name: string, description?: string | null } | null, boutique_id?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null, city?: string | null, category?: string | null } | null, user_created?: { __typename?: 'directus_users', id: string, first_name?: string | null, last_name?: string | null, email?: string | null } | null }> };
 
 export type GetProductDetailQueryVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -4645,60 +4612,6 @@ export type GetBoutiqueDetailQueryHookResult = ReturnType<typeof useGetBoutiqueD
 export type GetBoutiqueDetailLazyQueryHookResult = ReturnType<typeof useGetBoutiqueDetailLazyQuery>;
 export type GetBoutiqueDetailSuspenseQueryHookResult = ReturnType<typeof useGetBoutiqueDetailSuspenseQuery>;
 export type GetBoutiqueDetailQueryResult = ApolloReactCommon.QueryResult<GetBoutiqueDetailQuery, GetBoutiqueDetailQueryVariables>;
-export const GetMyBoutiqueDocument = gql`
-    query GetMyBoutique($userId: ID!) {
-  boutiques(filter: {user_created: {id: {_eq: $userId}}}) {
-    id
-    name
-    address
-    city
-    code
-    category
-    contact
-    expire_date
-    main_image
-    images
-    status
-    stars
-    sort
-    date_created
-    date_updated
-  }
-}
-    `;
-
-/**
- * __useGetMyBoutiqueQuery__
- *
- * To run a query within a React component, call `useGetMyBoutiqueQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetMyBoutiqueQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetMyBoutiqueQuery({
- *   variables: {
- *      userId: // value for 'userId'
- *   },
- * });
- */
-export function useGetMyBoutiqueQuery(baseOptions: ApolloReactHooks.QueryHookOptions<GetMyBoutiqueQuery, GetMyBoutiqueQueryVariables> & ({ variables: GetMyBoutiqueQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
-        const options = {...defaultOptions, ...baseOptions}
-        return ApolloReactHooks.useQuery<GetMyBoutiqueQuery, GetMyBoutiqueQueryVariables>(GetMyBoutiqueDocument, options);
-      }
-export function useGetMyBoutiqueLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetMyBoutiqueQuery, GetMyBoutiqueQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return ApolloReactHooks.useLazyQuery<GetMyBoutiqueQuery, GetMyBoutiqueQueryVariables>(GetMyBoutiqueDocument, options);
-        }
-export function useGetMyBoutiqueSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetMyBoutiqueQuery, GetMyBoutiqueQueryVariables>) {
-          const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
-          return ApolloReactHooks.useSuspenseQuery<GetMyBoutiqueQuery, GetMyBoutiqueQueryVariables>(GetMyBoutiqueDocument, options);
-        }
-export type GetMyBoutiqueQueryHookResult = ReturnType<typeof useGetMyBoutiqueQuery>;
-export type GetMyBoutiqueLazyQueryHookResult = ReturnType<typeof useGetMyBoutiqueLazyQuery>;
-export type GetMyBoutiqueSuspenseQueryHookResult = ReturnType<typeof useGetMyBoutiqueSuspenseQuery>;
-export type GetMyBoutiqueQueryResult = ApolloReactCommon.QueryResult<GetMyBoutiqueQuery, GetMyBoutiqueQueryVariables>;
 export const GetBoutiqueProductsDocument = gql`
     query GetBoutiqueProducts($boutiqueId: GraphQLStringOrFloat!, $filter: products_filter, $limit: Int, $offset: Int, $sort: [String]) {
   products(
@@ -4824,9 +4737,9 @@ export type GetBoutiqueCategoriesLazyQueryHookResult = ReturnType<typeof useGetB
 export type GetBoutiqueCategoriesSuspenseQueryHookResult = ReturnType<typeof useGetBoutiqueCategoriesSuspenseQuery>;
 export type GetBoutiqueCategoriesQueryResult = ApolloReactCommon.QueryResult<GetBoutiqueCategoriesQuery, GetBoutiqueCategoriesQueryVariables>;
 export const GetAllCategoriesDocument = gql`
-    query GetAllCategories($userId: ID!, $boutiqueId: GraphQLStringOrFloat!, $filter: categories_filter, $limit: Int, $offset: Int, $sort: [String]) {
+    query GetAllCategories($boutiqueId: GraphQLStringOrFloat!, $filter: categories_filter, $limit: Int, $offset: Int, $sort: [String]) {
   categories(
-    filter: {user_created: {id: {_eq: $userId}}, boutique_id: {id: {_eq: $boutiqueId}}, _and: [$filter]}
+    filter: {boutique_id: {id: {_eq: $boutiqueId}}, _and: [$filter]}
     limit: $limit
     offset: $offset
     sort: $sort
@@ -4859,7 +4772,6 @@ export const GetAllCategoriesDocument = gql`
  * @example
  * const { data, loading, error } = useGetAllCategoriesQuery({
  *   variables: {
- *      userId: // value for 'userId'
  *      boutiqueId: // value for 'boutiqueId'
  *      filter: // value for 'filter'
  *      limit: // value for 'limit'
@@ -4885,7 +4797,7 @@ export type GetAllCategoriesLazyQueryHookResult = ReturnType<typeof useGetAllCat
 export type GetAllCategoriesSuspenseQueryHookResult = ReturnType<typeof useGetAllCategoriesSuspenseQuery>;
 export type GetAllCategoriesQueryResult = ApolloReactCommon.QueryResult<GetAllCategoriesQuery, GetAllCategoriesQueryVariables>;
 export const GetCategoryByIdDocument = gql`
-    query GetCategoryById($userId: ID!, $boutiqueId: GraphQLStringOrFloat!, $id: ID!) {
+    query GetCategoryById($boutiqueId: GraphQLStringOrFloat!, $id: ID!) {
   categories_by_id(id: $id) {
     id
     name
@@ -4921,7 +4833,6 @@ export const GetCategoryByIdDocument = gql`
  * @example
  * const { data, loading, error } = useGetCategoryByIdQuery({
  *   variables: {
- *      userId: // value for 'userId'
  *      boutiqueId: // value for 'boutiqueId'
  *      id: // value for 'id'
  *   },
@@ -5209,9 +5120,9 @@ export type UpsertCustomerMutationHookResult = ReturnType<typeof useUpsertCustom
 export type UpsertCustomerMutationResult = ApolloReactCommon.MutationResult<UpsertCustomerMutation>;
 export type UpsertCustomerMutationOptions = ApolloReactCommon.BaseMutationOptions<UpsertCustomerMutation, UpsertCustomerMutationVariables>;
 export const GetCategoriesDocument = gql`
-    query GetCategories($userId: ID!, $boutiqueId: GraphQLStringOrFloat!, $filter: categories_filter, $limit: Int, $offset: Int, $sort: [String]) {
+    query GetCategories($boutiqueId: GraphQLStringOrFloat!, $filter: categories_filter, $limit: Int, $offset: Int, $sort: [String]) {
   categories(
-    filter: {user_created: {id: {_eq: $userId}}, boutique_id: {id: {_eq: $boutiqueId}}, _and: [$filter]}
+    filter: {boutique_id: {id: {_eq: $boutiqueId}}, _and: [$filter]}
     limit: $limit
     offset: $offset
     sort: $sort
@@ -5241,7 +5152,6 @@ export const GetCategoriesDocument = gql`
  * @example
  * const { data, loading, error } = useGetCategoriesQuery({
  *   variables: {
- *      userId: // value for 'userId'
  *      boutiqueId: // value for 'boutiqueId'
  *      filter: // value for 'filter'
  *      limit: // value for 'limit'
@@ -5398,98 +5308,10 @@ export type GetProductsQueryHookResult = ReturnType<typeof useGetProductsQuery>;
 export type GetProductsLazyQueryHookResult = ReturnType<typeof useGetProductsLazyQuery>;
 export type GetProductsSuspenseQueryHookResult = ReturnType<typeof useGetProductsSuspenseQuery>;
 export type GetProductsQueryResult = ApolloReactCommon.QueryResult<GetProductsQuery, GetProductsQueryVariables>;
-export const GetProductsByUserDocument = gql`
-    query GetProductsByUser($userId: ID!, $filter: products_filter, $limit: Int, $offset: Int, $sort: [String]) {
-  products(
-    filter: {user_created: {id: {_eq: $userId}}, _and: [$filter]}
-    limit: $limit
-    offset: $offset
-    sort: $sort
-  ) {
-    id
-    name
-    subtitle
-    description
-    price
-    market_price
-    stock
-    main_image
-    images
-    video_url
-    is_on_sale
-    status
-    total_sales_volume
-    rating_avg
-    total_reviews
-    brand
-    barcode
-    seller_id
-    category_id {
-      id
-      name
-      description
-    }
-    boutique_id {
-      id
-      name
-      address
-      city
-      category
-    }
-    user_created {
-      id
-      first_name
-      last_name
-      email
-    }
-    created_at
-    updated_at
-    date_created
-    date_updated
-  }
-}
-    `;
-
-/**
- * __useGetProductsByUserQuery__
- *
- * To run a query within a React component, call `useGetProductsByUserQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetProductsByUserQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetProductsByUserQuery({
- *   variables: {
- *      userId: // value for 'userId'
- *      filter: // value for 'filter'
- *      limit: // value for 'limit'
- *      offset: // value for 'offset'
- *      sort: // value for 'sort'
- *   },
- * });
- */
-export function useGetProductsByUserQuery(baseOptions: ApolloReactHooks.QueryHookOptions<GetProductsByUserQuery, GetProductsByUserQueryVariables> & ({ variables: GetProductsByUserQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
-        const options = {...defaultOptions, ...baseOptions}
-        return ApolloReactHooks.useQuery<GetProductsByUserQuery, GetProductsByUserQueryVariables>(GetProductsByUserDocument, options);
-      }
-export function useGetProductsByUserLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetProductsByUserQuery, GetProductsByUserQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return ApolloReactHooks.useLazyQuery<GetProductsByUserQuery, GetProductsByUserQueryVariables>(GetProductsByUserDocument, options);
-        }
-export function useGetProductsByUserSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetProductsByUserQuery, GetProductsByUserQueryVariables>) {
-          const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
-          return ApolloReactHooks.useSuspenseQuery<GetProductsByUserQuery, GetProductsByUserQueryVariables>(GetProductsByUserDocument, options);
-        }
-export type GetProductsByUserQueryHookResult = ReturnType<typeof useGetProductsByUserQuery>;
-export type GetProductsByUserLazyQueryHookResult = ReturnType<typeof useGetProductsByUserLazyQuery>;
-export type GetProductsByUserSuspenseQueryHookResult = ReturnType<typeof useGetProductsByUserSuspenseQuery>;
-export type GetProductsByUserQueryResult = ApolloReactCommon.QueryResult<GetProductsByUserQuery, GetProductsByUserQueryVariables>;
 export const GetProductsByBoutiqueDocument = gql`
     query GetProductsByBoutique($boutiqueId: GraphQLStringOrFloat!, $filter: products_filter, $limit: Int, $offset: Int, $sort: [String]) {
   products(
-    filter: {boutique_id: {id: {_eq: $boutiqueId}}}
+    filter: {boutique_id: {id: {_eq: $boutiqueId}}, _and: [$filter]}
     limit: $limit
     offset: $offset
     sort: $sort
@@ -5574,95 +5396,6 @@ export type GetProductsByBoutiqueQueryHookResult = ReturnType<typeof useGetProdu
 export type GetProductsByBoutiqueLazyQueryHookResult = ReturnType<typeof useGetProductsByBoutiqueLazyQuery>;
 export type GetProductsByBoutiqueSuspenseQueryHookResult = ReturnType<typeof useGetProductsByBoutiqueSuspenseQuery>;
 export type GetProductsByBoutiqueQueryResult = ApolloReactCommon.QueryResult<GetProductsByBoutiqueQuery, GetProductsByBoutiqueQueryVariables>;
-export const GetProductsByUserAndBoutiqueDocument = gql`
-    query GetProductsByUserAndBoutique($userId: ID!, $boutiqueId: GraphQLStringOrFloat!, $filter: products_filter, $limit: Int, $offset: Int, $sort: [String]) {
-  products(
-    filter: {user_created: {id: {_eq: $userId}}, boutique_id: {id: {_eq: $boutiqueId}}, _and: [$filter]}
-    limit: $limit
-    offset: $offset
-    sort: $sort
-  ) {
-    id
-    name
-    subtitle
-    description
-    price
-    market_price
-    stock
-    main_image
-    images
-    video_url
-    is_on_sale
-    status
-    total_sales_volume
-    rating_avg
-    total_reviews
-    brand
-    barcode
-    seller_id
-    category_id {
-      id
-      name
-      description
-    }
-    boutique_id {
-      id
-      name
-      address
-      city
-      category
-    }
-    user_created {
-      id
-      first_name
-      last_name
-      email
-    }
-    created_at
-    updated_at
-    date_created
-    date_updated
-  }
-}
-    `;
-
-/**
- * __useGetProductsByUserAndBoutiqueQuery__
- *
- * To run a query within a React component, call `useGetProductsByUserAndBoutiqueQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetProductsByUserAndBoutiqueQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetProductsByUserAndBoutiqueQuery({
- *   variables: {
- *      userId: // value for 'userId'
- *      boutiqueId: // value for 'boutiqueId'
- *      filter: // value for 'filter'
- *      limit: // value for 'limit'
- *      offset: // value for 'offset'
- *      sort: // value for 'sort'
- *   },
- * });
- */
-export function useGetProductsByUserAndBoutiqueQuery(baseOptions: ApolloReactHooks.QueryHookOptions<GetProductsByUserAndBoutiqueQuery, GetProductsByUserAndBoutiqueQueryVariables> & ({ variables: GetProductsByUserAndBoutiqueQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
-        const options = {...defaultOptions, ...baseOptions}
-        return ApolloReactHooks.useQuery<GetProductsByUserAndBoutiqueQuery, GetProductsByUserAndBoutiqueQueryVariables>(GetProductsByUserAndBoutiqueDocument, options);
-      }
-export function useGetProductsByUserAndBoutiqueLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetProductsByUserAndBoutiqueQuery, GetProductsByUserAndBoutiqueQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return ApolloReactHooks.useLazyQuery<GetProductsByUserAndBoutiqueQuery, GetProductsByUserAndBoutiqueQueryVariables>(GetProductsByUserAndBoutiqueDocument, options);
-        }
-export function useGetProductsByUserAndBoutiqueSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetProductsByUserAndBoutiqueQuery, GetProductsByUserAndBoutiqueQueryVariables>) {
-          const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
-          return ApolloReactHooks.useSuspenseQuery<GetProductsByUserAndBoutiqueQuery, GetProductsByUserAndBoutiqueQueryVariables>(GetProductsByUserAndBoutiqueDocument, options);
-        }
-export type GetProductsByUserAndBoutiqueQueryHookResult = ReturnType<typeof useGetProductsByUserAndBoutiqueQuery>;
-export type GetProductsByUserAndBoutiqueLazyQueryHookResult = ReturnType<typeof useGetProductsByUserAndBoutiqueLazyQuery>;
-export type GetProductsByUserAndBoutiqueSuspenseQueryHookResult = ReturnType<typeof useGetProductsByUserAndBoutiqueSuspenseQuery>;
-export type GetProductsByUserAndBoutiqueQueryResult = ApolloReactCommon.QueryResult<GetProductsByUserAndBoutiqueQuery, GetProductsByUserAndBoutiqueQueryVariables>;
 export const GetProductDetailDocument = gql`
     query GetProductDetail($id: ID!) {
   products_by_id(id: $id) {

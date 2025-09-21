@@ -5,7 +5,7 @@ import { router } from 'expo-router';
 import CarouselModal from '../components/CarouselModal';
 import ProductCard from '../components/ProductCard';
 import Tab from '../components/Tab';
-import { useGetCategoriesQuery, useGetProductsQuery, useGetMyBoutiqueQuery } from '../generated/graphql';
+import { useGetCategoriesQuery, useGetProductsQuery } from '../generated/graphql';
 import { useCurrentUser } from '../hooks/useCurrentUser';
 import { logger } from '../utils/logger';
 import { LAYOUT, getCardWidth, getBottomPadding } from '../utils/constants';
@@ -52,40 +52,20 @@ const ProductListScreen: React.FC = () => {
     return unsubscribe;
   }, []);
   
-  // 使用真实的API
+  // 使用真实的API - 不再需要 userId 参数
   const { data: categoryData, loading: categoryLoading, error: categoryError } = useGetCategoriesQuery({
     variables: {
-      userId: currentUser?.id || "",
       boutiqueId: currentConfig.selectedBoutiqueId || "",
       filter: {},
       limit: 100,
       offset: 0
     },
-    skip: !currentUser?.id || !currentConfig.selectedBoutiqueId,
+    skip: !currentConfig.selectedBoutiqueId,
   });
   
-  // 获取店铺信息 - 根据配置中的selectedBoutiqueId获取特定店铺
-  const { data: boutiqueData, loading: boutiqueLoading, error: boutiqueError } = useGetMyBoutiqueQuery({
-    variables: { userId: currentUser?.id || "" },
-    skip: !currentUser?.id,
-    // 不指定client，使用默认的主GraphQL端点
-  });
-  
-  // 根据配置选择特定店铺，而不是默认取第一个
-  const boutique = currentConfig.selectedBoutiqueId 
-    ? boutiqueData?.boutiques?.find(b => b.id === currentConfig.selectedBoutiqueId)
-    : boutiqueData?.boutiques?.[0]; // 如果没有配置，则取第一个作为后备
-  
-  // 调试信息：记录店铺信息
-  useEffect(() => {
-    if (boutiqueData?.boutiques && boutiqueData.boutiques.length > 0) {
-      logger.info('ProductListScreen', '用户店铺信息:', {
-        totalBoutiques: boutiqueData.boutiques.length,
-        currentBoutique: boutique ? { id: boutique.id, name: boutique.name } : null,
-        allBoutiques: boutiqueData.boutiques.map(b => ({ id: b.id, name: b.name }))
-      });
-    }
-  }, [boutiqueData, boutique]);
+  // 获取店铺信息 - 不再使用用户依赖的查询
+  // 直接从配置中获取已选择的店铺ID
+  const boutiqueId = currentConfig.selectedBoutiqueId;
   
   // 构建查询变量
   const buildQueryVariables = () => {
@@ -102,9 +82,9 @@ const ProductListScreen: React.FC = () => {
     }
 
     // 添加店铺过滤器 - 只显示当前店铺的商品
-    if (boutique?.id) {
+    if (boutiqueId) {
       filters.push({
-        boutique_id: { id: { _eq: boutique.id } }
+        boutique_id: { id: { _eq: boutiqueId } }
       });
     }
     
@@ -151,7 +131,7 @@ const ProductListScreen: React.FC = () => {
   const queryVariables = buildQueryVariables();
   useEffect(() => {
     logger.info('ProductListScreen', '商品查询变量:', JSON.stringify(queryVariables, null, 2));
-  }, [selectedCategory, search, boutique, currentUser]);
+  }, [selectedCategory, search, boutiqueId, currentUser]);
 
   const { data: productData, loading: productLoading, error: productError, refetch } = useGetProductsQuery({
     variables: queryVariables,
@@ -171,9 +151,9 @@ const ProductListScreen: React.FC = () => {
         }
         
         // 添加店铺过滤器
-        if (boutique?.id) {
+        if (boutiqueId) {
           carouselFilters.push({
-            boutique_id: { id: { _eq: boutique.id } }
+            boutique_id: { id: { _eq: boutiqueId } }
           });
         }
         
@@ -188,7 +168,7 @@ const ProductListScreen: React.FC = () => {
       limit: 1000, // 获取所有商品
       sort: ["-created_at"] // 按创建时间排序
     },
-    skip: !currentUser?.id || !boutique?.id, // 只有在有用户和店铺信息时才查询
+    skip: !currentUser?.id || !boutiqueId, // 只有在有用户和店铺信息时才查询
   });
 
   // 调试信息 - 使用结构化日志
@@ -199,13 +179,7 @@ const ProductListScreen: React.FC = () => {
     if (productError) {
       logger.error('ProductListScreen', '商品加载错误', productError.message);
     }
-    if (boutiqueError) {
-      logger.error('ProductListScreen', '店铺信息加载错误', boutiqueError.message);
-    }
-    if (boutique) {
-      logger.info('ProductListScreen', `店铺信息加载成功: ${boutique.name}`);
-    }
-  }, [categoryError, productError, boutiqueError, boutique]);
+  }, [categoryError, productError]);
 
   // 图像预加载优化
   useEffect(() => {
@@ -248,11 +222,7 @@ const ProductListScreen: React.FC = () => {
           </View>
           <View style={styles.brandInfo}>
             <Text style={styles.brandName}>
-              {boutiqueLoading ? '加载中...' : (
-                currentConfig.selectedBoutiqueName || 
-                boutique?.name || 
-                '朱老板服装旗舰店'
-              )}
+              {currentConfig.selectedBoutiqueName || '朱老板服装旗舰店'}
             </Text>
             <View style={styles.ratingSection}>
               <View style={styles.stars}>
@@ -260,9 +230,7 @@ const ProductListScreen: React.FC = () => {
                   <Ionicons key={star} name="star" size={12} color="#ff6b35" />
                 ))}
               </View>
-              <Text style={styles.ratingText}>
-                {boutique?.stars ? `${boutique.stars}分` : '11.5高分'}
-              </Text>
+              <Text style={styles.ratingText}>11.5高分</Text>
             </View>
           </View>
         </View>
@@ -272,19 +240,6 @@ const ProductListScreen: React.FC = () => {
             onPress={() => setCarouselVisible(true)}
           >
             <Text style={styles.couponText}>轮播</Text>
-          </TouchableOpacity>
-          <TouchableOpacity 
-            style={[styles.couponButton, { backgroundColor: '#666' }]}
-            onPress={() => {
-              logger.info('ProductListScreen', '配置按钮被点击，跳转到配置页面');
-              try {
-                router.push('/config');
-              } catch (error) {
-                logger.error('ProductListScreen', '跳转配置页面失败', error);
-              }
-            }}
-          >
-            <Ionicons name="settings" size={16} color="#fff" />
           </TouchableOpacity>
         </View>
       </View>

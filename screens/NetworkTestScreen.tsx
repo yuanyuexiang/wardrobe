@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
-import { useGetCategoriesQuery, useGetProductsByUserAndBoutiqueQuery } from '../generated/graphql';
+import { useGetCategoriesQuery, useGetProductsByBoutiqueQuery } from '../generated/graphql';
 import { API_CONFIG } from '../config/api';
 import { configManager } from '../utils/configManager';
 import { useCurrentUser } from '../hooks/useCurrentUser';
@@ -16,24 +16,22 @@ const NetworkTestScreen = () => {
   
   const { data: categoriesData, loading: categoriesLoading, error: categoriesError } = useGetCategoriesQuery({
     variables: {
-      userId: currentUser?.id || "",
       boutiqueId: currentConfig.selectedBoutiqueId || "",
       filter: {},
       limit: 100,
       offset: 0
     },
-    skip: !currentUser?.id || !currentConfig.selectedBoutiqueId,
+    skip: !currentConfig.selectedBoutiqueId,
   });
   
-  const { data: productsData, loading: productsLoading, error: productsError } = useGetProductsByUserAndBoutiqueQuery({
+  const { data: productsData, loading: productsLoading, error: productsError } = useGetProductsByBoutiqueQuery({
     variables: {
-      userId: currentUser?.id || "",
       boutiqueId: currentConfig.selectedBoutiqueId || "",
       filter: {},
       limit: 100,
       offset: 0
     },
-    skip: !currentUser?.id || !currentConfig.selectedBoutiqueId,
+    skip: !currentConfig.selectedBoutiqueId,
   });
 
   const addTestResult = (result: string) => {
@@ -145,15 +143,10 @@ const NetworkTestScreen = () => {
     setTestResults([]);
   };
 
-  const goToConfig = () => {
-    router.push('/config');
-  };
-
-  const resetConfigAndGoToConfig = async () => {
+  const resetConfig = async () => {
     try {
       await configManager.resetConfig();
       addTestResult('🔄 配置已重置');
-      router.replace('/config');
     } catch (error) {
       addTestResult(`❌ 重置配置失败: ${error}`);
     }

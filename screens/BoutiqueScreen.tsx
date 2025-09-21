@@ -12,12 +12,13 @@ import {
   View
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useGetMyBoutiqueQuery } from '../generated/graphql';
+import { useGetBoutiquesQuery } from '../generated/graphql';
 import { useCurrentUser } from '../hooks/useCurrentUser';
 import { getDirectusImageUrl } from '../utils/directus';
 import { logger } from '../utils/logger';
 import { useImagePreload } from '../utils/imageCache';
 import { LAYOUT } from '../utils/constants';
+import { configManager } from '../utils/configManager';
 
 const { screenWidth } = LAYOUT;
 
@@ -51,9 +52,14 @@ const BoutiqueScreen: React.FC = () => {
     logger.debug('BoutiqueScreen', '关闭图片预览');
   };
 
-  const { data, error } = useGetMyBoutiqueQuery({
-    variables: { userId: user?.id || "" },
-    skip: !user?.id
+  const [currentConfig] = useState(configManager.getConfig());
+  
+  const { data, error } = useGetBoutiquesQuery({
+    variables: { 
+      filter: { id: { _eq: currentConfig.selectedBoutiqueId } },
+      limit: 1
+    },
+    skip: !currentConfig.selectedBoutiqueId
   });
 
   const boutique = data?.boutiques?.[0]; // 假设一个用户只有一个商家

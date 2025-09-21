@@ -7,6 +7,7 @@ import {
 } from '../generated/graphql';
 import { DeviceInfoData } from '../components/DeviceInfo';
 import { logger } from '../utils/logger';
+import { configManager } from '../utils/configManager';
 
 export interface TerminalDevice {
   id?: string;
@@ -33,10 +34,12 @@ interface UseTerminalsResult {
   refetchTerminals: () => void;
 }
 
-export const useTerminals = (userId?: string): UseTerminalsResult => {
+export const useTerminals = (userId?: string) => {
   const [terminals, setTerminals] = useState<TerminalDevice[]>([]);
   const [currentTerminal, setCurrentTerminal] = useState<TerminalDevice | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [isRegistering, setIsRegistering] = useState(false);
+  const [currentConfig] = useState(configManager.getConfig());
 
   // GraphQL hooks
   const {
@@ -45,8 +48,8 @@ export const useTerminals = (userId?: string): UseTerminalsResult => {
     error: terminalsError,
     refetch: refetchTerminals,
   } = useGetCurrentUserTerminalsQuery({
-    variables: { userId: userId || '' },
-    skip: !userId,
+    variables: { boutiqueId: currentConfig.selectedBoutiqueId || '' },
+    skip: !currentConfig.selectedBoutiqueId,
   });
 
   const [getTerminalByAndroidId, { data: terminalByAndroidIdData }] = 

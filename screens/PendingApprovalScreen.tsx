@@ -182,7 +182,7 @@ export default function PendingApprovalScreen({
             />
             <DeviceInfoRow 
               label="设备型号" 
-              value={terminalInfo?.modelName || deviceInfo?.modelName || '未知'} 
+              value={terminalInfo?.model_name || deviceInfo?.modelName || '未知'} 
             />
             <DeviceInfoRow 
               label="操作系统" 
@@ -190,7 +190,7 @@ export default function PendingApprovalScreen({
             />
             <DeviceInfoRow 
               label="设备类型" 
-              value={getDeviceTypeText(terminalInfo?.deviceType || deviceInfo?.deviceType)} 
+              value={getDeviceTypeText(terminalInfo?.device_type || deviceInfo?.deviceType)} 
             />
           </View>
         </View>
