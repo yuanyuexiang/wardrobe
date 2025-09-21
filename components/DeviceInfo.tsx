@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import * as Device from 'expo-device';
 import * as Application from 'expo-application';
@@ -27,6 +27,7 @@ const DeviceInfo: React.FC<DeviceInfoProps> = ({
   const [deviceInfo, setDeviceInfo] = useState<DeviceInfoData>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const hasNotified = useRef(false);  // 添加标记防止重复通知
 
   useEffect(() => {
     const getDeviceInfo = async () => {
@@ -57,8 +58,9 @@ const DeviceInfo: React.FC<DeviceInfoProps> = ({
         logger.info('设备信息获取成功:', JSON.stringify(deviceData));
         setDeviceInfo(deviceData);
         
-        // 通知父组件设备信息已准备就绪
-        if (onDeviceInfoReady) {
+        // 只在第一次获取成功时通知父组件
+        if (onDeviceInfoReady && !hasNotified.current) {
+          hasNotified.current = true;
           onDeviceInfoReady(deviceData);
         }
       } catch (err) {
@@ -71,7 +73,7 @@ const DeviceInfo: React.FC<DeviceInfoProps> = ({
     };
 
     getDeviceInfo();
-  }, [onDeviceInfoReady]);
+  }, []); // 移除onDeviceInfoReady依赖，只在组件挂载时执行一次
 
   if (loading) {
     return (

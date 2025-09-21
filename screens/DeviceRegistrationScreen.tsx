@@ -2,7 +2,7 @@
  * 设备注册界面
  * 用于首次使用时注册设备信息
  */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   View,
   Text,
@@ -15,6 +15,7 @@ import {
   ScrollView,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 import { logger } from '../utils/logger';
 import { deviceStartupManager, DeviceStartupInfo } from '../utils/deviceStartupManager';
 import DeviceInfo from '../components/DeviceInfo';
@@ -23,63 +24,48 @@ interface DeviceRegistrationScreenProps {
   deviceInfo?: DeviceStartupInfo | null;
 }
 
-export default function DeviceRegistrationScreen({ deviceInfo: initialDeviceInfo }: DeviceRegistrationScreenProps) {
+export default function DeviceRegistrationScreen() {
   const [loading, setLoading] = useState(false);
-  const [deviceInfo, setDeviceInfo] = useState<DeviceStartupInfo>(initialDeviceInfo || {});
+  const [deviceInfo, setDeviceInfo] = useState<DeviceStartupInfo | null>(null);
   const [deviceInfoReady, setDeviceInfoReady] = useState(false);
+  const router = useRouter();
 
-  const handleDeviceInfoReady = (info: DeviceStartupInfo) => {
-    setDeviceInfo(info);
-    setDeviceInfoReady(true);
-    logger.info('DeviceRegistrationScreen', '设备信息就绪', JSON.stringify(info));
-  };
+  const handleDeviceInfoReady = useCallback((info: DeviceStartupInfo) => {
+    if (!deviceInfoReady) {  // 只在第一次调用时执行
+      setDeviceInfo(info);
+      setDeviceInfoReady(true);
+      logger.info('DeviceRegistrationScreen', '设备信息就绪', JSON.stringify(info));
+    }
+  }, [deviceInfoReady]);
 
-  const handleRegisterDevice = async () => {
-    if (!deviceInfoReady) {
-      Alert.alert('提示', '设备信息还未准备就绪，请稍候');
+    const handleRegisterDevice = useCallback(async () => {
+    console.log('🔥 handleRegisterDevice 被调用');
+    console.log('🔥 deviceInfo:', deviceInfo);
+    console.log('🔥 loading:', loading);
+    console.log('🔥 deviceInfoReady:', deviceInfoReady);
+    
+    if (!deviceInfo || loading) {
+      console.log('🔥 提前返回: deviceInfo缺失或正在加载');
       return;
     }
-
-    if (!deviceInfo.androidId) {
-      Alert.alert('错误', '无法获取设备标识符，请重新启动应用');
-      return;
-    }
-
+    
+    setLoading(true);
     try {
-      setLoading(true);
-      logger.info('DeviceRegistrationScreen', '开始注册设备');
-      
+      console.log('🔥 开始注册设备...');
+      // deviceStartupManager 会使用自己内部收集的设备信息
       await deviceStartupManager.registerDevice();
+      console.log('🔥 注册成功，跳转到主界面');
       
-      Alert.alert(
-        '注册成功',
-        '设备已成功注册，请等待管理员审批。审批通过后您将能够正常使用应用。',
-        [
-          {
-            text: '确定',
-            onPress: () => {
-              // 重新检查启动状态，应该会转到pending_approval状态
-              if (typeof window !== 'undefined' && window.location) {
-                window.location.reload();
-              }
-            }
-          }
-        ]
-      );
+      // 注册成功后返回主界面
+      router.replace('/(tabs)');
     } catch (error) {
-      logger.error('DeviceRegistrationScreen', '设备注册失败', String(error));
-      Alert.alert(
-        '注册失败',
-        '设备注册过程中出现错误，请检查网络连接或联系管理员。\n\n' + String(error),
-        [
-          { text: '重试', onPress: handleRegisterDevice },
-          { text: '取消', style: 'cancel' }
-        ]
-      );
+      console.log('🔥 注册出错:', error);
+      logger.error('设备注册失败:', String(error));
+      Alert.alert('注册失败', '设备注册失败，请稍后重试');
     } finally {
       setLoading(false);
     }
-  };
+  }, [deviceInfo, loading, deviceInfoReady, router]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -150,7 +136,7 @@ export default function DeviceRegistrationScreen({ deviceInfo: initialDeviceInfo
         <View style={styles.helpContainer}>
           <Text style={styles.helpTitle}>需要帮助？</Text>
           <Text style={styles.helpText}>如果您遇到任何问题，请联系系统管理员或技术支持团队。</Text>
-          <Text style={styles.helpText}>设备ID: {deviceInfo.androidId || '获取中...'}</Text>
+          <Text style={styles.helpText}>设备ID: {deviceInfo?.androidId || '获取中...'}</Text>
         </View>
       </ScrollView>
     </SafeAreaView>
