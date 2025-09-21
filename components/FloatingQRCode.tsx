@@ -26,8 +26,8 @@ const FloatingQRCode: React.FC<FloatingQRCodeProps> = ({
   onClose 
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const [currentPosition, setCurrentPosition] = useState({ x: screenWidth - 80, y: 100 });
-  const pan = useRef(new Animated.ValueXY({ x: screenWidth - 80, y: 100 })).current;
+  const [currentPosition, setCurrentPosition] = useState({ x: screenWidth - 70, y: 120 });
+  const pan = useRef(new Animated.ValueXY({ x: screenWidth - 70, y: 120 })).current;
 
   const qrCodeValue = `https://carture.matrix-net.tech/?boutique_id=${boutiqueId}`;
 
@@ -57,19 +57,23 @@ const FloatingQRCode: React.FC<FloatingQRCodeProps> = ({
         let finalY = newY;
         
         // 水平边界检测（吸附到左右边缘）
-        const componentWidth = isExpanded ? 200 : 60;
-        const componentHeight = isExpanded ? 200 : 60; // 更新高度
+        const compactSize = 55;
+        const expandedSize = Platform.OS === 'ios' ? 180 : 170; // iOS和Android适配
+        const componentWidth = isExpanded ? expandedSize : compactSize;
+        const componentHeight = isExpanded ? expandedSize : compactSize;
         
         if (finalX < screenWidth / 2) {
-          finalX = 10; // 吸附到左边
+          finalX = 15; // 吸附到左边，增加边距
         } else {
-          finalX = screenWidth - componentWidth - 10; // 吸附到右边
+          finalX = screenWidth - componentWidth - 15; // 吸附到右边，增加边距
         }
         
-        // 垂直边界限制
-        if (finalY < 50) finalY = 50;
-        if (finalY > screenHeight - componentHeight - 50) {
-          finalY = screenHeight - componentHeight - 50;
+        // 垂直边界限制，考虑状态栏和底部安全区域
+        const topSafeArea = Platform.OS === 'ios' ? 60 : 40;
+        const bottomSafeArea = Platform.OS === 'ios' ? 100 : 80;
+        if (finalY < topSafeArea) finalY = topSafeArea;
+        if (finalY > screenHeight - componentHeight - bottomSafeArea) {
+          finalY = screenHeight - componentHeight - bottomSafeArea;
         }
         
         // 更新位置状态
@@ -98,8 +102,8 @@ const FloatingQRCode: React.FC<FloatingQRCodeProps> = ({
         styles.container,
         {
           transform: [{ translateX: pan.x }, { translateY: pan.y }],
-          width: isExpanded ? 200 : 60,
-          height: isExpanded ? 200 : 60, // 减少高度，因为移除了按钮
+          width: isExpanded ? (Platform.OS === 'ios' ? 180 : 170) : 55,
+          height: isExpanded ? (Platform.OS === 'ios' ? 180 : 170) : 55,
         },
       ]}
       {...panResponder.panHandlers}
@@ -112,7 +116,7 @@ const FloatingQRCode: React.FC<FloatingQRCodeProps> = ({
             onPress={handleToggleExpand}
             activeOpacity={0.8}
           >
-            <Ionicons name="qr-code" size={28} color="#007AFF" />
+            <Ionicons name="qr-code" size={24} color="#ff6b35" />
           </TouchableOpacity>
         )}
 
@@ -126,7 +130,7 @@ const FloatingQRCode: React.FC<FloatingQRCodeProps> = ({
                 style={styles.closeButton}
                 onPress={() => setIsExpanded(false)}
               >
-                <Ionicons name="close" size={20} color="#666" />
+                <Ionicons name="close" size={18} color="#666" />
               </TouchableOpacity>
             </View>
 
@@ -134,13 +138,11 @@ const FloatingQRCode: React.FC<FloatingQRCodeProps> = ({
             <View style={styles.qrContainer}>
               <QRCode
                 value={qrCodeValue}
-                size={140}
+                size={Platform.OS === 'ios' ? 120 : 110}
                 backgroundColor="white"
                 color="black"
               />
             </View>
-
-
           </View>
         )}
       </View>
@@ -163,70 +165,76 @@ const styles = StyleSheet.create({
   },
   content: {
     backgroundColor: 'rgba(255, 255, 255, 0.95)',
-    borderRadius: 30,
+    borderRadius: 27.5, // 55/2 圆角
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
-      height: 2,
+      height: 3,
     },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-    borderWidth: 1,
-    borderColor: 'rgba(0, 122, 255, 0.3)',
+    shadowOpacity: 0.3,
+    shadowRadius: 4.65,
+    elevation: 6,
+    borderWidth: 2,
+    borderColor: 'rgba(255, 107, 53, 0.3)', // 使用橙色边框
   },
   expandedContent: {
     borderRadius: 16,
     backgroundColor: 'white',
+    borderColor: 'rgba(255, 107, 53, 0.2)',
+    borderWidth: 1,
   },
   compactButton: {
-    width: 60,
-    height: 60,
+    width: 55,
+    height: 55,
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 30,
+    borderRadius: 27.5,
   },
   expandedContainer: {
-    padding: 16,
+    padding: 14,
     width: '100%',
     height: '100%',
+    justifyContent: 'space-between',
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 12,
+    marginBottom: 8,
   },
   title: {
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: '600',
-    color: '#333',
+    color: '#ff6b35', // 使用橙色标题
   },
   closeButton: {
-    padding: 4,
+    padding: 2,
+    borderRadius: 10,
+    backgroundColor: 'rgba(0,0,0,0.05)',
   },
   qrContainer: {
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'white',
-    padding: 8,
+    padding: 6,
     borderRadius: 8,
+    flex: 1,
   },
   dragIndicator: {
     position: 'absolute',
-    top: 4,
-    right: 4,
-    width: 20,
-    height: 12,
+    top: 3,
+    right: 3,
+    width: 16,
+    height: 10,
     justifyContent: 'space-between',
     alignItems: 'center',
-    opacity: 0.3,
+    opacity: 0.4,
   },
   dragLine: {
-    width: 12,
-    height: 1.5,
-    backgroundColor: '#007AFF',
-    borderRadius: 0.75,
+    width: 10,
+    height: 1.2,
+    backgroundColor: '#ff6b35', // 使用橙色拖拽指示器
+    borderRadius: 0.6,
   },
 });
 
