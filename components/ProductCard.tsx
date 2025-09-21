@@ -91,9 +91,9 @@ const styles = StyleSheet.create({
     marginHorizontal: 8,
   },
   gridCard: {
-    width: 160,
-    height: 200,
-    marginHorizontal: 8,
+    width: 180,
+    height: 280,
+    marginHorizontal: 2,
   },
   backgroundImage: {
     flex: 1, // 充满整个容器

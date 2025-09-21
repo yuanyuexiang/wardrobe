@@ -482,16 +482,27 @@ const styles = StyleSheet.create({
   doubleLayerContainer: {
     flex: 1,
     justifyContent: 'center',
+    paddingVertical: 4,
+    borderRadius: 12,
+    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+    marginHorizontal: 8,
   },
   topLayer: {
     flex: 1,
-    marginBottom: 8,
+    marginBottom: 2,
+    borderTopLeftRadius: 12,
+    borderTopRightRadius: 12,
+    overflow: 'hidden',
   },
   bottomLayer: {
     flex: 1,
+    marginTop: 2,
+    borderBottomLeftRadius: 12,
+    borderBottomRightRadius: 12,
+    overflow: 'hidden',
   },
   layerContent: {
-    paddingHorizontal: 16,
+    paddingHorizontal: 4,
     alignItems: 'center',
   },
   loadingContainer: {
@@ -511,7 +522,7 @@ const styles = StyleSheet.create({
     color: '#999',
   },
   itemSeparator: {
-    width: 12,
+    width: 3,
   },
 });
 
