@@ -25,6 +25,7 @@ const ProductListScreen: React.FC = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [carouselVisible, setCarouselVisible] = useState(false);
   const [qrCodeVisible, setQrCodeVisible] = useState(true); // 默认显示二维码
+  const [isGridLayout, setIsGridLayout] = useState(false); // 布局切换状态: false=单层水平, true=双层网格
   const flatListRef = useRef<FlatList>(null);
   const [currentConfig, setCurrentConfig] = useState(configManager.getConfig());
   const [boutiqueId, setBoutiqueId] = useState<string>('');
@@ -217,6 +218,16 @@ const ProductListScreen: React.FC = () => {
           >
             <Text style={styles.couponText}>轮播</Text>
           </TouchableOpacity>
+          <TouchableOpacity 
+            style={styles.layoutButton}
+            onPress={() => setIsGridLayout(!isGridLayout)}
+          >
+            <Ionicons 
+              name={isGridLayout ? "list" : "grid"} 
+              size={18} 
+              color="#ff6b35" 
+            />
+          </TouchableOpacity>
         </View>
       </View>
 
@@ -251,33 +262,89 @@ const ProductListScreen: React.FC = () => {
 
       {/* 商品列表 */}
       <View style={styles.productSection}>
-        <FlatList
-          ref={flatListRef}
-          data={productData?.products || []}
-          keyExtractor={(prod) => prod.id}
-          renderItem={({ item }) => <ProductCard product={item} />}
-          style={styles.productList}
-          contentContainerStyle={styles.productContainer}
-          ListEmptyComponent={productLoading ? (
-            <View style={styles.loadingContainer}>
-              <ActivityIndicator size="large" color="#ff6b35" />
-            </View>
-          ) : (
-            <View style={styles.emptyContainer}>
-              <Text style={styles.emptyText}>暂无商品</Text>
-            </View>
-          )}
-          onScroll={handleScroll}
-          scrollEventThrottle={16}
-          refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
-          }
-          horizontal={true}
-          showsHorizontalScrollIndicator={false}
-          ItemSeparatorComponent={() => <View style={styles.itemSeparator} />}
-          snapToAlignment="start"
-          decelerationRate="fast"
-        />
+        {isGridLayout ? (
+          /* 双层横向布局 */
+          <View style={styles.doubleLayerContainer}>
+            <FlatList
+              data={productData?.products?.filter((_, index) => index % 2 === 0) || []}
+              keyExtractor={(prod) => `top-${prod.id}`}
+              renderItem={({ item }) => (
+                <ProductCard 
+                  product={item} 
+                  layoutMode="grid" 
+                />
+              )}
+              horizontal={true}
+              showsHorizontalScrollIndicator={false}
+              ItemSeparatorComponent={() => <View style={styles.itemSeparator} />}
+              contentContainerStyle={styles.layerContent}
+              style={styles.topLayer}
+            />
+            <FlatList
+              data={productData?.products?.filter((_, index) => index % 2 === 1) || []}
+              keyExtractor={(prod) => `bottom-${prod.id}`}
+              renderItem={({ item }) => (
+                <ProductCard 
+                  product={item} 
+                  layoutMode="grid" 
+                />
+              )}
+              horizontal={true}
+              showsHorizontalScrollIndicator={false}
+              ItemSeparatorComponent={() => <View style={styles.itemSeparator} />}
+              contentContainerStyle={styles.layerContent}
+              style={styles.bottomLayer}
+            />
+          </View>
+        ) : (
+          /* 单层横向布局 */
+          <FlatList
+            ref={flatListRef}
+            data={productData?.products || []}
+            keyExtractor={(prod) => prod.id}
+            renderItem={({ item }) => (
+              <ProductCard 
+                product={item} 
+                layoutMode="horizontal" 
+              />
+            )}
+            style={styles.productList}
+            contentContainerStyle={styles.productContainer}
+            ListEmptyComponent={productLoading ? (
+              <View style={styles.loadingContainer}>
+                <ActivityIndicator size="large" color="#ff6b35" />
+              </View>
+            ) : (
+              <View style={styles.emptyContainer}>
+                <Text style={styles.emptyText}>暂无商品</Text>
+              </View>
+            )}
+            onScroll={handleScroll}
+            scrollEventThrottle={16}
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
+            }
+            horizontal={true}
+            showsHorizontalScrollIndicator={false}
+            ItemSeparatorComponent={() => <View style={styles.itemSeparator} />}
+            snapToAlignment="start"
+            decelerationRate="fast"
+          />
+        )}
+        
+        {/* 双层布局的空状态 */}
+        {isGridLayout && (!productData?.products || productData.products.length === 0) && !productLoading && (
+          <View style={styles.emptyContainer}>
+            <Text style={styles.emptyText}>暂无商品</Text>
+          </View>
+        )}
+        
+        {/* 双层布局的加载状态 */}
+        {isGridLayout && productLoading && (
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color="#ff6b35" />
+          </View>
+        )}
       </View>
 
       {/* 轮播模态框 */}
@@ -371,6 +438,16 @@ const styles = StyleSheet.create({
     fontSize: 13, // 增加优惠券按钮文字大小
     fontWeight: 'bold',
   },
+  layoutButton: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: '#ff6b35',
+  },
   // 分类导航区域
   categorySection: {
     backgroundColor: '#fff',
@@ -397,6 +474,25 @@ const styles = StyleSheet.create({
     // 移除paddingBottom，在水平滚动中不需要
     alignItems: 'stretch', // 允许项目填充可用高度
     // 移除minHeight，让flex自然处理
+  },
+  gridContainer: {
+    padding: 16,
+    paddingBottom: BOTTOM_PADDING,
+  },
+  doubleLayerContainer: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  topLayer: {
+    flex: 1,
+    marginBottom: 8,
+  },
+  bottomLayer: {
+    flex: 1,
+  },
+  layerContent: {
+    paddingHorizontal: 16,
+    alignItems: 'center',
   },
   loadingContainer: {
     flex: 1,

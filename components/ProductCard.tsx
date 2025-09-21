@@ -8,9 +8,10 @@ export type Product = GetProductsQuery['products'][0];
 
 interface ProductCardProps {
   product: Product;
+  layoutMode?: 'horizontal' | 'grid'; // 新增布局模式参数
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
+const ProductCard: React.FC<ProductCardProps> = ({ product, layoutMode = 'horizontal' }) => {
   const router = useRouter();
 
   const handlePress = () => {
@@ -21,7 +22,13 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const imageUrl = product.main_image ? getDirectusThumbnailUrl(product.main_image, 320) : null;
 
   return (
-    <TouchableOpacity style={styles.card} onPress={handlePress} activeOpacity={0.85}>
+    <TouchableOpacity 
+      style={[
+        styles.card, 
+        layoutMode === 'grid' ? styles.gridCard : styles.horizontalCard
+      ]} 
+      onPress={handlePress}
+    >
       {imageUrl ? (
         <ImageBackground 
           source={{ uri: imageUrl }} 
@@ -65,7 +72,6 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 const styles = StyleSheet.create({
   card: {
     borderRadius: 12,
-    marginHorizontal: 8,
     // iOS 阴影
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
@@ -77,10 +83,17 @@ const styles = StyleSheet.create({
     ...(typeof window !== 'undefined' && {
       boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)',
     }),
-    // 简单的flex布局，让卡片填充可用空间
+    overflow: 'hidden',
+  },
+  horizontalCard: {
     flex: 1,
     width: 280,
-    overflow: 'hidden',
+    marginHorizontal: 8,
+  },
+  gridCard: {
+    width: 160,
+    height: 200,
+    marginHorizontal: 8,
   },
   backgroundImage: {
     flex: 1, // 充满整个容器
