@@ -13,9 +13,12 @@ import {
   ScrollView,
   RefreshControl,
   Animated,
+  AppState,
+  Platform,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect } from '@react-navigation/native';
+import { useRouter } from 'expo-router';
 import { logger } from '../utils/logger';
 import { deviceStartupManager, DeviceStartupInfo, TerminalInfo } from '../utils/deviceStartupManager';
 
@@ -32,6 +35,7 @@ export default function PendingApprovalScreen({
   const [terminalInfo, setTerminalInfo] = useState<TerminalInfo | null>(initialTerminalInfo || null);
   const [deviceInfo, setDeviceInfo] = useState<DeviceStartupInfo | null>(initialDeviceInfo || null);
   const [pulseAnim] = useState(new Animated.Value(0));
+  const router = useRouter();
 
   // 脉冲动画
   React.useEffect(() => {
@@ -62,11 +66,15 @@ export default function PendingApprovalScreen({
       const result = await deviceStartupManager.checkStartupState();
       
       if (result.state === 'approved') {
-        logger.info('PendingApprovalScreen', '设备已审批通过，重新加载应用');
-        // 设备已被审批，重新启动应用
-        if (typeof window !== 'undefined' && window.location) {
+        logger.info('PendingApprovalScreen', '设备已审批通过，跳转到主应用');
+        // 设备已被审批，跳转到主应用
+        if (Platform.OS === 'web' && typeof window !== 'undefined' && window.location) {
           window.location.reload();
+        } else {
+          // React Native 中重新导航到首页
+          router.replace('/(tabs)');
         }
+        return; // 跳转后不再执行后续逻辑
       } else if (result.state === 'pending_approval') {
         // 更新terminal信息
         setTerminalInfo(result.terminalInfo || null);
@@ -89,16 +97,30 @@ export default function PendingApprovalScreen({
     }, [])
   );
 
-  // 自动刷新（每30秒）
+  // 自动刷新（每10秒检查一次，更频繁的检查）
   React.useEffect(() => {
     const interval = setInterval(() => {
       if (!refreshing) {
+        logger.debug('PendingApprovalScreen', '定时检查审批状态');
         checkApprovalStatus();
       }
-    }, 30000); // 30秒
+    }, 10000); // 改为10秒
 
     return () => clearInterval(interval);
   }, [refreshing]);
+
+  // 监听应用状态变化，当应用从后台回到前台时立即检查
+  React.useEffect(() => {
+    const handleAppStateChange = (nextAppState: string) => {
+      if (nextAppState === 'active') {
+        logger.info('PendingApprovalScreen', '应用回到前台，立即检查审批状态');
+        checkApprovalStatus();
+      }
+    };
+
+    const subscription = AppState.addEventListener('change', handleAppStateChange);
+    return () => subscription?.remove();
+  }, []);
 
   const formatDate = (dateString?: string) => {
     if (!dateString) return '未知时间';
@@ -161,7 +183,7 @@ export default function PendingApprovalScreen({
           </View>
           <Text style={styles.statusText}>
             您的设备已成功注册到系统，请耐心等待管理员审批。
-            审批通过后，您将自动获得访问权限。
+            系统每10秒会自动检查审批状态，审批通过后将自动跳转。
           </Text>
           <View style={styles.statusDetails}>
             <Text style={styles.detailText}>注册时间: {formatDate(terminalInfo?.id)}</Text>
