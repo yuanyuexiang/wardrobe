@@ -2790,6 +2790,7 @@ type terminals {
   total_memory: String
   supported_cpu_architectures: String
   authorized_boutique(filter: boutiques_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): boutiques
+  purposes: String
 }
 
 type terminals_mutated {

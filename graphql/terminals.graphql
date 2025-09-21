@@ -12,6 +12,7 @@ query GetCurrentUserTerminals($boutiqueId: GraphQLStringOrFloat!) {
     os_version
     supported_cpu_architectures
     total_memory
+    purposes
     date_created
     date_updated
     authorized_boutique {
@@ -39,6 +40,7 @@ query GetTerminalByAndroidId($androidId: String!) {
     os_version
     supported_cpu_architectures
     total_memory
+    purposes
     date_created
     date_updated
     authorized_boutique {

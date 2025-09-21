@@ -409,6 +409,7 @@ input create_terminals_input {
   total_memory: String
   supported_cpu_architectures: String
   authorized_boutique: create_boutiques_input
+  purposes: String
 }
 
 input create_views_input {
@@ -1944,6 +1945,7 @@ type terminals {
   total_memory: String
   supported_cpu_architectures: String
   authorized_boutique(filter: boutiques_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): boutiques
+  purposes: String
 }
 
 type terminals_aggregated {
@@ -1976,6 +1978,7 @@ type terminals_aggregated_count {
   total_memory: Int
   supported_cpu_architectures: Int
   authorized_boutique: Int
+  purposes: Int
 }
 
 type terminals_aggregated_fields {
@@ -2002,6 +2005,7 @@ input terminals_filter {
   total_memory: string_filter_operators
   supported_cpu_architectures: string_filter_operators
   authorized_boutique: boutiques_filter
+  purposes: string_filter_operators
   _and: [terminals_filter]
   _or: [terminals_filter]
 }
@@ -2233,6 +2237,7 @@ input update_terminals_input {
   total_memory: String
   supported_cpu_architectures: String
   authorized_boutique: update_boutiques_input
+  purposes: String
 }
 
 input update_views_input {
@@ -2365,6 +2370,7 @@ type version_terminals {
   total_memory: String
   supported_cpu_architectures: String
   authorized_boutique: JSON
+  purposes: String
 }
 
 type version_views {

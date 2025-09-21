@@ -1489,6 +1489,7 @@ export type Create_Terminals_Input = {
   model_name?: InputMaybe<Scalars['String']['input']>;
   os_name?: InputMaybe<Scalars['String']['input']>;
   os_version?: InputMaybe<Scalars['String']['input']>;
+  purposes?: InputMaybe<Scalars['String']['input']>;
   supported_cpu_architectures?: InputMaybe<Scalars['String']['input']>;
   total_memory?: InputMaybe<Scalars['String']['input']>;
   user_created?: InputMaybe<Create_Directus_Users_Input>;
@@ -3567,6 +3568,7 @@ export type Terminals = {
   model_name?: Maybe<Scalars['String']['output']>;
   os_name?: Maybe<Scalars['String']['output']>;
   os_version?: Maybe<Scalars['String']['output']>;
+  purposes?: Maybe<Scalars['String']['output']>;
   supported_cpu_architectures?: Maybe<Scalars['String']['output']>;
   total_memory?: Maybe<Scalars['String']['output']>;
   user_created?: Maybe<Directus_Users>;
@@ -3631,6 +3633,7 @@ export type Terminals_Aggregated_Count = {
   model_name?: Maybe<Scalars['Int']['output']>;
   os_name?: Maybe<Scalars['Int']['output']>;
   os_version?: Maybe<Scalars['Int']['output']>;
+  purposes?: Maybe<Scalars['Int']['output']>;
   supported_cpu_architectures?: Maybe<Scalars['Int']['output']>;
   total_memory?: Maybe<Scalars['Int']['output']>;
   user_created?: Maybe<Scalars['Int']['output']>;
@@ -3660,6 +3663,7 @@ export type Terminals_Filter = {
   model_name?: InputMaybe<String_Filter_Operators>;
   os_name?: InputMaybe<String_Filter_Operators>;
   os_version?: InputMaybe<String_Filter_Operators>;
+  purposes?: InputMaybe<String_Filter_Operators>;
   supported_cpu_architectures?: InputMaybe<String_Filter_Operators>;
   total_memory?: InputMaybe<String_Filter_Operators>;
   user_created?: InputMaybe<Directus_Users_Filter>;
@@ -3889,6 +3893,7 @@ export type Update_Terminals_Input = {
   model_name?: InputMaybe<Scalars['String']['input']>;
   os_name?: InputMaybe<Scalars['String']['input']>;
   os_version?: InputMaybe<Scalars['String']['input']>;
+  purposes?: InputMaybe<Scalars['String']['input']>;
   supported_cpu_architectures?: InputMaybe<Scalars['String']['input']>;
   total_memory?: InputMaybe<Scalars['String']['input']>;
   user_created?: InputMaybe<Update_Directus_Users_Input>;
@@ -4027,6 +4032,7 @@ export type Version_Terminals = {
   model_name?: Maybe<Scalars['String']['output']>;
   os_name?: Maybe<Scalars['String']['output']>;
   os_version?: Maybe<Scalars['String']['output']>;
+  purposes?: Maybe<Scalars['String']['output']>;
   supported_cpu_architectures?: Maybe<Scalars['String']['output']>;
   total_memory?: Maybe<Scalars['String']['output']>;
   user_created?: Maybe<Scalars['JSON']['output']>;
@@ -4475,14 +4481,14 @@ export type GetCurrentUserTerminalsQueryVariables = Exact<{
 }>;
 
 
-export type GetCurrentUserTerminalsQuery = { __typename?: 'Query', terminals: Array<{ __typename?: 'terminals', id: string, android_id?: string | null, brand?: string | null, manufacturer?: string | null, model_name?: string | null, device_type?: string | null, device_name?: string | null, os_name?: string | null, os_version?: string | null, supported_cpu_architectures?: string | null, total_memory?: string | null, date_created?: any | null, date_updated?: any | null, authorized_boutique?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null, city?: string | null, category?: string | null, status?: string | null } | null }> };
+export type GetCurrentUserTerminalsQuery = { __typename?: 'Query', terminals: Array<{ __typename?: 'terminals', id: string, android_id?: string | null, brand?: string | null, manufacturer?: string | null, model_name?: string | null, device_type?: string | null, device_name?: string | null, os_name?: string | null, os_version?: string | null, supported_cpu_architectures?: string | null, total_memory?: string | null, purposes?: string | null, date_created?: any | null, date_updated?: any | null, authorized_boutique?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null, city?: string | null, category?: string | null, status?: string | null } | null }> };
 
 export type GetTerminalByAndroidIdQueryVariables = Exact<{
   androidId: Scalars['String']['input'];
 }>;
 
 
-export type GetTerminalByAndroidIdQuery = { __typename?: 'Query', terminals: Array<{ __typename?: 'terminals', id: string, android_id?: string | null, brand?: string | null, manufacturer?: string | null, model_name?: string | null, device_type?: string | null, device_name?: string | null, os_name?: string | null, os_version?: string | null, supported_cpu_architectures?: string | null, total_memory?: string | null, date_created?: any | null, date_updated?: any | null, authorized_boutique?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null, city?: string | null, category?: string | null, status?: string | null } | null }> };
+export type GetTerminalByAndroidIdQuery = { __typename?: 'Query', terminals: Array<{ __typename?: 'terminals', id: string, android_id?: string | null, brand?: string | null, manufacturer?: string | null, model_name?: string | null, device_type?: string | null, device_name?: string | null, os_name?: string | null, os_version?: string | null, supported_cpu_architectures?: string | null, total_memory?: string | null, purposes?: string | null, date_created?: any | null, date_updated?: any | null, authorized_boutique?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null, city?: string | null, category?: string | null, status?: string | null } | null }> };
 
 export type CreateOrUpdateTerminalMutationVariables = Exact<{
   data: Create_Terminals_Input;
@@ -5721,6 +5727,7 @@ export const GetCurrentUserTerminalsDocument = gql`
     os_version
     supported_cpu_architectures
     total_memory
+    purposes
     date_created
     date_updated
     authorized_boutique {
@@ -5781,6 +5788,7 @@ export const GetTerminalByAndroidIdDocument = gql`
     os_version
     supported_cpu_architectures
     total_memory
+    purposes
     date_created
     date_updated
     authorized_boutique {

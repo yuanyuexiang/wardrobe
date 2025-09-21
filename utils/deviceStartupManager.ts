@@ -32,6 +32,7 @@ export interface TerminalInfo {
   os_version?: string;
   supported_cpu_architectures?: string[];
   total_memory?: number;
+  purposes?: string; // 设备用途：carousel=轮播，interaction=交互，默认为交互
   date_created?: string;
   date_updated?: string;
   authorized_boutique?: {
@@ -60,6 +61,7 @@ const GET_TERMINAL_BY_ANDROID_ID = gql`
       brand
       manufacturer
       model_name
+      purposes
       authorized_boutique {
         id
         name
@@ -342,6 +344,7 @@ class DeviceStartupManager {
           brand: terminal.brand || '',
           manufacturer: terminal.manufacturer || '',
           model_name: terminal.model_name || '',
+          purposes: terminal.purposes || undefined, // 添加 purposes 字段
           authorized_boutique: terminal.authorized_boutique ? {
             id: terminal.authorized_boutique.id,
             name: terminal.authorized_boutique.name,

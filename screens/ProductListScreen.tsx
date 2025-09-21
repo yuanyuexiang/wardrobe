@@ -27,6 +27,7 @@ const ProductListScreen: React.FC = () => {
   const [carouselVisible, setCarouselVisible] = useState(false);
   const [qrCodeVisible, setQrCodeVisible] = useState(true); // 默认显示二维码
   const [isGridLayout, setIsGridLayout] = useState(false); // 布局切换状态: false=单层水平, true=双层网格
+  const [isCarouselDevice, setIsCarouselDevice] = useState(false); // 是否为轮播设备
   const flatListRef = useRef<FlatList>(null);
   const [currentConfig, setCurrentConfig] = useState(configManager.getConfig());
   
@@ -34,6 +35,26 @@ const ProductListScreen: React.FC = () => {
   const { boutiqueId, boutique, loading: boutiqueLoading } = useBoutiqueInfo();
   
   // 设备授权系统不需要用户状态
+
+  // 检查设备用途并自动开启轮播
+  useEffect(() => {
+    const checkDevicePurpose = async () => {
+      try {
+        const startupInfo = await deviceStartupManager.checkStartupState();
+        if (startupInfo.state === 'approved' && startupInfo.terminalInfo?.purposes === 'carousel') {
+          // 如果设备用途是轮播，自动开启轮播模式
+          logger.info('ProductListScreen', '检测到轮播设备，自动开启轮播模式');
+          setIsCarouselDevice(true);
+          setCarouselVisible(true);
+          setQrCodeVisible(false); // 轮播设备不显示二维码
+        }
+      } catch (error) {
+        logger.error('ProductListScreen', '检查设备用途失败', error);
+      }
+    };
+    
+    checkDevicePurpose();
+  }, []);
 
   // 监听配置变化
   useEffect(() => {
@@ -198,24 +219,27 @@ const ProductListScreen: React.FC = () => {
             </View>
           </View>
         </View>
-        <View style={styles.headerRight}>
-          <TouchableOpacity 
-            style={[styles.couponButton, { marginRight: 8 }]}
-            onPress={() => setCarouselVisible(true)}
-          >
-            <Text style={styles.couponText}>轮播</Text>
-          </TouchableOpacity>
-          <TouchableOpacity 
-            style={styles.layoutButton}
-            onPress={() => setIsGridLayout(!isGridLayout)}
-          >
-            <Ionicons 
-              name={isGridLayout ? "list" : "grid"} 
-              size={18} 
-              color="#ff6b35" 
-            />
-          </TouchableOpacity>
-        </View>
+        {/* 只在非轮播设备上显示操作按钮 */}
+        {!isCarouselDevice && (
+          <View style={styles.headerRight}>
+            <TouchableOpacity 
+              style={[styles.couponButton, { marginRight: 8 }]}
+              onPress={() => setCarouselVisible(true)}
+            >
+              <Text style={styles.couponText}>轮播</Text>
+            </TouchableOpacity>
+            <TouchableOpacity 
+              style={styles.layoutButton}
+              onPress={() => setIsGridLayout(!isGridLayout)}
+            >
+              <Ionicons 
+                name={isGridLayout ? "list" : "grid"} 
+                size={18} 
+                color="#ff6b35" 
+              />
+            </TouchableOpacity>
+          </View>
+        )}
       </View>
 
       {/* 分类导航 */}
