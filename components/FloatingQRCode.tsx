@@ -26,8 +26,21 @@ const FloatingQRCode: React.FC<FloatingQRCodeProps> = ({
   onClose 
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const [currentPosition, setCurrentPosition] = useState({ x: screenWidth - 70, y: 120 });
-  const pan = useRef(new Animated.ValueXY({ x: screenWidth - 70, y: 120 })).current;
+  
+  // 计算一个更安全的初始位置
+  const getInitialPosition = () => {
+    const expandedSize = Platform.OS === 'ios' ? 180 : 170;
+    const topSafeArea = Platform.OS === 'ios' ? 60 : 40;
+    const rightMargin = 15;
+    
+    return {
+      x: screenWidth - expandedSize - rightMargin, // 确保展开时不会超出右边界
+      y: topSafeArea + 20, // 距离顶部安全区域一定距离
+    };
+  };
+  
+  const [currentPosition, setCurrentPosition] = useState(getInitialPosition());
+  const pan = useRef(new Animated.ValueXY(getInitialPosition())).current;
 
   const qrCodeValue = `https://carture.matrix-net.tech/?boutique_id=${boutiqueId}`;
 
@@ -89,7 +102,48 @@ const FloatingQRCode: React.FC<FloatingQRCodeProps> = ({
   ).current;
 
   const handleToggleExpand = () => {
-    setIsExpanded(!isExpanded);
+    const newExpanded = !isExpanded;
+    
+    if (newExpanded) {
+      // 展开时，需要调整位置确保完全可见
+      const compactSize = 55;
+      const expandedSize = Platform.OS === 'ios' ? 180 : 170;
+      
+      let adjustedX = currentPosition.x;
+      let adjustedY = currentPosition.y;
+      
+      // 水平方向调整 - 确保展开后不超出屏幕
+      if (adjustedX + expandedSize > screenWidth - 15) {
+        adjustedX = screenWidth - expandedSize - 15;
+      }
+      if (adjustedX < 15) {
+        adjustedX = 15;
+      }
+      
+      // 垂直方向调整 - 确保展开后不超出屏幕
+      const topSafeArea = Platform.OS === 'ios' ? 60 : 40;
+      const bottomSafeArea = Platform.OS === 'ios' ? 100 : 80;
+      
+      if (adjustedY + expandedSize > screenHeight - bottomSafeArea) {
+        adjustedY = screenHeight - expandedSize - bottomSafeArea;
+      }
+      if (adjustedY < topSafeArea) {
+        adjustedY = topSafeArea;
+      }
+      
+      // 如果位置需要调整，动画移动到新位置
+      if (adjustedX !== currentPosition.x || adjustedY !== currentPosition.y) {
+        setCurrentPosition({ x: adjustedX, y: adjustedY });
+        Animated.spring(pan, {
+          toValue: { x: adjustedX, y: adjustedY },
+          useNativeDriver: false,
+          tension: 100,
+          friction: 8,
+        }).start();
+      }
+    }
+    
+    setIsExpanded(newExpanded);
   };
 
   if (!visible || !boutiqueId) {

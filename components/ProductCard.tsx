@@ -108,7 +108,8 @@ const styles = StyleSheet.create({
   textArea: {
     backgroundColor: 'rgba(0, 0, 0, 0.75)',
     paddingHorizontal: 12,
-    paddingVertical: 10,
+    paddingTop: 10,
+    paddingBottom: 16,
     justifyContent: 'flex-start',
     // 移除最大高度限制，让文本区域自然适应内容
   },
