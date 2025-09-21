@@ -14,19 +14,22 @@ import {
 } from 'react-native';
 import { getDirectusImageUrl } from '../utils/directus';
 import { logger } from '../utils/logger';
+import QRCode from 'react-native-qrcode-svg';
 
 interface CarouselModalProps {
   visible: boolean;
   onClose: () => void;
   products: any[];
+  boutiqueId?: string; // 添加店铺ID参数
 }
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('screen'); // 使用 'screen' 而不是 'window' 来获取包含状态栏的完整屏幕尺寸
 
-const CarouselModal: React.FC<CarouselModalProps> = ({ visible, onClose, products }) => {
+const CarouselModal: React.FC<CarouselModalProps> = ({ visible, onClose, products, boutiqueId }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(true);
   const [controlsVisible, setControlsVisible] = useState(true);
+  const [qrCodeVisible, setQrCodeVisible] = useState(true); // 二维码显示状态
   const intervalRef = useRef<number | null>(null);
   const hideControlsTimeoutRef = useRef<number | null>(null);
 
@@ -198,6 +201,29 @@ const CarouselModal: React.FC<CarouselModalProps> = ({ visible, onClose, product
             </View>
           )}
         </View>
+
+        {/* 浮动二维码 - 默认展开 */}
+        {qrCodeVisible && boutiqueId && controlsVisible && (
+          <View style={styles.qrCodeContainer}>
+            <TouchableOpacity
+              style={styles.qrCodeCloseButton}
+              onPress={() => setQrCodeVisible(false)}
+            >
+              <Ionicons name="close" size={16} color="#666" />
+            </TouchableOpacity>
+            <View style={styles.qrCodeContent}>
+              <Text style={styles.qrCodeTitle}>店铺二维码</Text>
+              <View style={styles.qrCodeWrapper}>
+                <QRCode
+                  value={`https://carture.matrix-net.tech/?boutique_id=${boutiqueId}`}
+                  size={100}
+                  backgroundColor="white"
+                  color="black"
+                />
+              </View>
+            </View>
+          </View>
+        )}
 
         {/* 底部指示器 */}
         {controlsVisible && (
@@ -375,6 +401,50 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 18,
     fontWeight: '500',
+  },
+  // 二维码样式
+  qrCodeContainer: {
+    position: 'absolute',
+    top: 60,
+    left: 20,
+    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+    borderRadius: 12,
+    padding: 12,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    zIndex: 999,
+  },
+  qrCodeCloseButton: {
+    position: 'absolute',
+    top: 8,
+    right: 8,
+    width: 24,
+    height: 24,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+    borderRadius: 12,
+    zIndex: 1000,
+  },
+  qrCodeContent: {
+    alignItems: 'center',
+  },
+  qrCodeTitle: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: '#333',
+    marginBottom: 8,
+  },
+  qrCodeWrapper: {
+    backgroundColor: 'white',
+    padding: 4,
+    borderRadius: 6,
   },
 });
 

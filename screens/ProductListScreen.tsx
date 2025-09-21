@@ -285,6 +285,7 @@ const ProductListScreen: React.FC = () => {
         visible={carouselVisible}
         onClose={() => setCarouselVisible(false)}
         products={allProductsData?.products || []}
+        boutiqueId={boutiqueId} // 传递店铺ID
       />
 
       {/* 浮动二维码 */}

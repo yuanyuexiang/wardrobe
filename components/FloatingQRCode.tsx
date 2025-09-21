@@ -6,11 +6,9 @@ import {
   Dimensions,
   Platform,
   TouchableOpacity,
-  Alert,
   Animated,
   PanResponder,
 } from 'react-native';
-import * as Clipboard from 'expo-clipboard';
 import QRCode from 'react-native-qrcode-svg';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -60,7 +58,7 @@ const FloatingQRCode: React.FC<FloatingQRCodeProps> = ({
         
         // 水平边界检测（吸附到左右边缘）
         const componentWidth = isExpanded ? 200 : 60;
-        const componentHeight = isExpanded ? 250 : 60;
+        const componentHeight = isExpanded ? 200 : 60; // 更新高度
         
         if (finalX < screenWidth / 2) {
           finalX = 10; // 吸附到左边
@@ -90,20 +88,6 @@ const FloatingQRCode: React.FC<FloatingQRCodeProps> = ({
     setIsExpanded(!isExpanded);
   };
 
-  const handleCopyUrl = async () => {
-    try {
-      await Clipboard.setStringAsync(qrCodeValue);
-      Alert.alert('复制成功', 'URL已复制到剪贴板');
-    } catch (error) {
-      Alert.alert('复制失败', '无法复制到剪贴板');
-    }
-  };
-
-  const handleClose = () => {
-    setIsExpanded(false);
-    onClose?.();
-  };
-
   if (!visible || !boutiqueId) {
     return null;
   }
@@ -115,7 +99,7 @@ const FloatingQRCode: React.FC<FloatingQRCodeProps> = ({
         {
           transform: [{ translateX: pan.x }, { translateY: pan.y }],
           width: isExpanded ? 200 : 60,
-          height: isExpanded ? 250 : 60,
+          height: isExpanded ? 200 : 60, // 减少高度，因为移除了按钮
         },
       ]}
       {...panResponder.panHandlers}
@@ -156,26 +140,7 @@ const FloatingQRCode: React.FC<FloatingQRCodeProps> = ({
               />
             </View>
 
-            {/* 操作按钮 */}
-            <View style={styles.actions}>
-              <TouchableOpacity
-                style={styles.actionButton}
-                onPress={handleCopyUrl}
-              >
-                <Ionicons name="copy-outline" size={16} color="#007AFF" />
-                <Text style={styles.actionText}>复制链接</Text>
-              </TouchableOpacity>
-              
-              {onClose && (
-                <TouchableOpacity
-                  style={[styles.actionButton, styles.closeActionButton]}
-                  onPress={handleClose}
-                >
-                  <Ionicons name="close-circle-outline" size={16} color="#FF3B30" />
-                  <Text style={[styles.actionText, styles.closeActionText]}>关闭</Text>
-                </TouchableOpacity>
-              )}
-            </View>
+
           </View>
         )}
       </View>
@@ -243,37 +208,9 @@ const styles = StyleSheet.create({
   qrContainer: {
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 16,
     backgroundColor: 'white',
     padding: 8,
     borderRadius: 8,
-  },
-  actions: {
-    gap: 8,
-  },
-  actionButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    backgroundColor: '#f8f9fa',
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: '#e9ecef',
-    gap: 6,
-  },
-  closeActionButton: {
-    backgroundColor: '#fff5f5',
-    borderColor: '#fed7d7',
-  },
-  actionText: {
-    fontSize: 12,
-    fontWeight: '500',
-    color: '#007AFF',
-  },
-  closeActionText: {
-    color: '#FF3B30',
   },
   dragIndicator: {
     position: 'absolute',
