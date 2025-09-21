@@ -28,6 +28,7 @@ const ProductListScreen: React.FC = () => {
   const [qrCodeVisible, setQrCodeVisible] = useState(true); // 默认显示二维码
   const [isGridLayout, setIsGridLayout] = useState(false); // 布局切换状态: false=单层水平, true=双层网格
   const [isCarouselDevice, setIsCarouselDevice] = useState(false); // 是否为轮播设备
+  const [devicePurpose, setDevicePurpose] = useState<string | null>(null); // 设备用途
   const flatListRef = useRef<FlatList>(null);
   const [currentConfig, setCurrentConfig] = useState(configManager.getConfig());
   const updateIntervalRef = useRef<number | null>(null); // 定时更新引用
@@ -42,15 +43,23 @@ const ProductListScreen: React.FC = () => {
     const checkDevicePurpose = async () => {
       try {
         const startupInfo = await deviceStartupManager.checkStartupState();
-        if (startupInfo.state === 'approved' && startupInfo.terminalInfo?.purposes === 'carousel') {
+        const purposes = startupInfo.terminalInfo?.purposes;
+        setDevicePurpose(purposes || null);
+        
+        if (startupInfo.state === 'approved' && purposes === 'carousel') {
           // 如果设备用途是轮播，自动开启轮播模式
           logger.info('ProductListScreen', '检测到轮播设备，自动开启轮播模式');
           setIsCarouselDevice(true);
           setCarouselVisible(true);
           setQrCodeVisible(false); // 轮播设备不显示二维码
+        } else {
+          // 非轮播设备，确保UI按钮可见
+          setIsCarouselDevice(false);
         }
       } catch (error) {
         logger.error('ProductListScreen', '检查设备用途失败', error);
+        setIsCarouselDevice(false); // 出错时也确保按钮可见
+        setDevicePurpose(null);
       }
     };
     
@@ -253,8 +262,8 @@ const ProductListScreen: React.FC = () => {
             </View>
           </View>
         </View>
-        {/* 只在非轮播设备上显示操作按钮 */}
-        {!isCarouselDevice && (
+        {/* 只有轮播设备在轮播状态时才隐藏按钮，其他情况都显示 */}
+        {!(devicePurpose === 'carousel' && carouselVisible) && (
           <View style={styles.headerRight}>
             <TouchableOpacity 
               style={[styles.couponButton, { marginRight: 8 }]}
