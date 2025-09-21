@@ -38,9 +38,9 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                   {product.subtitle}
                 </Text>
               )}
-              <Text style={styles.price}>
+              {/* <Text style={styles.price}>
                 ￥{product.price !== undefined ? product.price : '价格'}
-              </Text>
+              </Text> */}
             </View>
           </View>
         </ImageBackground>

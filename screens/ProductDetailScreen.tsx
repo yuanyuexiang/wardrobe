@@ -248,12 +248,12 @@ const ProductDetailScreen: React.FC = () => {
               <Text style={styles.productSubtitle}>{product.subtitle}</Text>
             )}
             
-            <View style={styles.priceContainer}>
+            {/* <View style={styles.priceContainer}>
               <Text style={styles.currentPrice}>¥{product.price}</Text>
               {product.market_price && product.market_price > product.price && (
                 <Text style={styles.originalPrice}>¥{product.market_price}</Text>
               )}
-            </View>
+            </View> */}
 
             {product.brand && (
               <View style={styles.brandContainer}>
