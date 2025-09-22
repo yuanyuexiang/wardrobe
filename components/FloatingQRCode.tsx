@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   View,
   Text,
@@ -6,11 +6,10 @@ import {
   Dimensions,
   Platform,
   TouchableOpacity,
-  Animated,
-  PanResponder,
 } from 'react-native';
 import QRCode from 'react-native-qrcode-svg';
 import { Ionicons } from '@expo/vector-icons';
+import Draggable from 'react-native-draggable';
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
@@ -27,142 +26,55 @@ const FloatingQRCode: React.FC<FloatingQRCodeProps> = ({
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   
-  // 计算一个更安全的初始位置
+  // 计算初始位置
   const getInitialPosition = () => {
-    const expandedSize = Platform.OS === 'ios' ? 180 : 170;
     const topSafeArea = Platform.OS === 'ios' ? 60 : 40;
-    const rightMargin = 15;
-    
     return {
-      x: screenWidth - expandedSize - rightMargin, // 确保展开时不会超出右边界
-      y: topSafeArea + 20, // 距离顶部安全区域一定距离
+      x: screenWidth * 0.7, 
+      y: topSafeArea + 20,
     };
   };
-  
-  const [currentPosition, setCurrentPosition] = useState(getInitialPosition());
-  const pan = useRef(new Animated.ValueXY(getInitialPosition())).current;
 
   const qrCodeValue = `https://carture.matrix-net.tech/?boutique_id=${boutiqueId}`;
 
-  // 创建PanResponder处理拖拽
-  const panResponder = useRef(
-    PanResponder.create({
-      onMoveShouldSetPanResponder: () => true,
-      onPanResponderGrant: () => {
-        pan.setOffset({
-          x: currentPosition.x,
-          y: currentPosition.y,
-        });
-      },
-      onPanResponderMove: Animated.event(
-        [null, { dx: pan.x, dy: pan.y }],
-        { useNativeDriver: false }
-      ),
-      onPanResponderRelease: (_, gesture) => {
-        pan.flattenOffset();
-        
-        // 计算最终位置
-        const newX = currentPosition.x + gesture.dx;
-        const newY = currentPosition.y + gesture.dy;
-        
-        // 边界检测和自动吸附
-        let finalX = newX;
-        let finalY = newY;
-        
-        // 水平边界检测（吸附到左右边缘）
-        const compactSize = 55;
-        const expandedSize = Platform.OS === 'ios' ? 180 : 170; // iOS和Android适配
-        const componentWidth = isExpanded ? expandedSize : compactSize;
-        const componentHeight = isExpanded ? expandedSize : compactSize;
-        
-        if (finalX < screenWidth / 2) {
-          finalX = 15; // 吸附到左边，增加边距
-        } else {
-          finalX = screenWidth - componentWidth - 15; // 吸附到右边，增加边距
-        }
-        
-        // 垂直边界限制，考虑状态栏和底部安全区域
-        const topSafeArea = Platform.OS === 'ios' ? 60 : 40;
-        const bottomSafeArea = Platform.OS === 'ios' ? 100 : 80;
-        if (finalY < topSafeArea) finalY = topSafeArea;
-        if (finalY > screenHeight - componentHeight - bottomSafeArea) {
-          finalY = screenHeight - componentHeight - bottomSafeArea;
-        }
-        
-        // 更新位置状态
-        setCurrentPosition({ x: finalX, y: finalY });
-        
-        // 动画到最终位置
-        Animated.spring(pan, {
-          toValue: { x: finalX, y: finalY },
-          useNativeDriver: false,
-        }).start();
-      },
-    })
-  ).current;
-
   const handleToggleExpand = () => {
-    const newExpanded = !isExpanded;
-    
-    if (newExpanded) {
-      // 展开时，需要调整位置确保完全可见
-      const compactSize = 55;
-      const expandedSize = Platform.OS === 'ios' ? 180 : 170;
-      
-      let adjustedX = currentPosition.x;
-      let adjustedY = currentPosition.y;
-      
-      // 水平方向调整 - 确保展开后不超出屏幕
-      if (adjustedX + expandedSize > screenWidth - 15) {
-        adjustedX = screenWidth - expandedSize - 15;
-      }
-      if (adjustedX < 15) {
-        adjustedX = 15;
-      }
-      
-      // 垂直方向调整 - 确保展开后不超出屏幕
-      const topSafeArea = Platform.OS === 'ios' ? 60 : 40;
-      const bottomSafeArea = Platform.OS === 'ios' ? 100 : 80;
-      
-      if (adjustedY + expandedSize > screenHeight - bottomSafeArea) {
-        adjustedY = screenHeight - expandedSize - bottomSafeArea;
-      }
-      if (adjustedY < topSafeArea) {
-        adjustedY = topSafeArea;
-      }
-      
-      // 如果位置需要调整，动画移动到新位置
-      if (adjustedX !== currentPosition.x || adjustedY !== currentPosition.y) {
-        setCurrentPosition({ x: adjustedX, y: adjustedY });
-        Animated.spring(pan, {
-          toValue: { x: adjustedX, y: adjustedY },
-          useNativeDriver: false,
-          tension: 100,
-          friction: 8,
-        }).start();
-      }
-    }
-    
-    setIsExpanded(newExpanded);
+    setIsExpanded(!isExpanded);
   };
 
   if (!visible || !boutiqueId) {
     return null;
   }
 
+  const componentSize = isExpanded ? (Platform.OS === 'ios' ? 180 : 170) : 55;
+  const initialPos = getInitialPosition();
+
   return (
-    <Animated.View
-      style={[
-        styles.container,
-        {
-          transform: [{ translateX: pan.x }, { translateY: pan.y }],
-          width: isExpanded ? (Platform.OS === 'ios' ? 180 : 170) : 55,
-          height: isExpanded ? (Platform.OS === 'ios' ? 180 : 170) : 55,
-        },
-      ]}
-      {...panResponder.panHandlers}
+    <Draggable
+      x={initialPos.x}
+      y={initialPos.y}
+      minX={0}
+      maxX={screenWidth - componentSize}
+      minY={Platform.OS === 'ios' ? 60 : 40}
+      maxY={screenHeight - componentSize - (Platform.OS === 'ios' ? 100 : 80)}
+      renderSize={componentSize}
+      renderColor="transparent"
+      shouldReverse={false}
+      onDrag={() => {}} // 拖动时的回调（必需）
+      onDragRelease={() => {}} // 释放时的回调
+      onShortPressRelease={() => {}} // 短按释放的回调
+      onPressIn={() => {}} // 按下时的回调（必需）
+      onPressOut={() => {}} // 松开时的回调（必需）
+      onLongPress={() => {}} // 长按的回调
+      onRelease={() => {}} // 释放的回调（必需）
     >
-      <View style={[styles.content, isExpanded && styles.expandedContent]}>
+      <View style={[
+        styles.content, 
+        isExpanded && styles.expandedContent,
+        {
+          width: componentSize,
+          height: componentSize,
+        }
+      ]}>
         {/* 收缩状态 - 只显示二维码图标 */}
         {!isExpanded && (
           <TouchableOpacity
@@ -199,24 +111,19 @@ const FloatingQRCode: React.FC<FloatingQRCodeProps> = ({
             </View>
           </View>
         )}
-      </View>
 
-      {/* 拖拽指示器 */}
-      <View style={styles.dragIndicator}>
-        <View style={styles.dragLine} />
-        <View style={styles.dragLine} />
-        <View style={styles.dragLine} />
+        {/* 拖拽指示器 */}
+        <View style={styles.dragIndicator}>
+          <View style={styles.dragLine} />
+          <View style={styles.dragLine} />
+          <View style={styles.dragLine} />
+        </View>
       </View>
-    </Animated.View>
+    </Draggable>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    position: 'absolute',
-    zIndex: 999,
-    elevation: 10,
-  },
   content: {
     backgroundColor: 'rgba(255, 255, 255, 0.95)',
     borderRadius: 27.5, // 55/2 圆角

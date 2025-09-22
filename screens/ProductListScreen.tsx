@@ -26,6 +26,7 @@ const ProductListScreen: React.FC = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [carouselVisible, setCarouselVisible] = useState(false);
   const [qrCodeVisible, setQrCodeVisible] = useState(true); // 默认显示二维码
+  const [userClosedQRCode, setUserClosedQRCode] = useState(false); // 跟踪用户是否主动关闭了二维码
   const [isGridLayout, setIsGridLayout] = useState(false); // 布局切换状态: false=单层水平, true=双层网格
   const [isCarouselDevice, setIsCarouselDevice] = useState(false); // 是否为轮播设备
   const [devicePurpose, setDevicePurpose] = useState<string | null>(null); // 设备用途
@@ -52,6 +53,7 @@ const ProductListScreen: React.FC = () => {
           setIsCarouselDevice(true);
           setCarouselVisible(true);
           setQrCodeVisible(false); // 轮播设备不显示二维码
+          // 注意：这里不设置 userClosedQRCode，因为这是系统自动隐藏，不是用户主动关闭
         } else {
           // 非轮播设备，确保UI按钮可见
           setIsCarouselDevice(false);
@@ -404,7 +406,13 @@ const ProductListScreen: React.FC = () => {
       {/* 轮播模态框 */}
       <CarouselModal
         visible={carouselVisible}
-        onClose={() => setCarouselVisible(false)}
+        onClose={() => {
+          setCarouselVisible(false);
+          // 轮播关闭时，如果用户没有主动关闭二维码，则恢复显示
+          if (!userClosedQRCode) {
+            setQrCodeVisible(true);
+          }
+        }}
         products={allProductsData?.products || []}
         boutiqueId={boutiqueId}
       />
@@ -413,7 +421,10 @@ const ProductListScreen: React.FC = () => {
       <FloatingQRCode
         boutiqueId={boutiqueId}
         visible={qrCodeVisible && !!boutiqueId}
-        onClose={() => setQrCodeVisible(false)}
+        onClose={() => {
+          setQrCodeVisible(false);
+          setUserClosedQRCode(true); // 标记用户主动关闭了二维码
+        }}
       />
     </SafeAreaView>
   );
