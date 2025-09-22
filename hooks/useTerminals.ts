@@ -19,7 +19,7 @@ export interface TerminalDevice {
   deviceName?: string | null;
   osName?: string | null;
   osVersion?: string | null;
-  supportedCpuArchitectures?: string | null;
+  supportedCpuArchitectures?: string[] | null;
   totalMemory?: string | null;
   dateCreated?: string;
   dateUpdated?: string;
@@ -71,7 +71,9 @@ export const useTerminals = (userId?: string) => {
         deviceName: terminal.device_name,
         osName: terminal.os_name,
         osVersion: terminal.os_version,
-        supportedCpuArchitectures: terminal.supported_cpu_architectures,
+        supportedCpuArchitectures: terminal.supported_cpu_architectures 
+          ? terminal.supported_cpu_architectures.split(', ') 
+          : null,
         totalMemory: terminal.total_memory,
         dateCreated: terminal.date_created,
         dateUpdated: terminal.date_updated,
@@ -117,6 +119,9 @@ export const useTerminals = (userId?: string) => {
         device_name: `${deviceInfo.brand || ''} ${deviceInfo.modelName || ''}`.trim() || null,
         os_name: deviceInfo.osName,
         os_version: deviceInfo.osVersion,
+        supported_cpu_architectures: deviceInfo.supportedCpuArchitectures 
+          ? deviceInfo.supportedCpuArchitectures.join(', ') 
+          : null,
         total_memory: deviceInfo.totalMemory?.toString(),
         authorized_user: { id: userId },
       };

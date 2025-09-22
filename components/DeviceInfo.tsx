@@ -12,6 +12,7 @@ export interface DeviceInfoData {
   deviceType?: Device.DeviceType | null;
   osName?: string | null;
   osVersion?: string | null;
+  supportedCpuArchitectures?: string[] | null;
   totalMemory?: number | null;
 }
 
@@ -42,6 +43,7 @@ const DeviceInfo: React.FC<DeviceInfoProps> = ({
           deviceType: Device.deviceType,
           osName: Device.osName,
           osVersion: Device.osVersion,
+          supportedCpuArchitectures: Device.supportedCpuArchitectures,
           totalMemory: Device.totalMemory,
         };
 
