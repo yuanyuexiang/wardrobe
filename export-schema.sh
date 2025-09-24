@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Directus 配置
-DIRECTUS_URL="https://directus.matrix-net.tech"
+DIRECTUS_URL="https://directus.kcbaotech.com"
 EMAIL="tom.nanjing@gmail.com"
 PASSWORD="sual116y"
 

@@ -10,8 +10,8 @@ require('dotenv').config();
 // 配置设置 - 从环境变量读取
 const config = {
   PORT: parseInt(process.env.EXPO_PUBLIC_PROXY_PORT) || 3001,
-  BASE_URL: process.env.EXPO_PUBLIC_API_BASE_URL || 'https://forge.matrix-net.tech',
-  TARGET_HOST: process.env.EXPO_PUBLIC_PROXY_TARGET_HOST || 'forge.matrix-net.tech',
+  BASE_URL: process.env.EXPO_PUBLIC_API_BASE_URL || 'https://forge.kcbaotech.com',
+  TARGET_HOST: process.env.EXPO_PUBLIC_PROXY_TARGET_HOST || 'forge.kcbaotech.com',
   TARGET_PORT: parseInt(process.env.EXPO_PUBLIC_PROXY_TARGET_PORT) || 443,
 };
 

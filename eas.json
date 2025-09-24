@@ -9,8 +9,8 @@
       "developmentClient": true,
       "distribution": "internal",
       "env": {
-        "EXPO_PUBLIC_API_BASE_URL": "https://forge.matrix-net.tech",
-        "EXPO_PUBLIC_AUTH_TOKEN": "CCZnVSanwCwzS6edoC8-2ImbzJiZLeAD",
+        "EXPO_PUBLIC_API_BASE_URL": "https://forge.kcbaotech.com",
+        "EXPO_PUBLIC_AUTH_TOKEN": "CCZnVSanwCwzS6edoC8t2ImbzJiZLeAD",
         "EXPO_PUBLIC_APP_NAME": "Wardrobe",
         "EXPO_PUBLIC_APP_VERSION": "1.0.1",
         "NODE_ENV": "development"
@@ -19,8 +19,8 @@
     "preview": {
       "distribution": "internal",
       "env": {
-        "EXPO_PUBLIC_API_BASE_URL": "https://forge.matrix-net.tech",
-        "EXPO_PUBLIC_AUTH_TOKEN": "CCZnVSanwCwzS6edoC8-2ImbzJiZLeAD",
+        "EXPO_PUBLIC_API_BASE_URL": "https://forge.kcbaotech.com",
+        "EXPO_PUBLIC_AUTH_TOKEN": "CCZnVSanwCwzS6edoC8t2ImbzJiZLeAD",
         "EXPO_PUBLIC_APP_NAME": "Wardrobe",
         "EXPO_PUBLIC_APP_VERSION": "1.0.1",
         "NODE_ENV": "preview"
@@ -38,8 +38,8 @@
       "env": {
         "EXPO_USE_PROGUARD": "1",
         "EXPO_IMAGE_COMPRESSION": "1",
-        "EXPO_PUBLIC_API_BASE_URL": "https://forge.matrix-net.tech",
-        "EXPO_PUBLIC_AUTH_TOKEN": "CCZnVSanwCwzS6edoC8-2ImbzJiZLeAD",
+        "EXPO_PUBLIC_API_BASE_URL": "https://forge.kcbaotech.com",
+        "EXPO_PUBLIC_AUTH_TOKEN": "CCZnVSanwCwzS6edoC8t2ImbzJiZLeAD",
         "EXPO_PUBLIC_APP_NAME": "Wardrobe",
         "EXPO_PUBLIC_APP_VERSION": "1.0.1",
         "NODE_ENV": "production"

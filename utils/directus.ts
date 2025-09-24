@@ -29,7 +29,7 @@ export const getDirectusImageUrl = (
   }
   
   // 检查是否包含重复的域名前缀
-  if (fileId.includes('forge.matrix-net.tech')) {
+  if (fileId.includes('forge.kcbaotech.com')) {
     console.warn('⚠️ 检测到重复域名的文件ID:', fileId);
     return fileId; // 直接返回，避免再次拼接
   }

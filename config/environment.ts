@@ -44,14 +44,14 @@ const getEnvVar = (key: string, defaultValue: string = ''): string => {
 
 // 环境配置函数 - 兼容多种部署方式
 const getEnvironment = (): Environment => {
-  const baseUrl = getEnvVar('EXPO_PUBLIC_API_BASE_URL', 'https://forge.matrix-net.tech');
+  const baseUrl = getEnvVar('EXPO_PUBLIC_API_BASE_URL', 'https://forge.kcbaotech.com');
   
   return {
     NODE_ENV: (getEnvVar('NODE_ENV', 'development') as Environment['NODE_ENV']),
     API_BASE_URL: baseUrl,
     SYSTEM_API_BASE_URL: `${baseUrl}/graphql/system`,
     ASSETS_BASE_URL: `${baseUrl}/assets`,
-    AUTH_TOKEN: getEnvVar('EXPO_PUBLIC_AUTH_TOKEN', 'CCZnVSanwCwzS6edoC8-2ImbzJiZLeAD'),
+    AUTH_TOKEN: getEnvVar('EXPO_PUBLIC_AUTH_TOKEN', 'CCZnVSanwCwzS6edoC8t2ImbzJiZLeAD'),
     PROXY_HOST: getEnvVar('EXPO_PUBLIC_PROXY_HOST', 'localhost'),
     PROXY_PORT: parseInt(getEnvVar('EXPO_PUBLIC_PROXY_PORT', '3001')),
     APP_NAME: getEnvVar('EXPO_PUBLIC_APP_NAME', 'Wardrobe'),
@@ -99,7 +99,7 @@ if (isDevelopment()) {
     buildSource: Constants.executionEnvironment,
   });
   
-  if (ENV.AUTH_TOKEN === 'CCZnVSanwCwzS6edoC8-2ImbzJiZLeAD') {
+  if (ENV.AUTH_TOKEN === 'CCZnVSanwCwzS6edoC8t2ImbzJiZLeAD') {
     console.warn('⚠️  使用默认AUTH_TOKEN，生产环境请更换！');
   }
   

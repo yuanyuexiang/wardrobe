@@ -1,5 +1,5 @@
 // API配置文件 - 从环境变量读取配置
-const BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL || 'https://forge.matrix-net.tech';
+const BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL || 'https://forge.kcbaotech.com';
 
 export const API_CONFIG = {
   // 主API地址
@@ -13,13 +13,13 @@ export const API_CONFIG = {
   ASSETS_URL: `${BASE_URL}/assets`,
   
   // 认证Token
-  AUTH_TOKEN: process.env.EXPO_PUBLIC_AUTH_TOKEN || 'CCZnVSanwCwzS6edoC8-2ImbzJiZLeAD',
+  AUTH_TOKEN: process.env.EXPO_PUBLIC_AUTH_TOKEN || 'CCZnVSanwCwzS6edoC8t2ImbzJiZLeAD',
   
   // 代理配置（开发环境）
   PROXY: {
     HOST: process.env.EXPO_PUBLIC_PROXY_HOST || 'localhost',
     PORT: parseInt(process.env.EXPO_PUBLIC_PROXY_PORT || '3001'),
-    TARGET_HOST: process.env.EXPO_PUBLIC_PROXY_TARGET_HOST || 'forge.matrix-net.tech',
+    TARGET_HOST: process.env.EXPO_PUBLIC_PROXY_TARGET_HOST || 'forge.kcbaotech.com',
     TARGET_PORT: parseInt(process.env.EXPO_PUBLIC_PROXY_TARGET_PORT || '443'),
   },
   
@@ -53,7 +53,7 @@ if (isDevelopment()) {
     appVersion: API_CONFIG.APP.VERSION,
   });
   
-  if (API_CONFIG.AUTH_TOKEN === 'CCZnVSanwCwzS6edoC8-2ImbzJiZLeAD') {
+  if (API_CONFIG.AUTH_TOKEN === 'CCZnVSanwCwzS6edoC8t2ImbzJiZLeAD') {
     console.warn('⚠️  使用默认AUTH_TOKEN，生产环境请更换！');
   }
 }

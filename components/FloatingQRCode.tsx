@@ -35,7 +35,7 @@ const FloatingQRCode: React.FC<FloatingQRCodeProps> = ({
     };
   };
 
-  const qrCodeValue = `https://carture.matrix-net.tech/?boutique_id=${boutiqueId}`;
+  const qrCodeValue = `https://carture.kcbaotech.com/?boutique_id=${boutiqueId}`;
 
   const handleToggleExpand = () => {
     setIsExpanded(!isExpanded);

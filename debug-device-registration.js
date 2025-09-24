@@ -56,7 +56,7 @@ async function testDeviceRegistration() {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer CCZnVSanwCwzS6edoC8-2ImbzJiZLeAD',
+        'Authorization': 'Bearer CCZnVSanwCwzS6edoC8t2ImbzJiZLeAD',
       },
       body: JSON.stringify({
         query: `

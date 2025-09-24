@@ -1,6 +1,6 @@
 const fetch = require('cross-fetch');
 
-const AUTH_TOKEN = 'CCZnVSanwCwzS6edoC8-2ImbzJiZLeAD';
+const AUTH_TOKEN = 'CCZnVSanwCwzS6edoC8t2ImbzJiZLeAD';
 const API_URL = 'http://localhost:3001/api/graphql';
 
 // 查询现有设备

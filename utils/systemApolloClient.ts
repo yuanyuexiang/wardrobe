@@ -36,7 +36,7 @@ const createSystemApolloClient = () => {
     },
   });
 
-  const token = process.env.EXPO_PUBLIC_AUTH_TOKEN || 'CCZnVSanwCwzS6edoC8-2ImbzJiZLeAD';
+  const token = process.env.EXPO_PUBLIC_AUTH_TOKEN || 'CCZnVSanwCwzS6edoC8t2ImbzJiZLeAD';
 
   const authLink = setContext((_: any, context: any) => ({
     headers: {
