@@ -42,6 +42,7 @@ type boutiques {
   contact: String
   expire_date: Date
   expire_date_func: datetime_functions
+  official_account_image: String
 }
 
 type boutiques_aggregated {
@@ -75,6 +76,7 @@ type boutiques_aggregated_count {
   category: Int
   contact: Int
   expire_date: Int
+  official_account_image: Int
 }
 
 type boutiques_aggregated_fields {
@@ -105,6 +107,7 @@ input boutiques_filter {
   contact: string_filter_operators
   expire_date: date_filter_operators
   expire_date_func: datetime_function_filter_operators
+  official_account_image: string_filter_operators
   _and: [boutiques_filter]
   _or: [boutiques_filter]
 }
@@ -206,6 +209,7 @@ input create_boutiques_input {
   category: String
   contact: String
   expire_date: Date
+  official_account_image: String
 }
 
 input create_categories_input {
@@ -234,6 +238,9 @@ input create_customers_input {
   user_updated: create_directus_users_input
   date_updated: Date
   boutique: create_boutiques_input
+  full_name: String
+  contact: String
+  address: String
 }
 
 input create_directus_access_input {
@@ -389,6 +396,7 @@ input create_products_input {
   user_updated: create_directus_users_input
   date_updated: Date
   carousel: String
+  location: String
   boutique: create_boutiques_input
 }
 
@@ -410,6 +418,7 @@ input create_terminals_input {
   supported_cpu_architectures: String
   authorized_boutique: create_boutiques_input
   purposes: String
+  carousel_interval: Int
 }
 
 input create_views_input {
@@ -433,6 +442,27 @@ input create_visits_input {
   boutique: create_boutiques_input
 }
 
+input create_wechat_users_input {
+  id: ID
+  openid: String!
+  unionid: String
+  nickname: String
+  sex: Int
+  language: String
+  country: String
+  province: String
+  city: String
+  headimgurl: String
+  privilege: JSON
+  access_token: String
+  refresh_token: String
+  expires_at: Date
+  scope: String
+  is_active: Boolean
+  created_at: Date
+  updated_at: Date
+}
+
 type customers {
   id: ID!
   open_id: String!
@@ -449,6 +479,9 @@ type customers {
   date_updated: Date
   date_updated_func: datetime_functions
   boutique(filter: boutiques_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): boutiques
+  full_name: String
+  contact: String
+  address: String
 }
 
 type customers_aggregated {
@@ -478,6 +511,9 @@ type customers_aggregated_count {
   user_updated: Int
   date_updated: Int
   boutique: Int
+  full_name: Int
+  contact: Int
+  address: Int
 }
 
 type customers_aggregated_fields {
@@ -503,6 +539,9 @@ input customers_filter {
   date_updated: date_filter_operators
   date_updated_func: datetime_function_filter_operators
   boutique: boutiques_filter
+  full_name: string_filter_operators
+  contact: string_filter_operators
+  address: string_filter_operators
   _and: [customers_filter]
   _or: [customers_filter]
 }
@@ -1267,6 +1306,21 @@ type directus_settings {
   visual_editor_urls_func: count_functions
   accepted_terms: Boolean
   project_id: String
+
+  """$t:fields.directus_settings.mcp_enabled_note"""
+  mcp_enabled: Boolean!
+
+  """$t:fields.directus_settings.mcp_allow_deletes_note"""
+  mcp_allow_deletes: Boolean!
+
+  """$t:fields.directus_settings.mcp_prompts_collection_note"""
+  mcp_prompts_collection: String
+
+  """$t:fields.directus_settings.mcp_system_prompt_enabled_note"""
+  mcp_system_prompt_enabled: Boolean
+
+  """$t:fields.directus_settings.mcp_system_prompt_note"""
+  mcp_system_prompt: String
 }
 
 type directus_settings_mutated {
@@ -1572,6 +1626,8 @@ type Mutation {
   create_views_item(data: create_views_input!): views
   create_visits_items(filter: visits_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_visits_input!]): [visits!]!
   create_visits_item(data: create_visits_input!): visits
+  create_wechat_users_items(filter: wechat_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_wechat_users_input!]): [wechat_users!]!
+  create_wechat_users_item(data: create_wechat_users_input!): wechat_users
   update_boutiques_items(filter: boutiques_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_boutiques_input!): [boutiques!]!
   update_boutiques_batch(filter: boutiques_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_boutiques_input!]): [boutiques!]!
   update_boutiques_item(id: ID!, data: update_boutiques_input!): boutiques
@@ -1596,6 +1652,9 @@ type Mutation {
   update_visits_items(filter: visits_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_visits_input!): [visits!]!
   update_visits_batch(filter: visits_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_visits_input!]): [visits!]!
   update_visits_item(id: ID!, data: update_visits_input!): visits
+  update_wechat_users_items(filter: wechat_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_wechat_users_input!): [wechat_users!]!
+  update_wechat_users_batch(filter: wechat_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_wechat_users_input!]): [wechat_users!]!
+  update_wechat_users_item(id: ID!, data: update_wechat_users_input!): wechat_users
   delete_boutiques_items(ids: [ID]!): delete_many
   delete_boutiques_item(id: ID!): delete_one
   delete_categories_items(ids: [ID]!): delete_many
@@ -1612,6 +1671,8 @@ type Mutation {
   delete_views_item(id: ID!): delete_one
   delete_visits_items(ids: [ID]!): delete_many
   delete_visits_item(id: ID!): delete_one
+  delete_wechat_users_items(ids: [ID]!): delete_many
+  delete_wechat_users_item(id: ID!): delete_one
 }
 
 input number_filter_operators {
@@ -1734,6 +1795,7 @@ type products {
   date_updated: Date
   date_updated_func: datetime_functions
   carousel: String
+  location: String
   boutique(filter: boutiques_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): boutiques
 }
 
@@ -1778,6 +1840,7 @@ type products_aggregated_count {
   user_updated: Int
   date_updated: Int
   carousel: Int
+  location: Int
 }
 
 type products_aggregated_fields {
@@ -1826,6 +1889,7 @@ input products_filter {
   date_updated: date_filter_operators
   date_updated_func: datetime_function_filter_operators
   carousel: string_filter_operators
+  location: string_filter_operators
   _and: [products_filter]
   _or: [products_filter]
   boutique: boutiques_filter
@@ -1870,6 +1934,10 @@ type Query {
   visits_by_id(id: ID!, version: String): visits
   visits_aggregated(groupBy: [String], filter: visits_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [visits_aggregated!]!
   visits_by_version(version: String!, id: ID!): version_visits
+  wechat_users(filter: wechat_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [wechat_users!]!
+  wechat_users_by_id(id: ID!, version: String): wechat_users
+  wechat_users_aggregated(groupBy: [String], filter: wechat_users_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [wechat_users_aggregated!]!
+  wechat_users_by_version(version: String!, id: ID!): version_wechat_users
 }
 
 input string_filter_operators {
@@ -1924,6 +1992,7 @@ type Subscription {
   terminals_mutated(event: EventEnum): terminals_mutated
   views_mutated(event: EventEnum): views_mutated
   visits_mutated(event: EventEnum): visits_mutated
+  wechat_users_mutated(event: EventEnum): wechat_users_mutated
 }
 
 type terminals {
@@ -1946,6 +2015,7 @@ type terminals {
   supported_cpu_architectures: String
   authorized_boutique(filter: boutiques_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): boutiques
   purposes: String
+  carousel_interval: Int
 }
 
 type terminals_aggregated {
@@ -1979,11 +2049,13 @@ type terminals_aggregated_count {
   supported_cpu_architectures: Int
   authorized_boutique: Int
   purposes: Int
+  carousel_interval: Int
 }
 
 type terminals_aggregated_fields {
   id: Float
   authorized_boutique: Float
+  carousel_interval: Float
 }
 
 input terminals_filter {
@@ -2006,6 +2078,7 @@ input terminals_filter {
   supported_cpu_architectures: string_filter_operators
   authorized_boutique: boutiques_filter
   purposes: string_filter_operators
+  carousel_interval: number_filter_operators
   _and: [terminals_filter]
   _or: [terminals_filter]
 }
@@ -2034,6 +2107,7 @@ input update_boutiques_input {
   category: String
   contact: String
   expire_date: Date
+  official_account_image: String
 }
 
 input update_categories_input {
@@ -2062,6 +2136,9 @@ input update_customers_input {
   user_updated: update_directus_users_input
   date_updated: Date
   boutique: update_boutiques_input
+  full_name: String
+  contact: String
+  address: String
 }
 
 input update_directus_access_input {
@@ -2217,6 +2294,7 @@ input update_products_input {
   user_updated: update_directus_users_input
   date_updated: Date
   carousel: String
+  location: String
   boutique: update_boutiques_input
 }
 
@@ -2238,6 +2316,7 @@ input update_terminals_input {
   supported_cpu_architectures: String
   authorized_boutique: update_boutiques_input
   purposes: String
+  carousel_interval: Int
 }
 
 input update_views_input {
@@ -2261,6 +2340,27 @@ input update_visits_input {
   boutique: update_boutiques_input
 }
 
+input update_wechat_users_input {
+  id: ID
+  openid: String
+  unionid: String
+  nickname: String
+  sex: Int
+  language: String
+  country: String
+  province: String
+  city: String
+  headimgurl: String
+  privilege: JSON
+  access_token: String
+  refresh_token: String
+  expires_at: Date
+  scope: String
+  is_active: Boolean
+  created_at: Date
+  updated_at: Date
+}
+
 type version_boutiques {
   id: ID
   name: String
@@ -2279,6 +2379,7 @@ type version_boutiques {
   category: String
   contact: String
   expire_date: Date
+  official_account_image: String
 }
 
 type version_categories {
@@ -2307,6 +2408,9 @@ type version_customers {
   user_updated: JSON
   date_updated: Date
   boutique: JSON
+  full_name: String
+  contact: String
+  address: String
 }
 
 type version_orders {
@@ -2350,6 +2454,7 @@ type version_products {
   user_updated: JSON
   date_updated: Date
   carousel: String
+  location: String
   boutique: JSON
 }
 
@@ -2371,6 +2476,7 @@ type version_terminals {
   supported_cpu_architectures: String
   authorized_boutique: JSON
   purposes: String
+  carousel_interval: Int
 }
 
 type version_views {
@@ -2392,6 +2498,27 @@ type version_visits {
   date_updated: Date
   customer: JSON
   boutique: JSON
+}
+
+type version_wechat_users {
+  id: ID
+  openid: String
+  unionid: String
+  nickname: String
+  sex: Int
+  language: String
+  country: String
+  province: String
+  city: String
+  headimgurl: String
+  privilege: JSON
+  access_token: String
+  refresh_token: String
+  expires_at: Date
+  scope: String
+  is_active: Boolean
+  created_at: Date
+  updated_at: Date
 }
 
 type views {
@@ -2518,5 +2645,102 @@ type visits_mutated {
   key: ID!
   event: EventEnum
   data: visits
+}
+
+type wechat_users {
+  id: ID!
+  openid: String!
+  unionid: String
+  nickname: String
+  sex: Int
+  language: String
+  country: String
+  province: String
+  city: String
+  headimgurl: String
+  privilege: JSON
+  privilege_func: count_functions
+  access_token: String
+  refresh_token: String
+  expires_at: Date
+  expires_at_func: datetime_functions
+  scope: String
+  is_active: Boolean
+  created_at: Date
+  created_at_func: datetime_functions
+  updated_at: Date
+  updated_at_func: datetime_functions
+}
+
+type wechat_users_aggregated {
+  group: JSON
+  countAll: Int
+  count: wechat_users_aggregated_count
+  countDistinct: wechat_users_aggregated_count
+  avg: wechat_users_aggregated_fields
+  sum: wechat_users_aggregated_fields
+  avgDistinct: wechat_users_aggregated_fields
+  sumDistinct: wechat_users_aggregated_fields
+  min: wechat_users_aggregated_fields
+  max: wechat_users_aggregated_fields
+}
+
+type wechat_users_aggregated_count {
+  id: Int
+  openid: Int
+  unionid: Int
+  nickname: Int
+  sex: Int
+  language: Int
+  country: Int
+  province: Int
+  city: Int
+  headimgurl: Int
+  privilege: Int
+  access_token: Int
+  refresh_token: Int
+  expires_at: Int
+  scope: Int
+  is_active: Int
+  created_at: Int
+  updated_at: Int
+}
+
+type wechat_users_aggregated_fields {
+  id: Float
+  sex: Float
+}
+
+input wechat_users_filter {
+  id: number_filter_operators
+  openid: string_filter_operators
+  unionid: string_filter_operators
+  nickname: string_filter_operators
+  sex: number_filter_operators
+  language: string_filter_operators
+  country: string_filter_operators
+  province: string_filter_operators
+  city: string_filter_operators
+  headimgurl: string_filter_operators
+  privilege: string_filter_operators
+  privilege_func: count_function_filter_operators
+  access_token: string_filter_operators
+  refresh_token: string_filter_operators
+  expires_at: date_filter_operators
+  expires_at_func: datetime_function_filter_operators
+  scope: string_filter_operators
+  is_active: boolean_filter_operators
+  created_at: date_filter_operators
+  created_at_func: datetime_function_filter_operators
+  updated_at: date_filter_operators
+  updated_at_func: datetime_function_filter_operators
+  _and: [wechat_users_filter]
+  _or: [wechat_users_filter]
+}
+
+type wechat_users_mutated {
+  key: ID!
+  event: EventEnum
+  data: wechat_users
 }
 

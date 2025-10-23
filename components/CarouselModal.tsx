@@ -22,11 +22,12 @@ interface CarouselModalProps {
   onClose: () => void;
   products: any[];
   boutiqueId?: string;
+  carouselInterval?: number; // 轮播间隔时间（秒）
 }
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('screen'); // 使用 'screen' 而不是 'window' 来获取包含状态栏的完整屏幕尺寸
 
-const CarouselModal: React.FC<CarouselModalProps> = ({ visible, onClose, products, boutiqueId }) => {
+const CarouselModal: React.FC<CarouselModalProps> = ({ visible, onClose, products, boutiqueId, carouselInterval }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(true);
   const [controlsVisible, setControlsVisible] = useState(true);
@@ -34,6 +35,10 @@ const CarouselModal: React.FC<CarouselModalProps> = ({ visible, onClose, product
   const intervalRef = useRef<number | null>(null);
   const hideControlsTimeoutRef = useRef<number | null>(null);
   const updateIntervalRef = useRef<number | null>(null);
+
+  // 计算实际使用的轮播间隔（毫秒）
+  // 如果 carouselInterval 为 0 或 null/undefined，使用默认的 5 秒
+  const actualInterval = (carouselInterval && carouselInterval > 0) ? carouselInterval * 1000 : 5000;
 
   // GraphQL查询，用于定时更新
   const { data: queryData, refetch } = useQuery(GetProductsByBoutiqueDocument, {
@@ -129,7 +134,7 @@ const CarouselModal: React.FC<CarouselModalProps> = ({ visible, onClose, product
       // 开始自动轮播
       intervalRef.current = setInterval(() => {
         setCurrentIndex((prevIndex) => (prevIndex + 1) % carouselItems.length);
-      }, 5000); // 每5秒切换
+      }, actualInterval); // 使用动态计算的间隔时间
     }
 
     return () => {
@@ -137,7 +142,7 @@ const CarouselModal: React.FC<CarouselModalProps> = ({ visible, onClose, product
         clearInterval(intervalRef.current);
       }
     };
-  }, [visible, carouselItems.length]);
+  }, [visible, carouselItems.length, actualInterval]);
 
   useEffect(() => {
     if (visible) {
@@ -155,10 +160,10 @@ const CarouselModal: React.FC<CarouselModalProps> = ({ visible, onClose, product
         clearTimeout(hideControlsTimeoutRef.current);
       }
       
-      // 设置5秒后隐藏控制按钮
+      // 使用动态间隔时间后隐藏控制按钮
       hideControlsTimeoutRef.current = setTimeout(() => {
         setControlsVisible(false);
-      }, 5000);
+      }, actualInterval);
     }
 
     return () => {
@@ -166,7 +171,7 @@ const CarouselModal: React.FC<CarouselModalProps> = ({ visible, onClose, product
         clearTimeout(hideControlsTimeoutRef.current);
       }
     };
-  }, [visible]);
+  }, [visible, actualInterval]);
 
   // 重置隐藏定时器的函数
   const resetHideTimer = () => {
@@ -178,7 +183,7 @@ const CarouselModal: React.FC<CarouselModalProps> = ({ visible, onClose, product
     
     hideControlsTimeoutRef.current = setTimeout(() => {
       setControlsVisible(false);
-    }, 5000);
+    }, actualInterval); // 使用动态计算的间隔时间
   };
 
   const handleImageLoad = () => {

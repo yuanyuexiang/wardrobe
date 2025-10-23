@@ -33,6 +33,7 @@ export interface TerminalInfo {
   supported_cpu_architectures?: string[];
   total_memory?: number;
   purposes?: string; // 设备用途：carousel=轮播，interaction=交互，默认为交互
+  carousel_interval?: number; // 轮播间隔时间（秒），0或null表示使用默认值5秒
   date_created?: string;
   date_updated?: string;
   authorized_boutique?: {
@@ -62,6 +63,7 @@ const GET_TERMINAL_BY_ANDROID_ID = gql`
       manufacturer
       model_name
       purposes
+      carousel_interval
       authorized_boutique {
         id
         name
@@ -345,6 +347,7 @@ class DeviceStartupManager {
           manufacturer: terminal.manufacturer || '',
           model_name: terminal.model_name || '',
           purposes: terminal.purposes || undefined, // 添加 purposes 字段
+          carousel_interval: terminal.carousel_interval || undefined, // 添加 carousel_interval 字段
           authorized_boutique: terminal.authorized_boutique ? {
             id: terminal.authorized_boutique.id,
             name: terminal.authorized_boutique.name,

@@ -54,6 +54,7 @@ type boutiques {
   contact: String
   expire_date: Date
   expire_date_func: datetime_functions
+  official_account_image: String
 }
 
 input boutiques_filter {
@@ -78,6 +79,7 @@ input boutiques_filter {
   contact: string_filter_operators
   expire_date: date_filter_operators
   expire_date_func: datetime_function_filter_operators
+  official_account_image: string_filter_operators
   _and: [boutiques_filter]
   _or: [boutiques_filter]
 }
@@ -417,6 +419,9 @@ type customers {
   date_updated: Date
   date_updated_func: datetime_functions
   boutique(filter: boutiques_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): boutiques
+  full_name: String
+  contact: String
+  address: String
 }
 
 input customers_filter {
@@ -435,6 +440,9 @@ input customers_filter {
   date_updated: date_filter_operators
   date_updated_func: datetime_function_filter_operators
   boutique: boutiques_filter
+  full_name: string_filter_operators
+  contact: string_filter_operators
+  address: string_filter_operators
   _and: [customers_filter]
   _or: [customers_filter]
 }
@@ -1810,6 +1818,21 @@ type directus_settings {
   visual_editor_urls_func: count_functions
   accepted_terms: Boolean
   project_id: String
+
+  """$t:fields.directus_settings.mcp_enabled_note"""
+  mcp_enabled: Boolean!
+
+  """$t:fields.directus_settings.mcp_allow_deletes_note"""
+  mcp_allow_deletes: Boolean!
+
+  """$t:fields.directus_settings.mcp_prompts_collection_note"""
+  mcp_prompts_collection: String
+
+  """$t:fields.directus_settings.mcp_system_prompt_enabled_note"""
+  mcp_system_prompt_enabled: Boolean
+
+  """$t:fields.directus_settings.mcp_system_prompt_note"""
+  mcp_system_prompt: String
 }
 
 type directus_settings_mutated {
@@ -2533,6 +2556,7 @@ type products {
   date_updated: Date
   date_updated_func: datetime_functions
   carousel: String
+  location: String
   boutique(filter: boutiques_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): boutiques
 }
 
@@ -2569,6 +2593,7 @@ input products_filter {
   date_updated: date_filter_operators
   date_updated_func: datetime_function_filter_operators
   carousel: string_filter_operators
+  location: string_filter_operators
   _and: [products_filter]
   _or: [products_filter]
   boutique: boutiques_filter
@@ -2769,6 +2794,7 @@ type Subscription {
   terminals_mutated(event: EventEnum): terminals_mutated
   views_mutated(event: EventEnum): views_mutated
   visits_mutated(event: EventEnum): visits_mutated
+  wechat_users_mutated(event: EventEnum): wechat_users_mutated
 }
 
 type terminals {
@@ -2791,6 +2817,7 @@ type terminals {
   supported_cpu_architectures: String
   authorized_boutique(filter: boutiques_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): boutiques
   purposes: String
+  carousel_interval: Int
 }
 
 type terminals_mutated {
@@ -3032,6 +3059,21 @@ input update_directus_settings_input {
   visual_editor_urls: JSON
   accepted_terms: Boolean
   project_id: String
+
+  """$t:fields.directus_settings.mcp_enabled_note"""
+  mcp_enabled: Boolean
+
+  """$t:fields.directus_settings.mcp_allow_deletes_note"""
+  mcp_allow_deletes: Boolean
+
+  """$t:fields.directus_settings.mcp_prompts_collection_note"""
+  mcp_prompts_collection: String
+
+  """$t:fields.directus_settings.mcp_system_prompt_enabled_note"""
+  mcp_system_prompt_enabled: Boolean
+
+  """$t:fields.directus_settings.mcp_system_prompt_note"""
+  mcp_system_prompt: String
 }
 
 input update_directus_shares_input {
@@ -3167,6 +3209,37 @@ type visits_mutated {
 
 """Represents NULL values"""
 scalar Void
+
+type wechat_users {
+  id: ID!
+  openid: String!
+  unionid: String
+  nickname: String
+  sex: Int
+  language: String
+  country: String
+  province: String
+  city: String
+  headimgurl: String
+  privilege: JSON
+  privilege_func: count_functions
+  access_token: String
+  refresh_token: String
+  expires_at: Date
+  expires_at_func: datetime_functions
+  scope: String
+  is_active: Boolean
+  created_at: Date
+  created_at_func: datetime_functions
+  updated_at: Date
+  updated_at_func: datetime_functions
+}
+
+type wechat_users_mutated {
+  key: ID!
+  event: EventEnum
+  data: wechat_users
+}
 
 type write_directus_collections {
   collection: String

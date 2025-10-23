@@ -6,6 +6,7 @@ import CarouselModal from '../components/CarouselModal';
 import ProductCard from '../components/ProductCard';
 import Tab from '../components/Tab';
 import FloatingQRCode from '../components/FloatingQRCode';
+import FloatingOfficialQR from '../components/FloatingOfficialQR';
 import { useGetCategoriesQuery, useGetProductsQuery } from '../generated/graphql';
 import { useBoutiqueInfo } from '../hooks/useBoutiqueInfo';
 import { logger } from '../utils/logger';
@@ -27,9 +28,11 @@ const ProductListScreen: React.FC = () => {
   const [carouselVisible, setCarouselVisible] = useState(false);
   const [qrCodeVisible, setQrCodeVisible] = useState(true); // 默认显示二维码
   const [userClosedQRCode, setUserClosedQRCode] = useState(false); // 跟踪用户是否主动关闭了二维码
+  const [officialQrVisible, setOfficialQrVisible] = useState(true); // 默认显示公众号二维码
   const [isGridLayout, setIsGridLayout] = useState(false); // 布局切换状态: false=单层水平, true=双层网格
   const [isCarouselDevice, setIsCarouselDevice] = useState(false); // 是否为轮播设备
   const [devicePurpose, setDevicePurpose] = useState<string | null>(null); // 设备用途
+  const [carouselInterval, setCarouselInterval] = useState<number>(5); // 轮播间隔时间（秒）
   const flatListRef = useRef<FlatList>(null);
   const [currentConfig, setCurrentConfig] = useState(configManager.getConfig());
   const updateIntervalRef = useRef<number | null>(null); // 定时更新引用
@@ -45,11 +48,17 @@ const ProductListScreen: React.FC = () => {
       try {
         const startupInfo = await deviceStartupManager.checkStartupState();
         const purposes = startupInfo.terminalInfo?.purposes;
+        const interval = startupInfo.terminalInfo?.carousel_interval;
+        
         setDevicePurpose(purposes || null);
+        // 设置轮播间隔，如果为0或null则使用默认值5秒
+        setCarouselInterval((interval && interval > 0) ? interval : 5);
         
         if (startupInfo.state === 'approved' && purposes === 'carousel') {
           // 如果设备用途是轮播，自动开启轮播模式
-          logger.info('ProductListScreen', '检测到轮播设备，自动开启轮播模式');
+          logger.info('ProductListScreen', '检测到轮播设备，自动开启轮播模式', { 
+            carouselInterval: interval || 5 
+          });
           setIsCarouselDevice(true);
           setCarouselVisible(true);
           setQrCodeVisible(false); // 轮播设备不显示二维码
@@ -223,7 +232,14 @@ const ProductListScreen: React.FC = () => {
         imageCache.preloadBatch(imageUrls);
       }
     }
-  }, [productData]);
+
+    // 预加载官方账号二维码
+    if (boutique?.official_account_image) {
+      const officialQrUrl = getDirectusThumbnailUrl(boutique.official_account_image, 400);
+      logger.info('ProductListScreen', '预加载官方账号二维码');
+      imageCache.preload(officialQrUrl);
+    }
+  }, [productData, boutique]);
 
   const handleRefresh = async () => {
     setRefreshing(true);
@@ -415,6 +431,7 @@ const ProductListScreen: React.FC = () => {
         }}
         products={allProductsData?.products || []}
         boutiqueId={boutiqueId}
+        carouselInterval={carouselInterval}
       />
 
       {/* 浮动二维码 */}
@@ -425,6 +442,13 @@ const ProductListScreen: React.FC = () => {
           setQrCodeVisible(false);
           setUserClosedQRCode(true); // 标记用户主动关闭了二维码
         }}
+      />
+
+      {/* 官方账号悬浮二维码 */}
+      <FloatingOfficialQR
+        imageId={boutique?.official_account_image || ''}
+        visible={officialQrVisible && !!boutique?.official_account_image}
+        onClose={() => setOfficialQrVisible(false)}
       />
     </SafeAreaView>
   );

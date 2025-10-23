@@ -16,6 +16,7 @@ query GetBoutiques($filter: boutiques_filter, $limit: Int, $offset: Int, $sort: 
     expire_date
     main_image
     images
+    official_account_image
     status
     stars
     sort
@@ -36,6 +37,7 @@ query GetBoutiqueDetail($id: ID!) {
     expire_date
     main_image
     images
+    official_account_image
     status
     stars
     sort

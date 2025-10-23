@@ -1,52 +1,53 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   View,
+  Image,
   Text,
   StyleSheet,
   Dimensions,
   Platform,
   TouchableOpacity,
 } from 'react-native';
-import QRCode from 'react-native-qrcode-svg';
 import { Ionicons } from '@expo/vector-icons';
 import Draggable from 'react-native-draggable';
+import { getDirectusImageUrl } from '../utils/directus';
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
-interface FloatingQRCodeProps {
-  boutiqueId: string;
+interface FloatingOfficialQRProps {
+  imageId: string;
   visible?: boolean;
   onClose?: () => void;
 }
 
-const FloatingQRCode: React.FC<FloatingQRCodeProps> = ({ 
-  boutiqueId, 
+const FloatingOfficialQR: React.FC<FloatingOfficialQRProps> = ({ 
+  imageId, 
   visible = true, 
   onClose 
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   
-  // 计算初始位置（水平并列,左侧位置）
+  // 计算初始位置（水平并列,在 FloatingQRCode 右侧）
   const getInitialPosition = () => {
     const topSafeArea = Platform.OS === 'ios' ? 60 : 40;
     return {
-      x: screenWidth * 0.55,  // 左侧位置,为公众号按钮留出空间
-      y: topSafeArea + 20,
+      x: screenWidth * 0.75,  // 右侧位置
+      y: topSafeArea + 20,    // 与 FloatingQRCode 同高
     };
   };
-
-  const qrCodeValue = `https://carture.kcbaotech.com/?boutique_id=${boutiqueId}`;
 
   const handleToggleExpand = () => {
     setIsExpanded(!isExpanded);
   };
 
-  if (!visible || !boutiqueId) {
+  // 严格检查 imageId 是否有效
+  if (!visible || !imageId || imageId.trim() === '') {
     return null;
   }
 
   const componentSize = isExpanded ? (Platform.OS === 'ios' ? 180 : 170) : 55;
   const initialPos = getInitialPosition();
+  const imageUrl = getDirectusImageUrl(imageId);
 
   return (
     <Draggable
@@ -59,13 +60,13 @@ const FloatingQRCode: React.FC<FloatingQRCodeProps> = ({
       renderSize={componentSize}
       renderColor="transparent"
       shouldReverse={false}
-      onDrag={() => {}} // 拖动时的回调（必需）
-      onDragRelease={() => {}} // 释放时的回调
-      onShortPressRelease={() => {}} // 短按释放的回调
-      onPressIn={() => {}} // 按下时的回调（必需）
-      onPressOut={() => {}} // 松开时的回调（必需）
-      onLongPress={() => {}} // 长按的回调
-      onRelease={() => {}} // 释放的回调（必需）
+      onDrag={() => {}}
+      onDragRelease={() => {}}
+      onShortPressRelease={() => {}}
+      onPressIn={() => {}}
+      onPressOut={() => {}}
+      onLongPress={() => {}}
+      onRelease={() => {}}
     >
       <View style={[
         styles.content, 
@@ -75,23 +76,23 @@ const FloatingQRCode: React.FC<FloatingQRCodeProps> = ({
           height: componentSize,
         }
       ]}>
-        {/* 收缩状态 - 只显示二维码图标 */}
+        {/* 收缩状态 - 只显示微信图标 */}
         {!isExpanded && (
           <TouchableOpacity
             style={styles.compactButton}
             onPress={handleToggleExpand}
             activeOpacity={0.8}
           >
-            <Ionicons name="qr-code" size={24} color="#ff6b35" />
+            <Ionicons name="logo-wechat" size={24} color="#ff6b35" />
           </TouchableOpacity>
         )}
 
-        {/* 展开状态 - 显示完整二维码 */}
+        {/* 展开状态 - 显示完整二维码图片 */}
         {isExpanded && (
           <View style={styles.expandedContainer}>
             {/* 标题栏 */}
             <View style={styles.header}>
-              <Text style={styles.title}>店铺二维码</Text>
+              <Text style={styles.title}>店铺公众号</Text>
               <TouchableOpacity
                 style={styles.closeButton}
                 onPress={() => setIsExpanded(false)}
@@ -100,13 +101,12 @@ const FloatingQRCode: React.FC<FloatingQRCodeProps> = ({
               </TouchableOpacity>
             </View>
 
-            {/* 二维码 */}
+            {/* 二维码图片 */}
             <View style={styles.qrContainer}>
-              <QRCode
-                value={qrCodeValue}
-                size={Platform.OS === 'ios' ? 120 : 110}
-                backgroundColor="white"
-                color="black"
+              <Image
+                source={{ uri: imageUrl }}
+                style={styles.qrImage}
+                resizeMode="contain"
               />
             </View>
           </View>
@@ -181,6 +181,10 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     flex: 1,
   },
+  qrImage: {
+    width: '100%',
+    height: '100%',
+  },
   dragIndicator: {
     position: 'absolute',
     top: 3,
@@ -199,4 +203,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default FloatingQRCode;
+export default FloatingOfficialQR;

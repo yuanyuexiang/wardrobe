@@ -21,6 +21,7 @@ export interface TerminalDevice {
   osVersion?: string | null;
   supportedCpuArchitectures?: string[] | null;
   totalMemory?: string | null;
+  carouselInterval?: number | null;
   dateCreated?: string;
   dateUpdated?: string;
 }
@@ -75,6 +76,7 @@ export const useTerminals = (userId?: string) => {
           ? terminal.supported_cpu_architectures.split(', ') 
           : null,
         totalMemory: terminal.total_memory,
+        carouselInterval: terminal.carousel_interval,
         dateCreated: terminal.date_created,
         dateUpdated: terminal.date_updated,
       }));
