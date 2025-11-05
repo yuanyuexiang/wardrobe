@@ -86,8 +86,13 @@ const ProductDetailScreen: React.FC = () => {
   // 当Modal打开时自动播放视频
   useEffect(() => {
     if (isVideoModalVisible && videoPlayer && videoUrl) {
-      logger.info('ProductDetail', 'Modal打开，开始播放视频');
-      videoPlayer.play();
+      logger.info('ProductDetail', 'Modal打开，重新加载并播放视频');
+      // 使用 replace 重新加载视频源，确保从头开始
+      videoPlayer.replace(videoUrl);
+      // 延迟一点点等待视频加载
+      setTimeout(() => {
+        videoPlayer.play();
+      }, 100);
     } else if (!isVideoModalVisible && videoPlayer) {
       logger.info('ProductDetail', 'Modal关闭，暂停视频');
       videoPlayer.pause();
@@ -777,9 +782,12 @@ const styles = StyleSheet.create({
   },
   videoCloseButton: {
     position: 'absolute',
-    top: -60,
-    right: 20,
+    top: 10, // 调整到视频内部顶部
+    right: 10, // 右上角
     zIndex: 10,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // 添加半透明背景，更容易看到
+    borderRadius: 20, // 圆形背景
+    padding: 2,
   },
   infoSection: {
     backgroundColor: '#fff',
