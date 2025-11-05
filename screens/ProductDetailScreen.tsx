@@ -254,6 +254,8 @@ const ProductDetailScreen: React.FC = () => {
   const renderMediaItem = ({ item, index }: { item: MediaItem; index: number }) => {
     if (item.type === 'video') {
       // 视频项：始终显示缩略图 + 播放按钮
+      logger.info('ProductDetail', `渲染视频项 ${index}, 缩略图: ${item.thumbnail}`);
+      
       return (
         <View style={styles.imageContainer}>
           <TouchableOpacity 
@@ -264,22 +266,37 @@ const ProductDetailScreen: React.FC = () => {
             }}
             activeOpacity={0.9}
           >
-            {Platform.OS === 'web' ? (
-              <img
-                src={item.thumbnail}
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'cover' as any
-                }}
-                alt="视频缩略图"
-              />
+            {/* 显示视频缩略图或占位符 */}
+            {item.thumbnail ? (
+              Platform.OS === 'web' ? (
+                <img
+                  src={item.thumbnail}
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'contain' as any,
+                    display: 'block',
+                  }}
+                  alt="视频缩略图"
+                  onError={(e) => {
+                    console.error('视频缩略图加载失败:', item.thumbnail);
+                    logger.error('ProductDetail', `视频缩略图加载失败: ${item.thumbnail}`);
+                  }}
+                  onLoad={() => {
+                    console.log('视频缩略图加载成功:', item.thumbnail);
+                  }}
+                />
+              ) : (
+                <Image
+                  source={{ uri: item.thumbnail }}
+                  style={styles.productImage}
+                  resizeMode="contain"
+                />
+              )
             ) : (
-              <Image
-                source={{ uri: item.thumbnail }}
-                style={styles.productImage}
-                resizeMode="cover"
-              />
+              <View style={styles.noImageContainer}>
+                <Text style={styles.noImageText}>视频</Text>
+              </View>
             )}
             
             {/* 播放按钮覆盖层 */}
@@ -303,6 +320,8 @@ const ProductDetailScreen: React.FC = () => {
       // 图片项
       const simpleUrl = getDirectusImageUrl(item.url);
       
+      logger.info('ProductDetail', `渲染图片项 ${index}: ${simpleUrl.substring(0, 50)}...`);
+      
       return (
         <TouchableOpacity 
           style={styles.imageContainer} 
@@ -315,15 +334,23 @@ const ProductDetailScreen: React.FC = () => {
               style={{
                 width: '100%',
                 height: '100%',
-                objectFit: 'cover' as any
+                objectFit: 'contain' as any,
+                display: 'block',
               }}
               alt={`商品图片 ${index + 1}`}
+              onError={(e) => {
+                console.error('图片加载失败:', simpleUrl);
+                logger.error('ProductDetail', `图片加载失败: ${simpleUrl}`);
+              }}
+              onLoad={() => {
+                console.log('图片加载成功:', simpleUrl);
+              }}
             />
           ) : (
             <Image
               source={{ uri: simpleUrl }}
               style={styles.productImage}
-              resizeMode="cover"
+              resizeMode="contain"
             />
           )}
           <View style={styles.imageOverlay}>
@@ -633,18 +660,20 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   imageSection: {
-    height: screenHeight * 0.60,
+    height: screenHeight, // 占满整个屏幕高度
+    width: screenWidth,
     position: 'relative',
-    backgroundColor: '#000',
+    backgroundColor: '#ffffff', // 白色背景
   },
   imageContainer: {
     width: screenWidth,
-    height: '100%',
+    height: screenHeight, // 明确设置为屏幕高度
     position: 'relative',
   },
   productImage: {
     width: '100%',
     height: '100%',
+    zIndex: 1, // 确保在模糊背景之上
   },
   image: {
     width: '100%',
@@ -698,7 +727,7 @@ const styles = StyleSheet.create({
   // 视频缩略图相关
   videoThumbnailContainer: {
     width: '100%',
-    height: '100%',
+    height: screenHeight, // 明确设置为屏幕高度
     position: 'relative',
   },
   playButtonOverlay: {
