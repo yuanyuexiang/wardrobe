@@ -14,6 +14,7 @@ import {
   View
 } from 'react-native';
 import { VideoView, useVideoPlayer } from 'expo-video';
+import * as VideoThumbnails from 'expo-video-thumbnails';
 import { Ionicons } from '@expo/vector-icons';
 import { useGetProductDetailQuery } from '../generated/graphql';
 import { getDirectusImageUrl, getDirectusVideoUrl } from '../utils/directus';
@@ -36,7 +37,8 @@ const ProductDetailScreen: React.FC = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isImageModalVisible, setIsImageModalVisible] = useState(false);
   const [previewImageIndex, setPreviewImageIndex] = useState(0);
-  const [playingVideoIndex, setPlayingVideoIndex] = useState<number | null>(null);
+  const [isVideoModalVisible, setIsVideoModalVisible] = useState(false);
+  const [videoThumbnailUri, setVideoThumbnailUri] = useState<string>('');
   const flatListRef = useRef<FlatList>(null);
   const previewFlatListRef = useRef<FlatList>(null);
   
@@ -49,10 +51,21 @@ const ProductDetailScreen: React.FC = () => {
 
   // 为视频创建播放器实例（仅在有视频时）
   const videoUrl = product?.video_url ? getDirectusVideoUrl(product.video_url) : '';
-  const videoPlayer = useVideoPlayer(videoUrl, (player) => {
+  
+  // 只在有 videoUrl 时创建播放器
+  const videoPlayer = useVideoPlayer(videoUrl || 'https://placeholder.com/empty.mp4', (player) => {
     player.loop = false;
     player.showNowPlayingNotification = false;
   });
+
+  // 当 videoUrl 变化时，更新播放器源
+  useEffect(() => {
+    if (videoUrl && videoPlayer) {
+      logger.info('ProductDetail', `更新视频播放器源: ${videoUrl}`);
+      // 替换播放器的视频源
+      videoPlayer.replace(videoUrl);
+    }
+  }, [videoUrl, videoPlayer]);
 
   // 监听视频播放完成
   useEffect(() => {
@@ -60,8 +73,8 @@ const ProductDetailScreen: React.FC = () => {
     
     const subscription = videoPlayer.addListener('playingChange', (newIsPlaying) => {
       if (!newIsPlaying && videoPlayer.currentTime >= videoPlayer.duration - 0.5) {
-        // 视频播放完成，返回缩略图状态
-        setPlayingVideoIndex(null);
+        // 视频播放完成，自动关闭Modal
+        setIsVideoModalVisible(false);
       }
     });
     
@@ -69,6 +82,63 @@ const ProductDetailScreen: React.FC = () => {
       subscription.remove();
     };
   }, [videoPlayer, videoUrl]);
+
+  // 当Modal打开时自动播放视频
+  useEffect(() => {
+    if (isVideoModalVisible && videoPlayer && videoUrl) {
+      logger.info('ProductDetail', 'Modal打开，开始播放视频');
+      videoPlayer.play();
+    } else if (!isVideoModalVisible && videoPlayer) {
+      logger.info('ProductDetail', 'Modal关闭，暂停视频');
+      videoPlayer.pause();
+    }
+  }, [isVideoModalVisible, videoPlayer, videoUrl]);
+
+  // 生成视频缩略图
+  useEffect(() => {
+    logger.info('ProductDetail', `缩略图生成Effect触发 - videoUrl: ${videoUrl}, product存在: ${!!product}, Platform: ${Platform.OS}`);
+    
+    const generateThumbnail = async () => {
+      if (!videoUrl) {
+        logger.info('ProductDetail', '没有视频URL，跳过缩略图生成');
+        return;
+      }
+
+      if (Platform.OS === 'web') {
+        // Web 平台不支持，使用主图作为降级
+        const fallbackUrl = product?.main_image ? getDirectusImageUrl(product.main_image) : '';
+        logger.info('ProductDetail', `Web平台使用主图作为缩略图: ${fallbackUrl}`);
+        setVideoThumbnailUri(fallbackUrl);
+        return;
+      }
+
+      try {
+        logger.info('ProductDetail', `【关键】开始生成视频缩略图 - URL: ${videoUrl}`);
+        logger.info('ProductDetail', `VideoThumbnails对象: ${typeof VideoThumbnails}, getThumbnailAsync: ${typeof VideoThumbnails.getThumbnailAsync}`);
+        
+        const { uri } = await VideoThumbnails.getThumbnailAsync(videoUrl, {
+          time: 0, // 获取第0秒的帧（首帧）
+          quality: 0.8,
+        });
+        
+        logger.info('ProductDetail', `【成功】视频缩略图生成成功: ${uri}`);
+        setVideoThumbnailUri(uri);
+      } catch (error) {
+        logger.error('ProductDetail', `【错误】视频缩略图生成失败: ${String(error)}`);
+        // 降级使用主图
+        const fallbackUrl = product?.main_image ? getDirectusImageUrl(product.main_image) : '';
+        logger.info('ProductDetail', `降级使用主图: ${fallbackUrl}`);
+        setVideoThumbnailUri(fallbackUrl);
+      }
+    };
+
+    if (videoUrl && product) {
+      logger.info('ProductDetail', `【执行】条件满足，开始调用generateThumbnail()`);
+      generateThumbnail();
+    } else {
+      logger.info('ProductDetail', `条件不满足 - videoUrl: "${videoUrl}", product: ${!!product}`);
+    }
+  }, [videoUrl, product]);
 
 
   // 处理媒体数组(视频+图片)
@@ -81,10 +151,13 @@ const ProductDetailScreen: React.FC = () => {
     if (product.video_url) {
       const fullVideoUrl = getDirectusVideoUrl(product.video_url);
       logger.info('ProductDetail', `视频URL转换: ${product.video_url} -> ${fullVideoUrl}`);
+      // 使用生成的视频缩略图，如果还未生成则使用主图作为临时占位
+      const thumbnailUrl = videoThumbnailUri || (product.main_image ? getDirectusImageUrl(product.main_image) : '');
+      logger.info('ProductDetail', `视频缩略图URL: ${thumbnailUrl} (生成状态: ${videoThumbnailUri ? '已生成' : '使用主图'})`);
       items.push({
         type: 'video',
         url: fullVideoUrl, // 转换为完整URL
-        thumbnail: product.main_image || '',
+        thumbnail: thumbnailUrl,
         id: 'video-0'
       });
     }
@@ -112,7 +185,7 @@ const ProductDetailScreen: React.FC = () => {
     }
     
     return items;
-  }, [product]);
+  }, [product, videoThumbnailUri]);
 
   // 结构化日志记录
   useEffect(() => {
@@ -180,79 +253,50 @@ const ProductDetailScreen: React.FC = () => {
 
   const renderMediaItem = ({ item, index }: { item: MediaItem; index: number }) => {
     if (item.type === 'video') {
-      // 视频项
-      const isPlaying = playingVideoIndex === index;
-      
+      // 视频项：始终显示缩略图 + 播放按钮
       return (
         <View style={styles.imageContainer}>
-          {isPlaying ? (
-            // 播放状态: 显示视频播放器
-            <View style={styles.videoPlayerContainer}>
-              <VideoView
-                player={videoPlayer}
-                style={styles.video}
-                allowsFullscreen
-                allowsPictureInPicture
-                nativeControls
-              />
-              
-              {/* 关闭按钮 */}
-              <TouchableOpacity 
-                style={styles.closeVideoButton}
-                onPress={() => {
-                  videoPlayer.pause();
-                  setPlayingVideoIndex(null);
+          <TouchableOpacity 
+            style={styles.videoThumbnailContainer}
+            onPress={() => {
+              setIsVideoModalVisible(true);
+              // 播放逻辑移到 useEffect 中自动处理
+            }}
+            activeOpacity={0.9}
+          >
+            {Platform.OS === 'web' ? (
+              <img
+                src={item.thumbnail}
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover' as any
                 }}
-              >
-                <Ionicons name="close-circle" size={32} color="#fff" />
-              </TouchableOpacity>
-            </View>
-          ) : (
-            // 未播放状态: 显示缩略图 + 播放按钮
-            <TouchableOpacity 
-              style={styles.videoThumbnailContainer}
-              onPress={() => {
-                setPlayingVideoIndex(index);
-                videoPlayer.play();
-              }}
-              activeOpacity={0.9}
-            >
-              {Platform.OS === 'web' ? (
-                <img
-                  src={getDirectusImageUrl(item.thumbnail || '')}
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'cover' as any
-                  }}
-                  alt="视频缩略图"
-                />
-              ) : (
-                <Image
-                  source={{ uri: getDirectusImageUrl(item.thumbnail || '') }}
-                  style={styles.productImage}
-                  resizeMode="cover"
-                />
-              )}
-              
-              {/* 播放按钮覆盖层 */}
-              <View style={styles.playButtonOverlay}>
-                <View style={styles.playButton}>
-                  <Ionicons name="play" size={48} color="#fff" />
-                </View>
-                <Text style={styles.videoLabel}>点击播放视频</Text>
+                alt="视频缩略图"
+              />
+            ) : (
+              <Image
+                source={{ uri: item.thumbnail }}
+                style={styles.productImage}
+                resizeMode="cover"
+              />
+            )}
+            
+            {/* 播放按钮覆盖层 */}
+            <View style={styles.playButtonOverlay}>
+              <View style={styles.playButton}>
+                <Ionicons name="play" size={48} color="#fff" />
               </View>
-            </TouchableOpacity>
-          )}
+              <Text style={styles.videoLabel}>点击播放视频</Text>
+            </View>
+          </TouchableOpacity>
           
           {/* 计数器 */}
-          {!isPlaying && (
-            <View style={styles.imageOverlay}>
-              <Text style={styles.imageCounter}>
-                📹 视频 ({index + 1} / {mediaItems.length})
-              </Text>
-            </View>
-          )}
+          <View style={styles.imageOverlay}>
+            <Text style={styles.imageCounter}>
+              📹 视频 ({index + 1} / {mediaItems.length})
+            </Text>
+          </View>
         </View>
       );
     } else {
@@ -511,6 +555,51 @@ const ProductDetailScreen: React.FC = () => {
           </View>
         </TouchableWithoutFeedback>
       </Modal>
+
+      {/* 视频播放Modal */}
+      <Modal
+        visible={isVideoModalVisible}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => {
+          videoPlayer.pause();
+          setIsVideoModalVisible(false);
+        }}
+      >
+        <View style={styles.videoModalOverlay}>
+          {/* 点击背景关闭 */}
+          <TouchableWithoutFeedback 
+            onPress={() => {
+              videoPlayer.pause();
+              setIsVideoModalVisible(false);
+            }}
+          >
+            <View style={StyleSheet.absoluteFill} />
+          </TouchableWithoutFeedback>
+          
+          {/* 视频播放器容器 */}
+          <View style={styles.videoModalContent}>
+            <VideoView
+              player={videoPlayer}
+              style={styles.fullscreenVideo}
+              nativeControls
+              allowsFullscreen
+              allowsPictureInPicture
+            />
+            
+            {/* 关闭按钮 */}
+            <TouchableOpacity 
+              style={styles.videoCloseButton}
+              onPress={() => {
+                videoPlayer.pause();
+                setIsVideoModalVisible(false);
+              }}
+            >
+              <Ionicons name="close-circle" size={40} color="#fff" />
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </>
   );
 };
@@ -641,26 +730,27 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     borderRadius: 16,
   },
-  // 视频播放器相关
-  videoPlayerContainer: {
-    width: '100%',
-    height: '100%',
-    backgroundColor: '#000',
+  // 视频Modal相关
+  videoModalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.95)',
     justifyContent: 'center',
     alignItems: 'center',
   },
-  video: {
+  videoModalContent: {
+    width: screenWidth,
+    height: screenWidth * (9 / 16), // 16:9 比例
+    position: 'relative',
+  },
+  fullscreenVideo: {
     width: '100%',
     height: '100%',
   },
-  closeVideoButton: {
+  videoCloseButton: {
     position: 'absolute',
-    top: 40,
+    top: -60,
     right: 20,
     zIndex: 10,
-    backgroundColor: 'rgba(0, 0, 0, 0.6)',
-    borderRadius: 20,
-    padding: 4,
   },
   infoSection: {
     backgroundColor: '#fff',
