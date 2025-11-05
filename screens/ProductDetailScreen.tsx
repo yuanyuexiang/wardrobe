@@ -13,19 +13,30 @@ import {
   TouchableWithoutFeedback,
   View
 } from 'react-native';
+import { VideoView, useVideoPlayer } from 'expo-video';
+import { Ionicons } from '@expo/vector-icons';
 import { useGetProductDetailQuery } from '../generated/graphql';
-import { getDirectusImageUrl } from '../utils/directus';
+import { getDirectusImageUrl, getDirectusVideoUrl } from '../utils/directus';
 import { logger } from '../utils/logger';
 import { imageCache } from '../utils/imageCache';
 import { LAYOUT } from '../utils/constants';
 
 const { screenWidth, screenHeight } = LAYOUT;
 
+// 媒体项类型定义
+type MediaItem = {
+  type: 'video' | 'image';
+  url: string;
+  thumbnail?: string;
+  id: string;
+};
+
 const ProductDetailScreen: React.FC = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isImageModalVisible, setIsImageModalVisible] = useState(false);
   const [previewImageIndex, setPreviewImageIndex] = useState(0);
+  const [playingVideoIndex, setPlayingVideoIndex] = useState<number | null>(null);
   const flatListRef = useRef<FlatList>(null);
   const previewFlatListRef = useRef<FlatList>(null);
   
@@ -36,27 +47,71 @@ const ProductDetailScreen: React.FC = () => {
 
   const product = data?.products_by_id;
 
-  // 处理图片数组
-  const images = React.useMemo(() => {
+  // 为视频创建播放器实例（仅在有视频时）
+  const videoUrl = product?.video_url ? getDirectusVideoUrl(product.video_url) : '';
+  const videoPlayer = useVideoPlayer(videoUrl, (player) => {
+    player.loop = false;
+    player.showNowPlayingNotification = false;
+  });
+
+  // 监听视频播放完成
+  useEffect(() => {
+    if (!videoPlayer || !videoUrl) return;
+    
+    const subscription = videoPlayer.addListener('playingChange', (newIsPlaying) => {
+      if (!newIsPlaying && videoPlayer.currentTime >= videoPlayer.duration - 0.5) {
+        // 视频播放完成，返回缩略图状态
+        setPlayingVideoIndex(null);
+      }
+    });
+    
+    return () => {
+      subscription.remove();
+    };
+  }, [videoPlayer, videoUrl]);
+
+
+  // 处理媒体数组(视频+图片)
+  const mediaItems = React.useMemo(() => {
     if (!product) return [];
     
-    const imageList: string[] = [];
+    const items: MediaItem[] = [];
     
-    // 添加主图
-    if (product.main_image) {
-      imageList.push(product.main_image);
+    // 1. 如果有视频,视频作为第一项
+    if (product.video_url) {
+      const fullVideoUrl = getDirectusVideoUrl(product.video_url);
+      logger.info('ProductDetail', `视频URL转换: ${product.video_url} -> ${fullVideoUrl}`);
+      items.push({
+        type: 'video',
+        url: fullVideoUrl, // 转换为完整URL
+        thumbnail: product.main_image || '',
+        id: 'video-0'
+      });
     }
     
-    // 添加其他图片
+    // 2. 添加主图
+    if (product.main_image) {
+      items.push({
+        type: 'image',
+        url: product.main_image,
+        id: 'main-image'
+      });
+    }
+    
+    // 3. 添加其他图片
     if (product.images && Array.isArray(product.images)) {
-      product.images.forEach((img: any) => {
+      product.images.forEach((img: any, index: number) => {
         if (typeof img === 'string' && img !== product.main_image) {
-          imageList.push(img);
+          items.push({
+            type: 'image',
+            url: img,
+            id: `image-${index}`
+          });
         }
       });
     }
     
-    return imageList;
+    return items;
   }, [product]);
 
   // 结构化日志记录
@@ -77,12 +132,24 @@ const ProductDetailScreen: React.FC = () => {
 
   // 图像预加载优化
   useEffect(() => {
-    if (images.length > 0) {
-      const imageUrls = images.map(img => getDirectusImageUrl(img));
-      logger.info('ProductDetailScreen', `开始预加载${imageUrls.length}张商品图片`);
-      imageCache.preloadBatch(imageUrls);
+    if (mediaItems.length > 0) {
+      const imageUrls = mediaItems
+        .filter(item => item.type === 'image')
+        .map(item => getDirectusImageUrl(item.url));
+      
+      if (imageUrls.length > 0) {
+        logger.info('ProductDetailScreen', `开始预加载${imageUrls.length}张商品图片`);
+        imageCache.preloadBatch(imageUrls);
+      }
     }
-  }, [images]);  const onViewableItemsChanged = useRef(({ viewableItems }: any) => {
+    
+    // 记录视频信息
+    if (product?.video_url) {
+      logger.info('ProductDetailScreen', '检测到商品视频', {
+        videoUrl: product.video_url
+      });
+    }
+  }, [mediaItems, product]);  const onViewableItemsChanged = useRef(({ viewableItems }: any) => {
     if (viewableItems.length > 0) {
       setCurrentImageIndex(viewableItems[0].index || 0);
     }
@@ -99,74 +166,162 @@ const ProductDetailScreen: React.FC = () => {
   }).current;
 
   const handleImagePress = (index: number) => {
-    setPreviewImageIndex(index);
-    setIsImageModalVisible(true);
+    const item = mediaItems[index];
+    // 只有图片才能预览
+    if (item && item.type === 'image') {
+      setPreviewImageIndex(index);
+      setIsImageModalVisible(true);
+    }
   };
 
   const closeImageModal = () => {
     setIsImageModalVisible(false);
   };
 
-  const renderImageItem = ({ item, index }: { item: string; index: number }) => {
-    const simpleUrl = getDirectusImageUrl(item);
+  const renderMediaItem = ({ item, index }: { item: MediaItem; index: number }) => {
+    if (item.type === 'video') {
+      // 视频项
+      const isPlaying = playingVideoIndex === index;
+      
+      return (
+        <View style={styles.imageContainer}>
+          {isPlaying ? (
+            // 播放状态: 显示视频播放器
+            <View style={styles.videoPlayerContainer}>
+              <VideoView
+                player={videoPlayer}
+                style={styles.video}
+                allowsFullscreen
+                allowsPictureInPicture
+                nativeControls
+              />
+              
+              {/* 关闭按钮 */}
+              <TouchableOpacity 
+                style={styles.closeVideoButton}
+                onPress={() => {
+                  videoPlayer.pause();
+                  setPlayingVideoIndex(null);
+                }}
+              >
+                <Ionicons name="close-circle" size={32} color="#fff" />
+              </TouchableOpacity>
+            </View>
+          ) : (
+            // 未播放状态: 显示缩略图 + 播放按钮
+            <TouchableOpacity 
+              style={styles.videoThumbnailContainer}
+              onPress={() => {
+                setPlayingVideoIndex(index);
+                videoPlayer.play();
+              }}
+              activeOpacity={0.9}
+            >
+              {Platform.OS === 'web' ? (
+                <img
+                  src={getDirectusImageUrl(item.thumbnail || '')}
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover' as any
+                  }}
+                  alt="视频缩略图"
+                />
+              ) : (
+                <Image
+                  source={{ uri: getDirectusImageUrl(item.thumbnail || '') }}
+                  style={styles.productImage}
+                  resizeMode="cover"
+                />
+              )}
+              
+              {/* 播放按钮覆盖层 */}
+              <View style={styles.playButtonOverlay}>
+                <View style={styles.playButton}>
+                  <Ionicons name="play" size={48} color="#fff" />
+                </View>
+                <Text style={styles.videoLabel}>点击播放视频</Text>
+              </View>
+            </TouchableOpacity>
+          )}
+          
+          {/* 计数器 */}
+          {!isPlaying && (
+            <View style={styles.imageOverlay}>
+              <Text style={styles.imageCounter}>
+                📹 视频 ({index + 1} / {mediaItems.length})
+              </Text>
+            </View>
+          )}
+        </View>
+      );
+    } else {
+      // 图片项
+      const simpleUrl = getDirectusImageUrl(item.url);
+      
+      return (
+        <TouchableOpacity 
+          style={styles.imageContainer} 
+          onPress={() => handleImagePress(index)}
+          activeOpacity={0.9}
+        >
+          {Platform.OS === 'web' ? (
+            <img
+              src={simpleUrl}
+              style={{
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover' as any
+              }}
+              alt={`商品图片 ${index + 1}`}
+            />
+          ) : (
+            <Image
+              source={{ uri: simpleUrl }}
+              style={styles.productImage}
+              resizeMode="cover"
+            />
+          )}
+          <View style={styles.imageOverlay}>
+            <Text style={styles.imageCounter}>
+              {index + 1} / {mediaItems.length}
+            </Text>
+          </View>
+        </TouchableOpacity>
+      );
+    }
+  };
+
+  const renderPreviewImageItem = ({ item, index }: { item: MediaItem; index: number }) => {
+    // 预览模式只显示图片,跳过视频
+    if (item.type === 'video') return null;
     
     return (
       <TouchableOpacity 
-        style={styles.imageContainer} 
-        onPress={() => handleImagePress(index)}
-        activeOpacity={0.9}
+        style={styles.previewImageContainer}
+        onPress={closeImageModal}
+        activeOpacity={1}
       >
         {Platform.OS === 'web' ? (
           <img
-            src={simpleUrl}
+            src={getDirectusImageUrl(item.url)}
             style={{
               width: '100%',
-              height: '100%',
-              objectFit: 'cover' as any
+              height: '80%',
+              objectFit: 'contain' as any
             }}
-            alt={`商品图片 ${index + 1}`}
+            alt={`预览图片 ${index + 1}`}
           />
         ) : (
           <Image
-            source={{ uri: simpleUrl }}
-            style={styles.productImage}
-            resizeMode="cover"
+            source={{ uri: getDirectusImageUrl(item.url) }}
+            style={styles.previewImage}
+            resizeMode="contain"
           />
         )}
-        <View style={styles.imageOverlay}>
-          <Text style={styles.imageCounter}>
-            {index + 1} / {images.length}
-          </Text>
-        </View>
       </TouchableOpacity>
     );
   };
-
-  const renderPreviewImageItem = ({ item, index }: { item: string; index: number }) => (
-    <TouchableOpacity 
-      style={styles.previewImageContainer}
-      onPress={closeImageModal}
-      activeOpacity={1}
-    >
-      {Platform.OS === 'web' ? (
-        <img
-          src={getDirectusImageUrl(item)}
-          style={{
-            width: '100%',
-            height: '80%',
-            objectFit: 'contain' as any
-          }}
-          alt={`预览图片 ${index + 1}`}
-        />
-      ) : (
-        <Image
-          source={{ uri: getDirectusImageUrl(item) }}
-          style={styles.previewImage}
-          resizeMode="contain"
-        />
-      )}
-    </TouchableOpacity>
-  );
 
   const renderDot = (index: number) => (
     <TouchableOpacity
@@ -207,18 +362,18 @@ const ProductDetailScreen: React.FC = () => {
     <>
       <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
         <View style={styles.imageSection}>
-          {images.length > 0 ? (
+          {mediaItems.length > 0 ? (
             <>
               <FlatList
                 ref={flatListRef}
-                data={images}
-                renderItem={renderImageItem}
+                data={mediaItems}
+                renderItem={renderMediaItem}
                 horizontal
                 pagingEnabled
                 showsHorizontalScrollIndicator={false}
                 onViewableItemsChanged={onViewableItemsChanged}
                 viewabilityConfig={viewabilityConfig}
-                keyExtractor={(item, index) => `image-${index}`}
+                keyExtractor={(item) => item.id}
                 getItemLayout={(data, index) => ({
                   length: screenWidth,
                   offset: screenWidth * index,
@@ -227,9 +382,9 @@ const ProductDetailScreen: React.FC = () => {
               />
               
               {/* 圆点指示器 */}
-              {images.length > 1 && (
+              {mediaItems.length > 1 && (
                 <View style={styles.dotsContainer}>
-                  {images.map((_, index) => renderDot(index))}
+                  {mediaItems.map((_, index) => renderDot(index))}
                 </View>
               )}
             </>
@@ -302,18 +457,18 @@ const ProductDetailScreen: React.FC = () => {
           <View style={styles.modalOverlay}>
             <TouchableWithoutFeedback onPress={() => {}}>
               <View style={styles.modalContent}>
-                {images.length > 0 && (
+                {mediaItems.length > 0 && (
                   <>
                     <FlatList
                       ref={previewFlatListRef}
-                      data={images}
+                      data={mediaItems}
                       renderItem={renderPreviewImageItem}
                       horizontal
                       pagingEnabled
                       showsHorizontalScrollIndicator={false}
                       onViewableItemsChanged={onPreviewViewableItemsChanged}
                       viewabilityConfig={viewabilityConfig}
-                      keyExtractor={(item, index) => `preview-${index}`}
+                      keyExtractor={(item) => `preview-${item.id}`}
                       initialScrollIndex={previewImageIndex}
                       getItemLayout={(data, index) => ({
                         length: screenWidth,
@@ -323,9 +478,9 @@ const ProductDetailScreen: React.FC = () => {
                     />
                     
                     {/* 预览模式的圆点指示器 */}
-                    {images.length > 1 && (
+                    {mediaItems.length > 1 && (
                       <View style={styles.previewDotsContainer}>
-                        {images.map((_, index) => (
+                        {mediaItems.map((_, index) => (
                           <TouchableOpacity
                             key={index}
                             style={[
@@ -346,7 +501,7 @@ const ProductDetailScreen: React.FC = () => {
                     {/* 预览模式的计数器 */}
                     <View style={styles.previewCounter}>
                       <Text style={styles.previewCounterText}>
-                        {previewImageIndex + 1} / {images.length}
+                        {previewImageIndex + 1} / {mediaItems.length}
                       </Text>
                     </View>
                   </>
@@ -450,6 +605,62 @@ const styles = StyleSheet.create({
   },
   inactiveDot: {
     backgroundColor: 'rgba(255, 255, 255, 0.5)',
+  },
+  // 视频缩略图相关
+  videoThumbnailContainer: {
+    width: '100%',
+    height: '100%',
+    position: 'relative',
+  },
+  playButtonOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  playButton: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    backgroundColor: 'rgba(255, 107, 53, 0.9)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 6,
+    elevation: 8,
+  },
+  videoLabel: {
+    color: '#fff',
+    fontSize: 14,
+    fontWeight: '600',
+    marginTop: 12,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    paddingHorizontal: 16,
+    paddingVertical: 6,
+    borderRadius: 16,
+  },
+  // 视频播放器相关
+  videoPlayerContainer: {
+    width: '100%',
+    height: '100%',
+    backgroundColor: '#000',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  video: {
+    width: '100%',
+    height: '100%',
+  },
+  closeVideoButton: {
+    position: 'absolute',
+    top: 40,
+    right: 20,
+    zIndex: 10,
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+    borderRadius: 20,
+    padding: 4,
   },
   infoSection: {
     backgroundColor: '#fff',

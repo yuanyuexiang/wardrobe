@@ -68,3 +68,25 @@ export const getDirectusThumbnailUrl = (fileId: string, size: number = 300): str
 export const getDirectusOriginalUrl = (fileId: string): string => {
   return getDirectusImageUrl(fileId);
 };
+
+/**
+ * 将 Directus 视频文件 ID 转换为完整的视频 URL
+ * @param fileId Directus 视频文件 ID 或已有的完整URL
+ * @returns 完整的视频 URL
+ */
+export const getDirectusVideoUrl = (fileId: string): string => {
+  if (!fileId) return '';
+  
+  // 检查是否已经是完整的URL
+  if (fileId.startsWith('http://') || fileId.startsWith('https://')) {
+    return fileId;
+  }
+  
+  // 检查是否包含重复的域名前缀
+  if (fileId.includes('forge.kcbaotech.com')) {
+    return fileId;
+  }
+  
+  // 构建 Directus 视频 URL
+  return `${DIRECTUS_BASE_URL}/assets/${fileId}`;
+};
