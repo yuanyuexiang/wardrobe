@@ -41,8 +41,8 @@ const ProductDetailScreen: React.FC = () => {
   const [videoThumbnailUri, setVideoThumbnailUri] = useState<string>('');
   const flatListRef = useRef<FlatList>(null);
   const previewFlatListRef = useRef<FlatList>(null);
-  
-  const { data, loading, error } = useGetProductDetailQuery({ 
+
+  const { data, loading, error } = useGetProductDetailQuery({
     variables: { id: id as string },
     skip: !id
   });
@@ -51,7 +51,7 @@ const ProductDetailScreen: React.FC = () => {
 
   // 为视频创建播放器实例（仅在有视频时）
   const videoUrl = product?.video_url ? getDirectusVideoUrl(product.video_url) : '';
-  
+
   // 只在有 videoUrl 时创建播放器
   const videoPlayer = useVideoPlayer(videoUrl || 'https://placeholder.com/empty.mp4', (player) => {
     player.loop = false;
@@ -70,14 +70,14 @@ const ProductDetailScreen: React.FC = () => {
   // 监听视频播放完成
   useEffect(() => {
     if (!videoPlayer || !videoUrl) return;
-    
+
     const subscription = videoPlayer.addListener('playingChange', (newIsPlaying) => {
       if (!newIsPlaying && videoPlayer.currentTime >= videoPlayer.duration - 0.5) {
         // 视频播放完成，自动关闭Modal
         setIsVideoModalVisible(false);
       }
     });
-    
+
     return () => {
       subscription.remove();
     };
@@ -102,7 +102,7 @@ const ProductDetailScreen: React.FC = () => {
   // 生成视频缩略图
   useEffect(() => {
     logger.info('ProductDetail', `缩略图生成Effect触发 - videoUrl: ${videoUrl}, product存在: ${!!product}, Platform: ${Platform.OS}`);
-    
+
     const generateThumbnail = async () => {
       if (!videoUrl) {
         logger.info('ProductDetail', '没有视频URL，跳过缩略图生成');
@@ -120,12 +120,12 @@ const ProductDetailScreen: React.FC = () => {
       try {
         logger.info('ProductDetail', `【关键】开始生成视频缩略图 - URL: ${videoUrl}`);
         logger.info('ProductDetail', `VideoThumbnails对象: ${typeof VideoThumbnails}, getThumbnailAsync: ${typeof VideoThumbnails.getThumbnailAsync}`);
-        
+
         const { uri } = await VideoThumbnails.getThumbnailAsync(videoUrl, {
           time: 0, // 获取第0秒的帧（首帧）
           quality: 0.8,
         });
-        
+
         logger.info('ProductDetail', `【成功】视频缩略图生成成功: ${uri}`);
         setVideoThumbnailUri(uri);
       } catch (error) {
@@ -149,9 +149,9 @@ const ProductDetailScreen: React.FC = () => {
   // 处理媒体数组(视频+图片)
   const mediaItems = React.useMemo(() => {
     if (!product) return [];
-    
+
     const items: MediaItem[] = [];
-    
+
     // 1. 如果有视频,视频作为第一项
     if (product.video_url) {
       const fullVideoUrl = getDirectusVideoUrl(product.video_url);
@@ -166,7 +166,7 @@ const ProductDetailScreen: React.FC = () => {
         id: 'video-0'
       });
     }
-    
+
     // 2. 添加主图
     if (product.main_image) {
       items.push({
@@ -175,7 +175,7 @@ const ProductDetailScreen: React.FC = () => {
         id: 'main-image'
       });
     }
-    
+
     // 3. 添加其他图片
     if (product.images && Array.isArray(product.images)) {
       product.images.forEach((img: any, index: number) => {
@@ -188,7 +188,7 @@ const ProductDetailScreen: React.FC = () => {
         }
       });
     }
-    
+
     return items;
   }, [product, videoThumbnailUri]);
 
@@ -214,20 +214,20 @@ const ProductDetailScreen: React.FC = () => {
       const imageUrls = mediaItems
         .filter(item => item.type === 'image')
         .map(item => getDirectusImageUrl(item.url));
-      
+
       if (imageUrls.length > 0) {
         logger.info('ProductDetailScreen', `开始预加载${imageUrls.length}张商品图片`);
         imageCache.preloadBatch(imageUrls);
       }
     }
-    
+
     // 记录视频信息
     if (product?.video_url) {
       logger.info('ProductDetailScreen', '检测到商品视频', {
         videoUrl: product.video_url
       });
     }
-  }, [mediaItems, product]);  const onViewableItemsChanged = useRef(({ viewableItems }: any) => {
+  }, [mediaItems, product]); const onViewableItemsChanged = useRef(({ viewableItems }: any) => {
     if (viewableItems.length > 0) {
       setCurrentImageIndex(viewableItems[0].index || 0);
     }
@@ -260,10 +260,10 @@ const ProductDetailScreen: React.FC = () => {
     if (item.type === 'video') {
       // 视频项：始终显示缩略图 + 播放按钮
       logger.info('ProductDetail', `渲染视频项 ${index}, 缩略图: ${item.thumbnail}`);
-      
+
       return (
         <View style={styles.imageContainer}>
-          <TouchableOpacity 
+          <TouchableOpacity
             style={styles.videoThumbnailContainer}
             onPress={() => {
               setIsVideoModalVisible(true);
@@ -303,7 +303,7 @@ const ProductDetailScreen: React.FC = () => {
                 <Text style={styles.noImageText}>视频</Text>
               </View>
             )}
-            
+
             {/* 播放按钮覆盖层 */}
             <View style={styles.playButtonOverlay}>
               <View style={styles.playButton}>
@@ -312,7 +312,7 @@ const ProductDetailScreen: React.FC = () => {
               <Text style={styles.videoLabel}>点击播放视频</Text>
             </View>
           </TouchableOpacity>
-          
+
           {/* 计数器 */}
           <View style={styles.imageOverlay}>
             <Text style={styles.imageCounter}>
@@ -324,12 +324,12 @@ const ProductDetailScreen: React.FC = () => {
     } else {
       // 图片项
       const simpleUrl = getDirectusImageUrl(item.url);
-      
+
       logger.info('ProductDetail', `渲染图片项 ${index}: ${simpleUrl.substring(0, 50)}...`);
-      
+
       return (
-        <TouchableOpacity 
-          style={styles.imageContainer} 
+        <TouchableOpacity
+          style={styles.imageContainer}
           onPress={() => handleImagePress(index)}
           activeOpacity={0.9}
         >
@@ -371,9 +371,9 @@ const ProductDetailScreen: React.FC = () => {
   const renderPreviewImageItem = ({ item, index }: { item: MediaItem; index: number }) => {
     // 预览模式只显示图片,跳过视频
     if (item.type === 'video') return null;
-    
+
     return (
-      <TouchableOpacity 
+      <TouchableOpacity
         style={styles.previewImageContainer}
         onPress={closeImageModal}
         activeOpacity={1}
@@ -407,9 +407,9 @@ const ProductDetailScreen: React.FC = () => {
         currentImageIndex === index ? styles.activeDot : styles.inactiveDot
       ]}
       onPress={() => {
-        flatListRef.current?.scrollToIndex({ 
-          index, 
-          animated: true 
+        flatListRef.current?.scrollToIndex({
+          index,
+          animated: true
         });
       }}
     />
@@ -456,7 +456,7 @@ const ProductDetailScreen: React.FC = () => {
                   index,
                 })}
               />
-              
+
               {/* 圆点指示器 */}
               {mediaItems.length > 1 && (
                 <View style={styles.dotsContainer}>
@@ -474,11 +474,11 @@ const ProductDetailScreen: React.FC = () => {
         <View style={styles.infoSection}>
           <View style={styles.productInfo}>
             <Text style={styles.productName}>{product.name}</Text>
-            
+
             {product.subtitle && (
               <Text style={styles.productSubtitle}>{product.subtitle}</Text>
             )}
-            
+
             {/* <View style={styles.priceContainer}>
               <Text style={styles.currentPrice}>¥{product.price}</Text>
               {product.market_price && product.market_price > product.price && (
@@ -493,7 +493,7 @@ const ProductDetailScreen: React.FC = () => {
               </View>
             )}
 
-            {product.stock !== null && product.stock !== undefined && (
+            {/* {product.stock !== null && product.stock !== undefined && (
               <View style={styles.stockContainer}>
                 <Text style={styles.stockLabel}>库存：</Text>
                 <Text style={[
@@ -503,7 +503,7 @@ const ProductDetailScreen: React.FC = () => {
                   {product.stock > 0 ? `${product.stock}件` : '缺货'}
                 </Text>
               </View>
-            )}
+            )} */}
 
             {product.description && (
               <View style={styles.descriptionContainer}>
@@ -531,7 +531,7 @@ const ProductDetailScreen: React.FC = () => {
       >
         <TouchableWithoutFeedback onPress={closeImageModal}>
           <View style={styles.modalOverlay}>
-            <TouchableWithoutFeedback onPress={() => {}}>
+            <TouchableWithoutFeedback onPress={() => { }}>
               <View style={styles.modalContent}>
                 {mediaItems.length > 0 && (
                   <>
@@ -552,7 +552,7 @@ const ProductDetailScreen: React.FC = () => {
                         index,
                       })}
                     />
-                    
+
                     {/* 预览模式的圆点指示器 */}
                     {mediaItems.length > 1 && (
                       <View style={styles.previewDotsContainer}>
@@ -564,16 +564,16 @@ const ProductDetailScreen: React.FC = () => {
                               previewImageIndex === index ? styles.previewActiveDot : styles.previewInactiveDot
                             ]}
                             onPress={() => {
-                              previewFlatListRef.current?.scrollToIndex({ 
-                                index, 
-                                animated: true 
+                              previewFlatListRef.current?.scrollToIndex({
+                                index,
+                                animated: true
                               });
                             }}
                           />
                         ))}
                       </View>
                     )}
-                    
+
                     {/* 预览模式的计数器 */}
                     <View style={styles.previewCounter}>
                       <Text style={styles.previewCounterText}>
@@ -600,7 +600,7 @@ const ProductDetailScreen: React.FC = () => {
       >
         <View style={styles.videoModalOverlay}>
           {/* 点击背景关闭 */}
-          <TouchableWithoutFeedback 
+          <TouchableWithoutFeedback
             onPress={() => {
               videoPlayer.pause();
               setIsVideoModalVisible(false);
@@ -608,7 +608,7 @@ const ProductDetailScreen: React.FC = () => {
           >
             <View style={StyleSheet.absoluteFill} />
           </TouchableWithoutFeedback>
-          
+
           {/* 视频播放器容器 */}
           <View style={styles.videoModalContent}>
             <VideoView
@@ -618,9 +618,9 @@ const ProductDetailScreen: React.FC = () => {
               allowsFullscreen
               allowsPictureInPicture
             />
-            
+
             {/* 关闭按钮 */}
-            <TouchableOpacity 
+            <TouchableOpacity
               style={styles.videoCloseButton}
               onPress={() => {
                 videoPlayer.pause();
@@ -674,6 +674,8 @@ const styles = StyleSheet.create({
     width: screenWidth,
     height: screenHeight, // 明确设置为屏幕高度
     position: 'relative',
+    justifyContent: 'center', // 垂直居中
+    alignItems: 'center', // 水平居中
   },
   productImage: {
     width: '100%',

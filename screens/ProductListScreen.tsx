@@ -1,6 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import React, { useRef, useState, useEffect } from 'react';
-import { ActivityIndicator, FlatList, RefreshControl, SafeAreaView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, FlatList, Image, RefreshControl, SafeAreaView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { router } from 'expo-router';
 import CarouselModal from '../components/CarouselModal';
 import ProductCard from '../components/ProductCard';
@@ -36,10 +36,10 @@ const ProductListScreen: React.FC = () => {
   const flatListRef = useRef<FlatList>(null);
   const [currentConfig, setCurrentConfig] = useState(configManager.getConfig());
   const updateIntervalRef = useRef<number | null>(null); // 定时更新引用
-  
+
   // 使用共享的商家信息
   const { boutiqueId, boutique, loading: boutiqueLoading } = useBoutiqueInfo();
-  
+
   // 设备授权系统不需要用户状态
 
   // 检查设备用途并自动开启轮播
@@ -49,15 +49,15 @@ const ProductListScreen: React.FC = () => {
         const startupInfo = await deviceStartupManager.checkStartupState();
         const purposes = startupInfo.terminalInfo?.purposes;
         const interval = startupInfo.terminalInfo?.carousel_interval;
-        
+
         setDevicePurpose(purposes || null);
         // 设置轮播间隔，如果为0或null则使用默认值5秒
         setCarouselInterval((interval && interval > 0) ? interval : 5);
-        
+
         if (startupInfo.state === 'approved' && purposes === 'carousel') {
           // 如果设备用途是轮播，自动开启轮播模式
-          logger.info('ProductListScreen', '检测到轮播设备，自动开启轮播模式', { 
-            carouselInterval: interval || 5 
+          logger.info('ProductListScreen', '检测到轮播设备，自动开启轮播模式', {
+            carouselInterval: interval || 5
           });
           setIsCarouselDevice(true);
           setCarouselVisible(true);
@@ -73,7 +73,7 @@ const ProductListScreen: React.FC = () => {
         setDevicePurpose(null);
       }
     };
-    
+
     checkDevicePurpose();
   }, []);
 
@@ -81,12 +81,12 @@ const ProductListScreen: React.FC = () => {
   useEffect(() => {
     const unsubscribe = configManager.addListener((config) => {
       setCurrentConfig(config);
-      logger.info('ProductListScreen', '配置更新', { 
+      logger.info('ProductListScreen', '配置更新', {
         selectedBoutiqueId: config.selectedBoutiqueId,
-        selectedBoutiqueName: config.selectedBoutiqueName 
+        selectedBoutiqueName: config.selectedBoutiqueName
       });
     });
-    
+
     return unsubscribe;
   }, []);
 
@@ -100,22 +100,22 @@ const ProductListScreen: React.FC = () => {
     },
     skip: !boutiqueId,
   });
-  
+
   // 获取店铺信息 - 不再使用用户依赖的查询
   // 直接使用从设备启动管理器获取的店铺ID  // 构建查询变量
   const buildQueryVariables = () => {
     const variables: any = {};
-    
+
     // 构建动态 filter 对象
     const filters: any[] = [];
-    
+
     // 只使用店铺过滤器 - 显示当前店铺的所有商品
     if (boutiqueId) {
       filters.push({
         boutique_id: { id: { _eq: boutiqueId } }
       });
     }
-    
+
     // 处理推荐商品分类（获取最新上架的5个商品）
     if (selectedCategory === "recommended") {
       variables.limit = 5;
@@ -123,7 +123,7 @@ const ProductListScreen: React.FC = () => {
     } else {
       // 普通分类显示所有商品
       variables.limit = 1000; // 设置一个足够大的数字来获取所有商品
-      
+
       // 添加分类过滤器
       if (selectedCategory) {
         filters.push({
@@ -131,7 +131,7 @@ const ProductListScreen: React.FC = () => {
         });
       }
     }
-    
+
     // 添加搜索过滤器
     if (search && search.trim()) {
       filters.push({
@@ -142,7 +142,7 @@ const ProductListScreen: React.FC = () => {
         ]
       });
     }
-    
+
     // 如果有过滤条件，使用 _and 组合
     if (filters.length > 0) {
       if (filters.length === 1) {
@@ -151,10 +151,10 @@ const ProductListScreen: React.FC = () => {
         variables.filter = { _and: filters };
       }
     }
-    
+
     return variables;
   };
-  
+
   // 打印查询变量，便于调试
   const queryVariables = buildQueryVariables();
   useEffect(() => {
@@ -195,7 +195,7 @@ const ProductListScreen: React.FC = () => {
     const scheduleNextUpdate = () => {
       updateIntervalRef.current = setTimeout(() => {
         logger.info('ProductListScreen', '定时更新主商品列表');
-        
+
         // 只更新主商品列表，轮播数据由CarouselModal自己管理
         refetch?.()
           .then(() => {
@@ -226,7 +226,7 @@ const ProductListScreen: React.FC = () => {
       const imageUrls = productData.products
         .filter(product => product.main_image)
         .map(product => getDirectusThumbnailUrl(product.main_image!, 320));
-      
+
       if (imageUrls.length > 0) {
         logger.info('ProductListScreen', `开始预加载${imageUrls.length}张商品图片`);
         imageCache.preloadBatch(imageUrls);
@@ -259,12 +259,16 @@ const ProductListScreen: React.FC = () => {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="#fff" />
-      
+
       {/* 顶部品牌区域 */}
       <View style={styles.header}>
         <View style={styles.brandSection}>
           <View style={styles.brandLogo}>
-            <Text style={styles.logoText}>衣橱</Text>
+            <Image
+              source={require('../assets/images/favicon.png')}
+              style={styles.logoImage}
+              resizeMode="contain"
+            />
           </View>
           <View style={styles.brandInfo}>
             <Text style={styles.brandName}>
@@ -283,20 +287,20 @@ const ProductListScreen: React.FC = () => {
         {/* 只有轮播设备在轮播状态时才隐藏按钮，其他情况都显示 */}
         {!(devicePurpose === 'carousel' && carouselVisible) && (
           <View style={styles.headerRight}>
-            <TouchableOpacity 
+            <TouchableOpacity
               style={[styles.couponButton, { marginRight: 8 }]}
               onPress={() => setCarouselVisible(true)}
             >
               <Text style={styles.couponText}>轮播</Text>
             </TouchableOpacity>
-            <TouchableOpacity 
+            <TouchableOpacity
               style={styles.layoutButton}
               onPress={() => setIsGridLayout(!isGridLayout)}
             >
-              <Ionicons 
-                name={isGridLayout ? "list" : "grid"} 
-                size={18} 
-                color="#ff6b35" 
+              <Ionicons
+                name={isGridLayout ? "list" : "grid"}
+                size={18}
+                color="#ff6b35"
               />
             </TouchableOpacity>
           </View>
@@ -341,9 +345,9 @@ const ProductListScreen: React.FC = () => {
               data={productData?.products?.filter((_, index) => index % 2 === 0) || []}
               keyExtractor={(prod) => `top-${prod.id}`}
               renderItem={({ item }) => (
-                <ProductCard 
-                  product={item} 
-                  layoutMode="grid" 
+                <ProductCard
+                  product={item}
+                  layoutMode="grid"
                 />
               )}
               horizontal={true}
@@ -356,9 +360,9 @@ const ProductListScreen: React.FC = () => {
               data={productData?.products?.filter((_, index) => index % 2 === 1) || []}
               keyExtractor={(prod) => `bottom-${prod.id}`}
               renderItem={({ item }) => (
-                <ProductCard 
-                  product={item} 
-                  layoutMode="grid" 
+                <ProductCard
+                  product={item}
+                  layoutMode="grid"
                 />
               )}
               horizontal={true}
@@ -375,9 +379,9 @@ const ProductListScreen: React.FC = () => {
             data={productData?.products || []}
             keyExtractor={(prod) => prod.id}
             renderItem={({ item }) => (
-              <ProductCard 
-                product={item} 
-                layoutMode="horizontal" 
+              <ProductCard
+                product={item}
+                layoutMode="horizontal"
               />
             )}
             style={styles.productList}
@@ -403,14 +407,14 @@ const ProductListScreen: React.FC = () => {
             decelerationRate="fast"
           />
         )}
-        
+
         {/* 双层布局的空状态 */}
         {isGridLayout && (!productData?.products || productData.products.length === 0) && !productLoading && (
           <View style={styles.emptyContainer}>
             <Text style={styles.emptyText}>暂无商品</Text>
           </View>
         )}
-        
+
         {/* 双层布局的加载状态 */}
         {isGridLayout && productLoading && (
           <View style={styles.loadingContainer}>
@@ -478,10 +482,13 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 8,
-    backgroundColor: '#ff6b35',
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: 12,
+  },
+  logoImage: {
+    width: '100%',
+    height: '100%',
   },
   logoText: {
     color: '#fff',
