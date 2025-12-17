@@ -89,10 +89,10 @@ const ProductDetailScreen: React.FC = () => {
       logger.info('ProductDetail', 'Modal打开，重新加载并播放视频');
       // 使用 replace 重新加载视频源，确保从头开始
       videoPlayer.replace(videoUrl);
-      // 延迟一点点等待视频加载
+      // 增加延迟等待视频完全加载（修复：有声音但没有图像的问题）
       setTimeout(() => {
         videoPlayer.play();
-      }, 100);
+      }, 300);
     } else if (!isVideoModalVisible && videoPlayer) {
       logger.info('ProductDetail', 'Modal关闭，暂停视频');
       videoPlayer.pause();
@@ -739,7 +739,7 @@ const styles = StyleSheet.create({
   },
   playButtonOverlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // 增加不透明度，让按钮更突出
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -747,14 +747,16 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: 40,
-    backgroundColor: 'rgba(255, 107, 53, 0.9)',
+    backgroundColor: 'rgba(255, 107, 53, 1.0)', // 完全不透明，增强对比度
     justifyContent: 'center',
     alignItems: 'center',
+    borderWidth: 3, // 添加白色边框
+    borderColor: '#fff', // 白色边框增加对比度
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 6,
-    elevation: 8,
+    shadowOpacity: 0.5, // 增加阴影不透明度
+    shadowRadius: 8, // 增加阴影半径
+    elevation: 12, // 增加 Android 阴影效果
   },
   videoLabel: {
     color: '#fff',
@@ -775,12 +777,15 @@ const styles = StyleSheet.create({
   },
   videoModalContent: {
     width: screenWidth,
-    height: screenWidth * (9 / 16), // 16:9 比例
+    aspectRatio: 16 / 9, // 使用 aspectRatio 代替固定高度
+    maxHeight: screenHeight * 0.8, // 最大高度不超过屏幕的80%
     position: 'relative',
+    backgroundColor: '#000', // 添加黑色背景
   },
   fullscreenVideo: {
     width: '100%',
     height: '100%',
+    backgroundColor: '#000', // 添加黑色背景，确保视频正确渲染
   },
   videoCloseButton: {
     position: 'absolute',
