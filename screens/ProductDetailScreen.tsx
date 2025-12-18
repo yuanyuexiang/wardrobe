@@ -494,7 +494,7 @@ const ProductDetailScreen: React.FC = () => {
               </View>
             )}
 
-            {/* {product.stock !== null && product.stock !== undefined && (
+            {product.stock !== null && product.stock !== undefined && (
               <View style={styles.stockContainer}>
                 <Text style={styles.stockLabel}>库存：</Text>
                 <Text style={[
@@ -504,7 +504,14 @@ const ProductDetailScreen: React.FC = () => {
                   {product.stock > 0 ? `${product.stock}件` : '缺货'}
                 </Text>
               </View>
-            )} */}
+            )}
+
+            {product.location && (
+              <View style={styles.locationContainer}>
+                <Text style={styles.locationLabel}>摆放位置：</Text>
+                <Text style={styles.locationText}>{product.location}</Text>
+              </View>
+            )}
 
             {product.description && (
               <View style={styles.descriptionContainer}>
@@ -883,6 +890,26 @@ const styles = StyleSheet.create({
   },
   outOfStock: {
     color: '#f44336',
+  },
+  locationContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 16,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    backgroundColor: '#f5f5f5',
+    borderRadius: 8,
+  },
+  locationLabel: {
+    fontSize: 14,
+    color: '#666',
+    fontWeight: '500',
+    marginRight: 8,
+  },
+  locationText: {
+    fontSize: 14,
+    color: '#e65100',
+    fontWeight: '600',
   },
   descriptionContainer: {
     marginTop: 20,

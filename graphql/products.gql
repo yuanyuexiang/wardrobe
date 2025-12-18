@@ -212,6 +212,7 @@ query GetProductDetail($id: ID!) {
     price
     market_price
     stock
+    location
     main_image
     images
     video_url

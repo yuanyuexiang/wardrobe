@@ -17,6 +17,7 @@ export const GET_PRODUCT_DETAIL = gql`
       video_url
       is_on_sale
       status
+      location
       total_sales_volume
       rating_avg
       total_reviews
