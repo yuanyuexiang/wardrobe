@@ -1,16 +1,16 @@
 import { Ionicons } from '@expo/vector-icons';
 import React, { useEffect, useRef, useState } from 'react';
 import {
-    ActivityIndicator,
-    Dimensions,
-    Image,
-    Modal,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    TouchableWithoutFeedback,
-    View,
-    StatusBar,
+  ActivityIndicator,
+  Dimensions,
+  Image,
+  Modal,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
+  StatusBar,
 } from 'react-native';
 import { useQuery } from '@apollo/client';
 import { GetProductsByBoutiqueDocument } from '../generated/graphql';
@@ -42,8 +42,8 @@ const CarouselModal: React.FC<CarouselModalProps> = ({ visible, onClose, product
 
   // GraphQL查询，用于定时更新
   const { data: queryData, refetch } = useQuery(GetProductsByBoutiqueDocument, {
-    variables: { 
-      boutiqueId: boutiqueId || '', 
+    variables: {
+      boutiqueId: boutiqueId || '',
       filter: { carousel: { _eq: "in" } }
     },
     skip: !boutiqueId || !visible,
@@ -95,8 +95,8 @@ const CarouselModal: React.FC<CarouselModalProps> = ({ visible, onClose, product
   useEffect(() => {
     if (queryData?.products) {
       setLocalProducts(queryData.products);
-      logger.info('CarouselModal', '产品数据已更新', { 
-        count: queryData.products.length 
+      logger.info('CarouselModal', '产品数据已更新', {
+        count: queryData.products.length
       });
     } else if (products) {
       setLocalProducts(products);
@@ -107,19 +107,27 @@ const CarouselModal: React.FC<CarouselModalProps> = ({ visible, onClose, product
   const carouselItems = localProducts
     .filter(product => product.carousel === "in") // 只包含参与轮播的商品
     .flatMap(product => {
-      // 解析images字段
+      // 解析图片数据，优先使用 carousel_images
       let imageIds: string[] = [];
-      if (product.images) {
+      let sourceData = product.carousel_images;
+
+      // 如果 carousel_images 无效，回退到 images
+      // 判断无效: undefined/null, 空数组, 或空JSON数组字符串
+      if (!sourceData || (Array.isArray(sourceData) && sourceData.length === 0) || sourceData === '[]') {
+        sourceData = product.images;
+      }
+
+      if (sourceData) {
         try {
-          imageIds = Array.isArray(product.images) 
-            ? product.images 
-            : JSON.parse(product.images);
+          imageIds = Array.isArray(sourceData)
+            ? sourceData
+            : JSON.parse(sourceData);
         } catch (e) {
-          console.warn('解析商品images失败:', e);
+          console.warn('解析商品图片失败:', e);
           imageIds = [];
         }
       }
-      
+
       // 为每个图片创建一个轮播项，包含商品信息
       return imageIds.map(imageId => ({
         imageId,
@@ -159,7 +167,7 @@ const CarouselModal: React.FC<CarouselModalProps> = ({ visible, onClose, product
       if (hideControlsTimeoutRef.current) {
         clearTimeout(hideControlsTimeoutRef.current);
       }
-      
+
       // 使用动态间隔时间后隐藏控制按钮
       hideControlsTimeoutRef.current = setTimeout(() => {
         setControlsVisible(false);
@@ -176,11 +184,11 @@ const CarouselModal: React.FC<CarouselModalProps> = ({ visible, onClose, product
   // 重置隐藏定时器的函数
   const resetHideTimer = () => {
     setControlsVisible(true);
-    
+
     if (hideControlsTimeoutRef.current) {
       clearTimeout(hideControlsTimeoutRef.current);
     }
-    
+
     hideControlsTimeoutRef.current = setTimeout(() => {
       setControlsVisible(false);
     }, actualInterval); // 使用动态计算的间隔时间
@@ -195,7 +203,7 @@ const CarouselModal: React.FC<CarouselModalProps> = ({ visible, onClose, product
   };
 
   const goToPrevious = () => {
-    setCurrentIndex((prevIndex) => 
+    setCurrentIndex((prevIndex) =>
       prevIndex === 0 ? carouselItems.length - 1 : prevIndex - 1
     );
   };
@@ -209,13 +217,13 @@ const CarouselModal: React.FC<CarouselModalProps> = ({ visible, onClose, product
   }
 
   const currentItem = carouselItems[currentIndex];
-  const imageUrl = currentItem?.imageId 
+  const imageUrl = currentItem?.imageId
     ? getDirectusImageUrl(
-        currentItem.imageId, 
-        Math.round(screenWidth), 
-        Math.round(screenHeight),
-        90 // 高质量
-      )
+      currentItem.imageId,
+      Math.round(screenWidth),
+      Math.round(screenHeight),
+      90 // 高质量
+    )
     : null;
 
   // 结构化日志
@@ -247,77 +255,77 @@ const CarouselModal: React.FC<CarouselModalProps> = ({ visible, onClose, product
             </View>
           )}
 
-        {/* 主图片区域 - 填充整个屏幕 */}
-        <View style={styles.imageContainer}>
-          {loading && (
-            <View style={styles.loadingContainer}>
-              <ActivityIndicator size="large" color="white" />
-            </View>
-          )}
-          
-          {imageUrl ? (
-            <Image
-              source={{ uri: imageUrl }}
-              style={styles.mainImage}
-              resizeMode="cover" // 改为cover，填充整个容器
-              onLoad={handleImageLoad}
-              onError={handleImageError}
-            />
-          ) : (
-            <View style={styles.noImageContainer}>
-              <Text style={styles.noImageText}>暂无图片</Text>
-            </View>
-          )}
+          {/* 主图片区域 - 填充整个屏幕 */}
+          <View style={styles.imageContainer}>
+            {loading && (
+              <View style={styles.loadingContainer}>
+                <ActivityIndicator size="large" color="white" />
+              </View>
+            )}
 
-          {/* 左右切换按钮 */}
-          {controlsVisible && (
-            <>
-              <TouchableOpacity style={styles.prevButton} onPress={goToPrevious}>
-                <Ionicons name="chevron-back" size={40} color="white" />
-              </TouchableOpacity>
+            {imageUrl ? (
+              <Image
+                source={{ uri: imageUrl }}
+                style={styles.mainImage}
+                resizeMode="cover" // 改为cover，填充整个容器
+                onLoad={handleImageLoad}
+                onError={handleImageError}
+              />
+            ) : (
+              <View style={styles.noImageContainer}>
+                <Text style={styles.noImageText}>暂无图片</Text>
+              </View>
+            )}
 
-              <TouchableOpacity style={styles.nextButton} onPress={goToNext}>
-                <Ionicons name="chevron-forward" size={40} color="white" />
-              </TouchableOpacity>
-            </>
-          )}
+            {/* 左右切换按钮 */}
+            {controlsVisible && (
+              <>
+                <TouchableOpacity style={styles.prevButton} onPress={goToPrevious}>
+                  <Ionicons name="chevron-back" size={40} color="white" />
+                </TouchableOpacity>
 
-          {/* 商品信息覆盖层 - 在图片底部 */}
-          {controlsVisible && (
-            <View style={styles.overlayInfo}>
-              <Text style={styles.overlayProductName} numberOfLines={2}>
-                {currentItem?.productName || '商品名称'}
-              </Text>
-              {/* <Text style={styles.overlayProductPrice}>
+                <TouchableOpacity style={styles.nextButton} onPress={goToNext}>
+                  <Ionicons name="chevron-forward" size={40} color="white" />
+                </TouchableOpacity>
+              </>
+            )}
+
+            {/* 商品信息覆盖层 - 在图片底部 */}
+            {controlsVisible && (
+              <View style={styles.overlayInfo}>
+                <Text style={styles.overlayProductName} numberOfLines={2}>
+                  {currentItem?.productName || '商品名称'}
+                </Text>
+                {/* <Text style={styles.overlayProductPrice}>
                 ¥{currentProduct.price || '0.00'}
               </Text> */}
+              </View>
+            )}
+          </View>
+
+          {/* 底部指示器 */}
+          {controlsVisible && (
+            <View style={styles.indicators}>
+              {carouselItems.map((_, index) => (
+                <TouchableOpacity
+                  key={index}
+                  style={[
+                    styles.indicator,
+                    { backgroundColor: index === currentIndex ? 'white' : 'rgba(255,255,255,0.3)' }
+                  ]}
+                  onPress={() => setCurrentIndex(index)}
+                />
+              ))}
             </View>
           )}
-        </View>
 
-        {/* 底部指示器 */}
-        {controlsVisible && (
-          <View style={styles.indicators}>
-            {carouselItems.map((_, index) => (
-              <TouchableOpacity
-                key={index}
-                style={[
-                  styles.indicator,
-                  { backgroundColor: index === currentIndex ? 'white' : 'rgba(255,255,255,0.3)' }
-                ]}
-                onPress={() => setCurrentIndex(index)}
-              />
-            ))}
-          </View>
-        )}
-
-        {/* 自动播放状态 */}
-        {controlsVisible && (
-          <View style={styles.autoPlayIndicator}>
-            <Ionicons name="play" size={16} color="white" />
-            <Text style={styles.autoPlayText}>自动播放中</Text>
-          </View>
-        )}
+          {/* 自动播放状态 */}
+          {controlsVisible && (
+            <View style={styles.autoPlayIndicator}>
+              <Ionicons name="play" size={16} color="white" />
+              <Text style={styles.autoPlayText}>自动播放中</Text>
+            </View>
+          )}
         </View>
       </TouchableWithoutFeedback>
     </Modal>

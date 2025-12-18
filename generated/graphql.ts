@@ -1567,6 +1567,7 @@ export type Create_Products_Input = {
   boutique_id?: InputMaybe<Create_Boutiques_Input>;
   brand?: InputMaybe<Scalars['String']['input']>;
   carousel?: InputMaybe<Scalars['String']['input']>;
+  carousel_images?: InputMaybe<Scalars['JSON']['input']>;
   category_id?: InputMaybe<Create_Categories_Input>;
   created_at?: InputMaybe<Scalars['Date']['input']>;
   date_created?: InputMaybe<Scalars['Date']['input']>;
@@ -3504,6 +3505,8 @@ export type Products = {
   boutique_id?: Maybe<Boutiques>;
   brand?: Maybe<Scalars['String']['output']>;
   carousel?: Maybe<Scalars['String']['output']>;
+  carousel_images?: Maybe<Scalars['JSON']['output']>;
+  carousel_images_func?: Maybe<Count_Functions>;
   category_id?: Maybe<Categories>;
   created_at?: Maybe<Scalars['Date']['output']>;
   created_at_func?: Maybe<Datetime_Functions>;
@@ -3605,6 +3608,7 @@ export type Products_Aggregated_Count = {
   boutique_id?: Maybe<Scalars['Int']['output']>;
   brand?: Maybe<Scalars['Int']['output']>;
   carousel?: Maybe<Scalars['Int']['output']>;
+  carousel_images?: Maybe<Scalars['Int']['output']>;
   category_id?: Maybe<Scalars['Int']['output']>;
   created_at?: Maybe<Scalars['Int']['output']>;
   date_created?: Maybe<Scalars['Int']['output']>;
@@ -3653,6 +3657,8 @@ export type Products_Filter = {
   boutique_id?: InputMaybe<Boutiques_Filter>;
   brand?: InputMaybe<String_Filter_Operators>;
   carousel?: InputMaybe<String_Filter_Operators>;
+  carousel_images?: InputMaybe<String_Filter_Operators>;
+  carousel_images_func?: InputMaybe<Count_Function_Filter_Operators>;
   category_id?: InputMaybe<Categories_Filter>;
   created_at?: InputMaybe<Date_Filter_Operators>;
   created_at_func?: InputMaybe<Datetime_Function_Filter_Operators>;
@@ -4025,6 +4031,7 @@ export type Update_Products_Input = {
   boutique_id?: InputMaybe<Update_Boutiques_Input>;
   brand?: InputMaybe<Scalars['String']['input']>;
   carousel?: InputMaybe<Scalars['String']['input']>;
+  carousel_images?: InputMaybe<Scalars['JSON']['input']>;
   category_id?: InputMaybe<Update_Categories_Input>;
   created_at?: InputMaybe<Scalars['Date']['input']>;
   date_created?: InputMaybe<Scalars['Date']['input']>;
@@ -4191,6 +4198,7 @@ export type Version_Products = {
   boutique_id?: Maybe<Scalars['JSON']['output']>;
   brand?: Maybe<Scalars['String']['output']>;
   carousel?: Maybe<Scalars['String']['output']>;
+  carousel_images?: Maybe<Scalars['JSON']['output']>;
   category_id?: Maybe<Scalars['JSON']['output']>;
   created_at?: Maybe<Scalars['Date']['output']>;
   date_created?: Maybe<Scalars['Date']['output']>;
@@ -4757,14 +4765,14 @@ export type GetProductsByBoutiqueQueryVariables = Exact<{
 }>;
 
 
-export type GetProductsByBoutiqueQuery = { __typename?: 'Query', products: Array<{ __typename?: 'products', id: string, name: string, subtitle?: string | null, description?: string | null, price: number, market_price?: number | null, stock?: number | null, main_image?: string | null, images?: any | null, carousel?: string | null, video_url?: string | null, is_on_sale?: boolean | null, status?: string | null, total_sales_volume?: number | null, rating_avg?: number | null, total_reviews?: number | null, brand?: string | null, barcode?: string | null, seller_id?: number | null, created_at?: any | null, updated_at?: any | null, date_created?: any | null, date_updated?: any | null, category_id?: { __typename?: 'categories', id: string, name: string, description?: string | null } | null, boutique_id?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null, city?: string | null, category?: string | null } | null, user_created?: { __typename?: 'directus_users', id: string, first_name?: string | null, last_name?: string | null, email?: string | null } | null }> };
+export type GetProductsByBoutiqueQuery = { __typename?: 'Query', products: Array<{ __typename?: 'products', id: string, name: string, subtitle?: string | null, description?: string | null, price: number, market_price?: number | null, stock?: number | null, main_image?: string | null, images?: any | null, carousel_images?: any | null, carousel?: string | null, video_url?: string | null, is_on_sale?: boolean | null, status?: string | null, total_sales_volume?: number | null, rating_avg?: number | null, total_reviews?: number | null, brand?: string | null, barcode?: string | null, seller_id?: number | null, created_at?: any | null, updated_at?: any | null, date_created?: any | null, date_updated?: any | null, category_id?: { __typename?: 'categories', id: string, name: string, description?: string | null } | null, boutique_id?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null, city?: string | null, category?: string | null } | null, user_created?: { __typename?: 'directus_users', id: string, first_name?: string | null, last_name?: string | null, email?: string | null } | null }> };
 
 export type GetProductDetailQueryVariables = Exact<{
   id: Scalars['ID']['input'];
 }>;
 
 
-export type GetProductDetailQuery = { __typename?: 'Query', products_by_id?: { __typename?: 'products', id: string, name: string, subtitle?: string | null, description?: string | null, price: number, market_price?: number | null, stock?: number | null, main_image?: string | null, images?: any | null, video_url?: string | null, is_on_sale?: boolean | null, status?: string | null, total_sales_volume?: number | null, rating_avg?: number | null, total_reviews?: number | null, brand?: string | null, barcode?: string | null, location?: string | null, seller_id?: number | null, created_at?: any | null, updated_at?: any | null, date_created?: any | null, date_updated?: any | null, boutique_id?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null, city?: string | null, code?: string | null, category?: string | null, contact?: string | null, expire_date?: any | null, stars?: number | null, main_image?: string | null, images?: any | null } | null, user_created?: { __typename?: 'directus_users', id: string, first_name?: string | null, last_name?: string | null, email?: string | null } | null, category_id?: { __typename?: 'categories', id: string, name: string, description?: string | null } | null } | null };
+export type GetProductDetailQuery = { __typename?: 'Query', products_by_id?: { __typename?: 'products', id: string, name: string, subtitle?: string | null, description?: string | null, price: number, market_price?: number | null, stock?: number | null, location?: string | null, main_image?: string | null, images?: any | null, video_url?: string | null, is_on_sale?: boolean | null, status?: string | null, total_sales_volume?: number | null, rating_avg?: number | null, total_reviews?: number | null, brand?: string | null, barcode?: string | null, seller_id?: number | null, created_at?: any | null, updated_at?: any | null, date_created?: any | null, date_updated?: any | null, boutique_id?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null, city?: string | null, code?: string | null, category?: string | null, contact?: string | null, expire_date?: any | null, stars?: number | null, main_image?: string | null, images?: any | null } | null, user_created?: { __typename?: 'directus_users', id: string, first_name?: string | null, last_name?: string | null, email?: string | null } | null, category_id?: { __typename?: 'categories', id: string, name: string, description?: string | null } | null } | null };
 
 export type GetMyProductsQueryVariables = Exact<{
   userId: Scalars['ID']['input'];
@@ -4881,17 +4889,17 @@ export const GetBoutiquesDocument = gql`
  * });
  */
 export function useGetBoutiquesQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetBoutiquesQuery, GetBoutiquesQueryVariables>) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useQuery<GetBoutiquesQuery, GetBoutiquesQueryVariables>(GetBoutiquesDocument, options);
-}
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetBoutiquesQuery, GetBoutiquesQueryVariables>(GetBoutiquesDocument, options);
+      }
 export function useGetBoutiquesLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetBoutiquesQuery, GetBoutiquesQueryVariables>) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useLazyQuery<GetBoutiquesQuery, GetBoutiquesQueryVariables>(GetBoutiquesDocument, options);
-}
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetBoutiquesQuery, GetBoutiquesQueryVariables>(GetBoutiquesDocument, options);
+        }
 export function useGetBoutiquesSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetBoutiquesQuery, GetBoutiquesQueryVariables>) {
-  const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useSuspenseQuery<GetBoutiquesQuery, GetBoutiquesQueryVariables>(GetBoutiquesDocument, options);
-}
+          const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetBoutiquesQuery, GetBoutiquesQueryVariables>(GetBoutiquesDocument, options);
+        }
 export type GetBoutiquesQueryHookResult = ReturnType<typeof useGetBoutiquesQuery>;
 export type GetBoutiquesLazyQueryHookResult = ReturnType<typeof useGetBoutiquesLazyQuery>;
 export type GetBoutiquesSuspenseQueryHookResult = ReturnType<typeof useGetBoutiquesSuspenseQuery>;
@@ -4936,18 +4944,18 @@ export const GetBoutiqueDetailDocument = gql`
  *   },
  * });
  */
-export function useGetBoutiqueDetailQuery(baseOptions: ApolloReactHooks.QueryHookOptions<GetBoutiqueDetailQuery, GetBoutiqueDetailQueryVariables> & ({ variables: GetBoutiqueDetailQueryVariables; skip?: boolean; } | { skip: boolean; })) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useQuery<GetBoutiqueDetailQuery, GetBoutiqueDetailQueryVariables>(GetBoutiqueDetailDocument, options);
-}
+export function useGetBoutiqueDetailQuery(baseOptions: ApolloReactHooks.QueryHookOptions<GetBoutiqueDetailQuery, GetBoutiqueDetailQueryVariables> & ({ variables: GetBoutiqueDetailQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetBoutiqueDetailQuery, GetBoutiqueDetailQueryVariables>(GetBoutiqueDetailDocument, options);
+      }
 export function useGetBoutiqueDetailLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetBoutiqueDetailQuery, GetBoutiqueDetailQueryVariables>) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useLazyQuery<GetBoutiqueDetailQuery, GetBoutiqueDetailQueryVariables>(GetBoutiqueDetailDocument, options);
-}
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetBoutiqueDetailQuery, GetBoutiqueDetailQueryVariables>(GetBoutiqueDetailDocument, options);
+        }
 export function useGetBoutiqueDetailSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetBoutiqueDetailQuery, GetBoutiqueDetailQueryVariables>) {
-  const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useSuspenseQuery<GetBoutiqueDetailQuery, GetBoutiqueDetailQueryVariables>(GetBoutiqueDetailDocument, options);
-}
+          const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetBoutiqueDetailQuery, GetBoutiqueDetailQueryVariables>(GetBoutiqueDetailDocument, options);
+        }
 export type GetBoutiqueDetailQueryHookResult = ReturnType<typeof useGetBoutiqueDetailQuery>;
 export type GetBoutiqueDetailLazyQueryHookResult = ReturnType<typeof useGetBoutiqueDetailLazyQuery>;
 export type GetBoutiqueDetailSuspenseQueryHookResult = ReturnType<typeof useGetBoutiqueDetailSuspenseQuery>;
@@ -5007,18 +5015,18 @@ export const GetBoutiqueProductsDocument = gql`
  *   },
  * });
  */
-export function useGetBoutiqueProductsQuery(baseOptions: ApolloReactHooks.QueryHookOptions<GetBoutiqueProductsQuery, GetBoutiqueProductsQueryVariables> & ({ variables: GetBoutiqueProductsQueryVariables; skip?: boolean; } | { skip: boolean; })) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useQuery<GetBoutiqueProductsQuery, GetBoutiqueProductsQueryVariables>(GetBoutiqueProductsDocument, options);
-}
+export function useGetBoutiqueProductsQuery(baseOptions: ApolloReactHooks.QueryHookOptions<GetBoutiqueProductsQuery, GetBoutiqueProductsQueryVariables> & ({ variables: GetBoutiqueProductsQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetBoutiqueProductsQuery, GetBoutiqueProductsQueryVariables>(GetBoutiqueProductsDocument, options);
+      }
 export function useGetBoutiqueProductsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetBoutiqueProductsQuery, GetBoutiqueProductsQueryVariables>) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useLazyQuery<GetBoutiqueProductsQuery, GetBoutiqueProductsQueryVariables>(GetBoutiqueProductsDocument, options);
-}
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetBoutiqueProductsQuery, GetBoutiqueProductsQueryVariables>(GetBoutiqueProductsDocument, options);
+        }
 export function useGetBoutiqueProductsSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetBoutiqueProductsQuery, GetBoutiqueProductsQueryVariables>) {
-  const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useSuspenseQuery<GetBoutiqueProductsQuery, GetBoutiqueProductsQueryVariables>(GetBoutiqueProductsDocument, options);
-}
+          const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetBoutiqueProductsQuery, GetBoutiqueProductsQueryVariables>(GetBoutiqueProductsDocument, options);
+        }
 export type GetBoutiqueProductsQueryHookResult = ReturnType<typeof useGetBoutiqueProductsQuery>;
 export type GetBoutiqueProductsLazyQueryHookResult = ReturnType<typeof useGetBoutiqueProductsLazyQuery>;
 export type GetBoutiqueProductsSuspenseQueryHookResult = ReturnType<typeof useGetBoutiqueProductsSuspenseQuery>;
@@ -5060,18 +5068,18 @@ export const GetBoutiqueCategoriesDocument = gql`
  *   },
  * });
  */
-export function useGetBoutiqueCategoriesQuery(baseOptions: ApolloReactHooks.QueryHookOptions<GetBoutiqueCategoriesQuery, GetBoutiqueCategoriesQueryVariables> & ({ variables: GetBoutiqueCategoriesQueryVariables; skip?: boolean; } | { skip: boolean; })) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useQuery<GetBoutiqueCategoriesQuery, GetBoutiqueCategoriesQueryVariables>(GetBoutiqueCategoriesDocument, options);
-}
+export function useGetBoutiqueCategoriesQuery(baseOptions: ApolloReactHooks.QueryHookOptions<GetBoutiqueCategoriesQuery, GetBoutiqueCategoriesQueryVariables> & ({ variables: GetBoutiqueCategoriesQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetBoutiqueCategoriesQuery, GetBoutiqueCategoriesQueryVariables>(GetBoutiqueCategoriesDocument, options);
+      }
 export function useGetBoutiqueCategoriesLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetBoutiqueCategoriesQuery, GetBoutiqueCategoriesQueryVariables>) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useLazyQuery<GetBoutiqueCategoriesQuery, GetBoutiqueCategoriesQueryVariables>(GetBoutiqueCategoriesDocument, options);
-}
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetBoutiqueCategoriesQuery, GetBoutiqueCategoriesQueryVariables>(GetBoutiqueCategoriesDocument, options);
+        }
 export function useGetBoutiqueCategoriesSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetBoutiqueCategoriesQuery, GetBoutiqueCategoriesQueryVariables>) {
-  const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useSuspenseQuery<GetBoutiqueCategoriesQuery, GetBoutiqueCategoriesQueryVariables>(GetBoutiqueCategoriesDocument, options);
-}
+          const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetBoutiqueCategoriesQuery, GetBoutiqueCategoriesQueryVariables>(GetBoutiqueCategoriesDocument, options);
+        }
 export type GetBoutiqueCategoriesQueryHookResult = ReturnType<typeof useGetBoutiqueCategoriesQuery>;
 export type GetBoutiqueCategoriesLazyQueryHookResult = ReturnType<typeof useGetBoutiqueCategoriesLazyQuery>;
 export type GetBoutiqueCategoriesSuspenseQueryHookResult = ReturnType<typeof useGetBoutiqueCategoriesSuspenseQuery>;
@@ -5120,18 +5128,18 @@ export const GetAllCategoriesDocument = gql`
  *   },
  * });
  */
-export function useGetAllCategoriesQuery(baseOptions: ApolloReactHooks.QueryHookOptions<GetAllCategoriesQuery, GetAllCategoriesQueryVariables> & ({ variables: GetAllCategoriesQueryVariables; skip?: boolean; } | { skip: boolean; })) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useQuery<GetAllCategoriesQuery, GetAllCategoriesQueryVariables>(GetAllCategoriesDocument, options);
-}
+export function useGetAllCategoriesQuery(baseOptions: ApolloReactHooks.QueryHookOptions<GetAllCategoriesQuery, GetAllCategoriesQueryVariables> & ({ variables: GetAllCategoriesQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetAllCategoriesQuery, GetAllCategoriesQueryVariables>(GetAllCategoriesDocument, options);
+      }
 export function useGetAllCategoriesLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetAllCategoriesQuery, GetAllCategoriesQueryVariables>) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useLazyQuery<GetAllCategoriesQuery, GetAllCategoriesQueryVariables>(GetAllCategoriesDocument, options);
-}
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetAllCategoriesQuery, GetAllCategoriesQueryVariables>(GetAllCategoriesDocument, options);
+        }
 export function useGetAllCategoriesSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetAllCategoriesQuery, GetAllCategoriesQueryVariables>) {
-  const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useSuspenseQuery<GetAllCategoriesQuery, GetAllCategoriesQueryVariables>(GetAllCategoriesDocument, options);
-}
+          const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetAllCategoriesQuery, GetAllCategoriesQueryVariables>(GetAllCategoriesDocument, options);
+        }
 export type GetAllCategoriesQueryHookResult = ReturnType<typeof useGetAllCategoriesQuery>;
 export type GetAllCategoriesLazyQueryHookResult = ReturnType<typeof useGetAllCategoriesLazyQuery>;
 export type GetAllCategoriesSuspenseQueryHookResult = ReturnType<typeof useGetAllCategoriesSuspenseQuery>;
@@ -5178,18 +5186,18 @@ export const GetCategoryByIdDocument = gql`
  *   },
  * });
  */
-export function useGetCategoryByIdQuery(baseOptions: ApolloReactHooks.QueryHookOptions<GetCategoryByIdQuery, GetCategoryByIdQueryVariables> & ({ variables: GetCategoryByIdQueryVariables; skip?: boolean; } | { skip: boolean; })) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useQuery<GetCategoryByIdQuery, GetCategoryByIdQueryVariables>(GetCategoryByIdDocument, options);
-}
+export function useGetCategoryByIdQuery(baseOptions: ApolloReactHooks.QueryHookOptions<GetCategoryByIdQuery, GetCategoryByIdQueryVariables> & ({ variables: GetCategoryByIdQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetCategoryByIdQuery, GetCategoryByIdQueryVariables>(GetCategoryByIdDocument, options);
+      }
 export function useGetCategoryByIdLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetCategoryByIdQuery, GetCategoryByIdQueryVariables>) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useLazyQuery<GetCategoryByIdQuery, GetCategoryByIdQueryVariables>(GetCategoryByIdDocument, options);
-}
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetCategoryByIdQuery, GetCategoryByIdQueryVariables>(GetCategoryByIdDocument, options);
+        }
 export function useGetCategoryByIdSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetCategoryByIdQuery, GetCategoryByIdQueryVariables>) {
-  const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useSuspenseQuery<GetCategoryByIdQuery, GetCategoryByIdQueryVariables>(GetCategoryByIdDocument, options);
-}
+          const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetCategoryByIdQuery, GetCategoryByIdQueryVariables>(GetCategoryByIdDocument, options);
+        }
 export type GetCategoryByIdQueryHookResult = ReturnType<typeof useGetCategoryByIdQuery>;
 export type GetCategoryByIdLazyQueryHookResult = ReturnType<typeof useGetCategoryByIdLazyQuery>;
 export type GetCategoryByIdSuspenseQueryHookResult = ReturnType<typeof useGetCategoryByIdSuspenseQuery>;
@@ -5253,18 +5261,18 @@ export const GetProductsByCategoryDocument = gql`
  *   },
  * });
  */
-export function useGetProductsByCategoryQuery(baseOptions: ApolloReactHooks.QueryHookOptions<GetProductsByCategoryQuery, GetProductsByCategoryQueryVariables> & ({ variables: GetProductsByCategoryQueryVariables; skip?: boolean; } | { skip: boolean; })) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useQuery<GetProductsByCategoryQuery, GetProductsByCategoryQueryVariables>(GetProductsByCategoryDocument, options);
-}
+export function useGetProductsByCategoryQuery(baseOptions: ApolloReactHooks.QueryHookOptions<GetProductsByCategoryQuery, GetProductsByCategoryQueryVariables> & ({ variables: GetProductsByCategoryQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetProductsByCategoryQuery, GetProductsByCategoryQueryVariables>(GetProductsByCategoryDocument, options);
+      }
 export function useGetProductsByCategoryLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetProductsByCategoryQuery, GetProductsByCategoryQueryVariables>) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useLazyQuery<GetProductsByCategoryQuery, GetProductsByCategoryQueryVariables>(GetProductsByCategoryDocument, options);
-}
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetProductsByCategoryQuery, GetProductsByCategoryQueryVariables>(GetProductsByCategoryDocument, options);
+        }
 export function useGetProductsByCategorySuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetProductsByCategoryQuery, GetProductsByCategoryQueryVariables>) {
-  const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useSuspenseQuery<GetProductsByCategoryQuery, GetProductsByCategoryQueryVariables>(GetProductsByCategoryDocument, options);
-}
+          const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetProductsByCategoryQuery, GetProductsByCategoryQueryVariables>(GetProductsByCategoryDocument, options);
+        }
 export type GetProductsByCategoryQueryHookResult = ReturnType<typeof useGetProductsByCategoryQuery>;
 export type GetProductsByCategoryLazyQueryHookResult = ReturnType<typeof useGetProductsByCategoryLazyQuery>;
 export type GetProductsByCategorySuspenseQueryHookResult = ReturnType<typeof useGetProductsByCategorySuspenseQuery>;
@@ -5300,18 +5308,18 @@ export const GetCategoriesAggregatedDocument = gql`
  *   },
  * });
  */
-export function useGetCategoriesAggregatedQuery(baseOptions: ApolloReactHooks.QueryHookOptions<GetCategoriesAggregatedQuery, GetCategoriesAggregatedQueryVariables> & ({ variables: GetCategoriesAggregatedQueryVariables; skip?: boolean; } | { skip: boolean; })) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useQuery<GetCategoriesAggregatedQuery, GetCategoriesAggregatedQueryVariables>(GetCategoriesAggregatedDocument, options);
-}
+export function useGetCategoriesAggregatedQuery(baseOptions: ApolloReactHooks.QueryHookOptions<GetCategoriesAggregatedQuery, GetCategoriesAggregatedQueryVariables> & ({ variables: GetCategoriesAggregatedQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetCategoriesAggregatedQuery, GetCategoriesAggregatedQueryVariables>(GetCategoriesAggregatedDocument, options);
+      }
 export function useGetCategoriesAggregatedLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetCategoriesAggregatedQuery, GetCategoriesAggregatedQueryVariables>) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useLazyQuery<GetCategoriesAggregatedQuery, GetCategoriesAggregatedQueryVariables>(GetCategoriesAggregatedDocument, options);
-}
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetCategoriesAggregatedQuery, GetCategoriesAggregatedQueryVariables>(GetCategoriesAggregatedDocument, options);
+        }
 export function useGetCategoriesAggregatedSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetCategoriesAggregatedQuery, GetCategoriesAggregatedQueryVariables>) {
-  const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useSuspenseQuery<GetCategoriesAggregatedQuery, GetCategoriesAggregatedQueryVariables>(GetCategoriesAggregatedDocument, options);
-}
+          const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetCategoriesAggregatedQuery, GetCategoriesAggregatedQueryVariables>(GetCategoriesAggregatedDocument, options);
+        }
 export type GetCategoriesAggregatedQueryHookResult = ReturnType<typeof useGetCategoriesAggregatedQuery>;
 export type GetCategoriesAggregatedLazyQueryHookResult = ReturnType<typeof useGetCategoriesAggregatedLazyQuery>;
 export type GetCategoriesAggregatedSuspenseQueryHookResult = ReturnType<typeof useGetCategoriesAggregatedSuspenseQuery>;
@@ -5348,18 +5356,18 @@ export const GetCustomerByOpenIdDocument = gql`
  *   },
  * });
  */
-export function useGetCustomerByOpenIdQuery(baseOptions: ApolloReactHooks.QueryHookOptions<GetCustomerByOpenIdQuery, GetCustomerByOpenIdQueryVariables> & ({ variables: GetCustomerByOpenIdQueryVariables; skip?: boolean; } | { skip: boolean; })) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useQuery<GetCustomerByOpenIdQuery, GetCustomerByOpenIdQueryVariables>(GetCustomerByOpenIdDocument, options);
-}
+export function useGetCustomerByOpenIdQuery(baseOptions: ApolloReactHooks.QueryHookOptions<GetCustomerByOpenIdQuery, GetCustomerByOpenIdQueryVariables> & ({ variables: GetCustomerByOpenIdQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetCustomerByOpenIdQuery, GetCustomerByOpenIdQueryVariables>(GetCustomerByOpenIdDocument, options);
+      }
 export function useGetCustomerByOpenIdLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetCustomerByOpenIdQuery, GetCustomerByOpenIdQueryVariables>) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useLazyQuery<GetCustomerByOpenIdQuery, GetCustomerByOpenIdQueryVariables>(GetCustomerByOpenIdDocument, options);
-}
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetCustomerByOpenIdQuery, GetCustomerByOpenIdQueryVariables>(GetCustomerByOpenIdDocument, options);
+        }
 export function useGetCustomerByOpenIdSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetCustomerByOpenIdQuery, GetCustomerByOpenIdQueryVariables>) {
-  const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useSuspenseQuery<GetCustomerByOpenIdQuery, GetCustomerByOpenIdQueryVariables>(GetCustomerByOpenIdDocument, options);
-}
+          const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetCustomerByOpenIdQuery, GetCustomerByOpenIdQueryVariables>(GetCustomerByOpenIdDocument, options);
+        }
 export type GetCustomerByOpenIdQueryHookResult = ReturnType<typeof useGetCustomerByOpenIdQuery>;
 export type GetCustomerByOpenIdLazyQueryHookResult = ReturnType<typeof useGetCustomerByOpenIdLazyQuery>;
 export type GetCustomerByOpenIdSuspenseQueryHookResult = ReturnType<typeof useGetCustomerByOpenIdSuspenseQuery>;
@@ -5397,18 +5405,18 @@ export const GetCustomerByIdDocument = gql`
  *   },
  * });
  */
-export function useGetCustomerByIdQuery(baseOptions: ApolloReactHooks.QueryHookOptions<GetCustomerByIdQuery, GetCustomerByIdQueryVariables> & ({ variables: GetCustomerByIdQueryVariables; skip?: boolean; } | { skip: boolean; })) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useQuery<GetCustomerByIdQuery, GetCustomerByIdQueryVariables>(GetCustomerByIdDocument, options);
-}
+export function useGetCustomerByIdQuery(baseOptions: ApolloReactHooks.QueryHookOptions<GetCustomerByIdQuery, GetCustomerByIdQueryVariables> & ({ variables: GetCustomerByIdQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetCustomerByIdQuery, GetCustomerByIdQueryVariables>(GetCustomerByIdDocument, options);
+      }
 export function useGetCustomerByIdLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetCustomerByIdQuery, GetCustomerByIdQueryVariables>) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useLazyQuery<GetCustomerByIdQuery, GetCustomerByIdQueryVariables>(GetCustomerByIdDocument, options);
-}
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetCustomerByIdQuery, GetCustomerByIdQueryVariables>(GetCustomerByIdDocument, options);
+        }
 export function useGetCustomerByIdSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetCustomerByIdQuery, GetCustomerByIdQueryVariables>) {
-  const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useSuspenseQuery<GetCustomerByIdQuery, GetCustomerByIdQueryVariables>(GetCustomerByIdDocument, options);
-}
+          const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetCustomerByIdQuery, GetCustomerByIdQueryVariables>(GetCustomerByIdDocument, options);
+        }
 export type GetCustomerByIdQueryHookResult = ReturnType<typeof useGetCustomerByIdQuery>;
 export type GetCustomerByIdLazyQueryHookResult = ReturnType<typeof useGetCustomerByIdLazyQuery>;
 export type GetCustomerByIdSuspenseQueryHookResult = ReturnType<typeof useGetCustomerByIdSuspenseQuery>;
@@ -5453,9 +5461,9 @@ export type UpsertCustomerMutationFn = ApolloReactCommon.MutationFunction<Upsert
  * });
  */
 export function useUpsertCustomerMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpsertCustomerMutation, UpsertCustomerMutationVariables>) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useMutation<UpsertCustomerMutation, UpsertCustomerMutationVariables>(UpsertCustomerDocument, options);
-}
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<UpsertCustomerMutation, UpsertCustomerMutationVariables>(UpsertCustomerDocument, options);
+      }
 export type UpsertCustomerMutationHookResult = ReturnType<typeof useUpsertCustomerMutation>;
 export type UpsertCustomerMutationResult = ApolloReactCommon.MutationResult<UpsertCustomerMutation>;
 export type UpsertCustomerMutationOptions = ApolloReactCommon.BaseMutationOptions<UpsertCustomerMutation, UpsertCustomerMutationVariables>;
@@ -5500,18 +5508,18 @@ export const GetCategoriesDocument = gql`
  *   },
  * });
  */
-export function useGetCategoriesQuery(baseOptions: ApolloReactHooks.QueryHookOptions<GetCategoriesQuery, GetCategoriesQueryVariables> & ({ variables: GetCategoriesQueryVariables; skip?: boolean; } | { skip: boolean; })) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useQuery<GetCategoriesQuery, GetCategoriesQueryVariables>(GetCategoriesDocument, options);
-}
+export function useGetCategoriesQuery(baseOptions: ApolloReactHooks.QueryHookOptions<GetCategoriesQuery, GetCategoriesQueryVariables> & ({ variables: GetCategoriesQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetCategoriesQuery, GetCategoriesQueryVariables>(GetCategoriesDocument, options);
+      }
 export function useGetCategoriesLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetCategoriesQuery, GetCategoriesQueryVariables>) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useLazyQuery<GetCategoriesQuery, GetCategoriesQueryVariables>(GetCategoriesDocument, options);
-}
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetCategoriesQuery, GetCategoriesQueryVariables>(GetCategoriesDocument, options);
+        }
 export function useGetCategoriesSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetCategoriesQuery, GetCategoriesQueryVariables>) {
-  const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useSuspenseQuery<GetCategoriesQuery, GetCategoriesQueryVariables>(GetCategoriesDocument, options);
-}
+          const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetCategoriesQuery, GetCategoriesQueryVariables>(GetCategoriesDocument, options);
+        }
 export type GetCategoriesQueryHookResult = ReturnType<typeof useGetCategoriesQuery>;
 export type GetCategoriesLazyQueryHookResult = ReturnType<typeof useGetCategoriesLazyQuery>;
 export type GetCategoriesSuspenseQueryHookResult = ReturnType<typeof useGetCategoriesSuspenseQuery>;
@@ -5553,18 +5561,18 @@ export const GetCategoryDetailDocument = gql`
  *   },
  * });
  */
-export function useGetCategoryDetailQuery(baseOptions: ApolloReactHooks.QueryHookOptions<GetCategoryDetailQuery, GetCategoryDetailQueryVariables> & ({ variables: GetCategoryDetailQueryVariables; skip?: boolean; } | { skip: boolean; })) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useQuery<GetCategoryDetailQuery, GetCategoryDetailQueryVariables>(GetCategoryDetailDocument, options);
-}
+export function useGetCategoryDetailQuery(baseOptions: ApolloReactHooks.QueryHookOptions<GetCategoryDetailQuery, GetCategoryDetailQueryVariables> & ({ variables: GetCategoryDetailQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetCategoryDetailQuery, GetCategoryDetailQueryVariables>(GetCategoryDetailDocument, options);
+      }
 export function useGetCategoryDetailLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetCategoryDetailQuery, GetCategoryDetailQueryVariables>) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useLazyQuery<GetCategoryDetailQuery, GetCategoryDetailQueryVariables>(GetCategoryDetailDocument, options);
-}
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetCategoryDetailQuery, GetCategoryDetailQueryVariables>(GetCategoryDetailDocument, options);
+        }
 export function useGetCategoryDetailSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetCategoryDetailQuery, GetCategoryDetailQueryVariables>) {
-  const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useSuspenseQuery<GetCategoryDetailQuery, GetCategoryDetailQueryVariables>(GetCategoryDetailDocument, options);
-}
+          const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetCategoryDetailQuery, GetCategoryDetailQueryVariables>(GetCategoryDetailDocument, options);
+        }
 export type GetCategoryDetailQueryHookResult = ReturnType<typeof useGetCategoryDetailQuery>;
 export type GetCategoryDetailLazyQueryHookResult = ReturnType<typeof useGetCategoryDetailLazyQuery>;
 export type GetCategoryDetailSuspenseQueryHookResult = ReturnType<typeof useGetCategoryDetailSuspenseQuery>;
@@ -5634,17 +5642,17 @@ export const GetProductsDocument = gql`
  * });
  */
 export function useGetProductsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetProductsQuery, GetProductsQueryVariables>) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useQuery<GetProductsQuery, GetProductsQueryVariables>(GetProductsDocument, options);
-}
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetProductsQuery, GetProductsQueryVariables>(GetProductsDocument, options);
+      }
 export function useGetProductsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetProductsQuery, GetProductsQueryVariables>) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useLazyQuery<GetProductsQuery, GetProductsQueryVariables>(GetProductsDocument, options);
-}
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetProductsQuery, GetProductsQueryVariables>(GetProductsDocument, options);
+        }
 export function useGetProductsSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetProductsQuery, GetProductsQueryVariables>) {
-  const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useSuspenseQuery<GetProductsQuery, GetProductsQueryVariables>(GetProductsDocument, options);
-}
+          const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetProductsQuery, GetProductsQueryVariables>(GetProductsDocument, options);
+        }
 export type GetProductsQueryHookResult = ReturnType<typeof useGetProductsQuery>;
 export type GetProductsLazyQueryHookResult = ReturnType<typeof useGetProductsLazyQuery>;
 export type GetProductsSuspenseQueryHookResult = ReturnType<typeof useGetProductsSuspenseQuery>;
@@ -5666,6 +5674,7 @@ export const GetProductsByBoutiqueDocument = gql`
     stock
     main_image
     images
+    carousel_images
     carousel
     video_url
     is_on_sale
@@ -5722,18 +5731,18 @@ export const GetProductsByBoutiqueDocument = gql`
  *   },
  * });
  */
-export function useGetProductsByBoutiqueQuery(baseOptions: ApolloReactHooks.QueryHookOptions<GetProductsByBoutiqueQuery, GetProductsByBoutiqueQueryVariables> & ({ variables: GetProductsByBoutiqueQueryVariables; skip?: boolean; } | { skip: boolean; })) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useQuery<GetProductsByBoutiqueQuery, GetProductsByBoutiqueQueryVariables>(GetProductsByBoutiqueDocument, options);
-}
+export function useGetProductsByBoutiqueQuery(baseOptions: ApolloReactHooks.QueryHookOptions<GetProductsByBoutiqueQuery, GetProductsByBoutiqueQueryVariables> & ({ variables: GetProductsByBoutiqueQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetProductsByBoutiqueQuery, GetProductsByBoutiqueQueryVariables>(GetProductsByBoutiqueDocument, options);
+      }
 export function useGetProductsByBoutiqueLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetProductsByBoutiqueQuery, GetProductsByBoutiqueQueryVariables>) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useLazyQuery<GetProductsByBoutiqueQuery, GetProductsByBoutiqueQueryVariables>(GetProductsByBoutiqueDocument, options);
-}
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetProductsByBoutiqueQuery, GetProductsByBoutiqueQueryVariables>(GetProductsByBoutiqueDocument, options);
+        }
 export function useGetProductsByBoutiqueSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetProductsByBoutiqueQuery, GetProductsByBoutiqueQueryVariables>) {
-  const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useSuspenseQuery<GetProductsByBoutiqueQuery, GetProductsByBoutiqueQueryVariables>(GetProductsByBoutiqueDocument, options);
-}
+          const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetProductsByBoutiqueQuery, GetProductsByBoutiqueQueryVariables>(GetProductsByBoutiqueDocument, options);
+        }
 export type GetProductsByBoutiqueQueryHookResult = ReturnType<typeof useGetProductsByBoutiqueQuery>;
 export type GetProductsByBoutiqueLazyQueryHookResult = ReturnType<typeof useGetProductsByBoutiqueLazyQuery>;
 export type GetProductsByBoutiqueSuspenseQueryHookResult = ReturnType<typeof useGetProductsByBoutiqueSuspenseQuery>;
@@ -5748,6 +5757,7 @@ export const GetProductDetailDocument = gql`
     price
     market_price
     stock
+    location
     main_image
     images
     video_url
@@ -5757,7 +5767,6 @@ export const GetProductDetailDocument = gql`
     rating_avg
     total_reviews
     brand
-    location
     barcode
     seller_id
     boutique_id {
@@ -5808,18 +5817,18 @@ export const GetProductDetailDocument = gql`
  *   },
  * });
  */
-export function useGetProductDetailQuery(baseOptions: ApolloReactHooks.QueryHookOptions<GetProductDetailQuery, GetProductDetailQueryVariables> & ({ variables: GetProductDetailQueryVariables; skip?: boolean; } | { skip: boolean; })) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useQuery<GetProductDetailQuery, GetProductDetailQueryVariables>(GetProductDetailDocument, options);
-}
+export function useGetProductDetailQuery(baseOptions: ApolloReactHooks.QueryHookOptions<GetProductDetailQuery, GetProductDetailQueryVariables> & ({ variables: GetProductDetailQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetProductDetailQuery, GetProductDetailQueryVariables>(GetProductDetailDocument, options);
+      }
 export function useGetProductDetailLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetProductDetailQuery, GetProductDetailQueryVariables>) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useLazyQuery<GetProductDetailQuery, GetProductDetailQueryVariables>(GetProductDetailDocument, options);
-}
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetProductDetailQuery, GetProductDetailQueryVariables>(GetProductDetailDocument, options);
+        }
 export function useGetProductDetailSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetProductDetailQuery, GetProductDetailQueryVariables>) {
-  const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useSuspenseQuery<GetProductDetailQuery, GetProductDetailQueryVariables>(GetProductDetailDocument, options);
-}
+          const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetProductDetailQuery, GetProductDetailQueryVariables>(GetProductDetailDocument, options);
+        }
 export type GetProductDetailQueryHookResult = ReturnType<typeof useGetProductDetailQuery>;
 export type GetProductDetailLazyQueryHookResult = ReturnType<typeof useGetProductDetailLazyQuery>;
 export type GetProductDetailSuspenseQueryHookResult = ReturnType<typeof useGetProductDetailSuspenseQuery>;
@@ -5880,18 +5889,18 @@ export const GetMyProductsDocument = gql`
  *   },
  * });
  */
-export function useGetMyProductsQuery(baseOptions: ApolloReactHooks.QueryHookOptions<GetMyProductsQuery, GetMyProductsQueryVariables> & ({ variables: GetMyProductsQueryVariables; skip?: boolean; } | { skip: boolean; })) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useQuery<GetMyProductsQuery, GetMyProductsQueryVariables>(GetMyProductsDocument, options);
-}
+export function useGetMyProductsQuery(baseOptions: ApolloReactHooks.QueryHookOptions<GetMyProductsQuery, GetMyProductsQueryVariables> & ({ variables: GetMyProductsQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetMyProductsQuery, GetMyProductsQueryVariables>(GetMyProductsDocument, options);
+      }
 export function useGetMyProductsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetMyProductsQuery, GetMyProductsQueryVariables>) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useLazyQuery<GetMyProductsQuery, GetMyProductsQueryVariables>(GetMyProductsDocument, options);
-}
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetMyProductsQuery, GetMyProductsQueryVariables>(GetMyProductsDocument, options);
+        }
 export function useGetMyProductsSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetMyProductsQuery, GetMyProductsQueryVariables>) {
-  const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useSuspenseQuery<GetMyProductsQuery, GetMyProductsQueryVariables>(GetMyProductsDocument, options);
-}
+          const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetMyProductsQuery, GetMyProductsQueryVariables>(GetMyProductsDocument, options);
+        }
 export type GetMyProductsQueryHookResult = ReturnType<typeof useGetMyProductsQuery>;
 export type GetMyProductsLazyQueryHookResult = ReturnType<typeof useGetMyProductsLazyQuery>;
 export type GetMyProductsSuspenseQueryHookResult = ReturnType<typeof useGetMyProductsSuspenseQuery>;
@@ -5956,17 +5965,17 @@ export const GetOnSaleProductsDocument = gql`
  * });
  */
 export function useGetOnSaleProductsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetOnSaleProductsQuery, GetOnSaleProductsQueryVariables>) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useQuery<GetOnSaleProductsQuery, GetOnSaleProductsQueryVariables>(GetOnSaleProductsDocument, options);
-}
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetOnSaleProductsQuery, GetOnSaleProductsQueryVariables>(GetOnSaleProductsDocument, options);
+      }
 export function useGetOnSaleProductsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetOnSaleProductsQuery, GetOnSaleProductsQueryVariables>) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useLazyQuery<GetOnSaleProductsQuery, GetOnSaleProductsQueryVariables>(GetOnSaleProductsDocument, options);
-}
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetOnSaleProductsQuery, GetOnSaleProductsQueryVariables>(GetOnSaleProductsDocument, options);
+        }
 export function useGetOnSaleProductsSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetOnSaleProductsQuery, GetOnSaleProductsQueryVariables>) {
-  const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useSuspenseQuery<GetOnSaleProductsQuery, GetOnSaleProductsQueryVariables>(GetOnSaleProductsDocument, options);
-}
+          const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetOnSaleProductsQuery, GetOnSaleProductsQueryVariables>(GetOnSaleProductsDocument, options);
+        }
 export type GetOnSaleProductsQueryHookResult = ReturnType<typeof useGetOnSaleProductsQuery>;
 export type GetOnSaleProductsLazyQueryHookResult = ReturnType<typeof useGetOnSaleProductsLazyQuery>;
 export type GetOnSaleProductsSuspenseQueryHookResult = ReturnType<typeof useGetOnSaleProductsSuspenseQuery>;
@@ -6026,18 +6035,18 @@ export const SearchProductsDocument = gql`
  *   },
  * });
  */
-export function useSearchProductsQuery(baseOptions: ApolloReactHooks.QueryHookOptions<SearchProductsQuery, SearchProductsQueryVariables> & ({ variables: SearchProductsQueryVariables; skip?: boolean; } | { skip: boolean; })) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useQuery<SearchProductsQuery, SearchProductsQueryVariables>(SearchProductsDocument, options);
-}
+export function useSearchProductsQuery(baseOptions: ApolloReactHooks.QueryHookOptions<SearchProductsQuery, SearchProductsQueryVariables> & ({ variables: SearchProductsQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<SearchProductsQuery, SearchProductsQueryVariables>(SearchProductsDocument, options);
+      }
 export function useSearchProductsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<SearchProductsQuery, SearchProductsQueryVariables>) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useLazyQuery<SearchProductsQuery, SearchProductsQueryVariables>(SearchProductsDocument, options);
-}
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<SearchProductsQuery, SearchProductsQueryVariables>(SearchProductsDocument, options);
+        }
 export function useSearchProductsSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<SearchProductsQuery, SearchProductsQueryVariables>) {
-  const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useSuspenseQuery<SearchProductsQuery, SearchProductsQueryVariables>(SearchProductsDocument, options);
-}
+          const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<SearchProductsQuery, SearchProductsQueryVariables>(SearchProductsDocument, options);
+        }
 export type SearchProductsQueryHookResult = ReturnType<typeof useSearchProductsQuery>;
 export type SearchProductsLazyQueryHookResult = ReturnType<typeof useSearchProductsLazyQuery>;
 export type SearchProductsSuspenseQueryHookResult = ReturnType<typeof useSearchProductsSuspenseQuery>;
@@ -6088,18 +6097,18 @@ export const GetCurrentUserTerminalsDocument = gql`
  *   },
  * });
  */
-export function useGetCurrentUserTerminalsQuery(baseOptions: ApolloReactHooks.QueryHookOptions<GetCurrentUserTerminalsQuery, GetCurrentUserTerminalsQueryVariables> & ({ variables: GetCurrentUserTerminalsQueryVariables; skip?: boolean; } | { skip: boolean; })) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useQuery<GetCurrentUserTerminalsQuery, GetCurrentUserTerminalsQueryVariables>(GetCurrentUserTerminalsDocument, options);
-}
+export function useGetCurrentUserTerminalsQuery(baseOptions: ApolloReactHooks.QueryHookOptions<GetCurrentUserTerminalsQuery, GetCurrentUserTerminalsQueryVariables> & ({ variables: GetCurrentUserTerminalsQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetCurrentUserTerminalsQuery, GetCurrentUserTerminalsQueryVariables>(GetCurrentUserTerminalsDocument, options);
+      }
 export function useGetCurrentUserTerminalsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetCurrentUserTerminalsQuery, GetCurrentUserTerminalsQueryVariables>) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useLazyQuery<GetCurrentUserTerminalsQuery, GetCurrentUserTerminalsQueryVariables>(GetCurrentUserTerminalsDocument, options);
-}
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetCurrentUserTerminalsQuery, GetCurrentUserTerminalsQueryVariables>(GetCurrentUserTerminalsDocument, options);
+        }
 export function useGetCurrentUserTerminalsSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetCurrentUserTerminalsQuery, GetCurrentUserTerminalsQueryVariables>) {
-  const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useSuspenseQuery<GetCurrentUserTerminalsQuery, GetCurrentUserTerminalsQueryVariables>(GetCurrentUserTerminalsDocument, options);
-}
+          const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetCurrentUserTerminalsQuery, GetCurrentUserTerminalsQueryVariables>(GetCurrentUserTerminalsDocument, options);
+        }
 export type GetCurrentUserTerminalsQueryHookResult = ReturnType<typeof useGetCurrentUserTerminalsQuery>;
 export type GetCurrentUserTerminalsLazyQueryHookResult = ReturnType<typeof useGetCurrentUserTerminalsLazyQuery>;
 export type GetCurrentUserTerminalsSuspenseQueryHookResult = ReturnType<typeof useGetCurrentUserTerminalsSuspenseQuery>;
@@ -6150,18 +6159,18 @@ export const GetTerminalByAndroidIdDocument = gql`
  *   },
  * });
  */
-export function useGetTerminalByAndroidIdQuery(baseOptions: ApolloReactHooks.QueryHookOptions<GetTerminalByAndroidIdQuery, GetTerminalByAndroidIdQueryVariables> & ({ variables: GetTerminalByAndroidIdQueryVariables; skip?: boolean; } | { skip: boolean; })) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useQuery<GetTerminalByAndroidIdQuery, GetTerminalByAndroidIdQueryVariables>(GetTerminalByAndroidIdDocument, options);
-}
+export function useGetTerminalByAndroidIdQuery(baseOptions: ApolloReactHooks.QueryHookOptions<GetTerminalByAndroidIdQuery, GetTerminalByAndroidIdQueryVariables> & ({ variables: GetTerminalByAndroidIdQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetTerminalByAndroidIdQuery, GetTerminalByAndroidIdQueryVariables>(GetTerminalByAndroidIdDocument, options);
+      }
 export function useGetTerminalByAndroidIdLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetTerminalByAndroidIdQuery, GetTerminalByAndroidIdQueryVariables>) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useLazyQuery<GetTerminalByAndroidIdQuery, GetTerminalByAndroidIdQueryVariables>(GetTerminalByAndroidIdDocument, options);
-}
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetTerminalByAndroidIdQuery, GetTerminalByAndroidIdQueryVariables>(GetTerminalByAndroidIdDocument, options);
+        }
 export function useGetTerminalByAndroidIdSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetTerminalByAndroidIdQuery, GetTerminalByAndroidIdQueryVariables>) {
-  const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useSuspenseQuery<GetTerminalByAndroidIdQuery, GetTerminalByAndroidIdQueryVariables>(GetTerminalByAndroidIdDocument, options);
-}
+          const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetTerminalByAndroidIdQuery, GetTerminalByAndroidIdQueryVariables>(GetTerminalByAndroidIdDocument, options);
+        }
 export type GetTerminalByAndroidIdQueryHookResult = ReturnType<typeof useGetTerminalByAndroidIdQuery>;
 export type GetTerminalByAndroidIdLazyQueryHookResult = ReturnType<typeof useGetTerminalByAndroidIdLazyQuery>;
 export type GetTerminalByAndroidIdSuspenseQueryHookResult = ReturnType<typeof useGetTerminalByAndroidIdSuspenseQuery>;
@@ -6205,9 +6214,9 @@ export type CreateOrUpdateTerminalMutationFn = ApolloReactCommon.MutationFunctio
  * });
  */
 export function useCreateOrUpdateTerminalMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreateOrUpdateTerminalMutation, CreateOrUpdateTerminalMutationVariables>) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useMutation<CreateOrUpdateTerminalMutation, CreateOrUpdateTerminalMutationVariables>(CreateOrUpdateTerminalDocument, options);
-}
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<CreateOrUpdateTerminalMutation, CreateOrUpdateTerminalMutationVariables>(CreateOrUpdateTerminalDocument, options);
+      }
 export type CreateOrUpdateTerminalMutationHookResult = ReturnType<typeof useCreateOrUpdateTerminalMutation>;
 export type CreateOrUpdateTerminalMutationResult = ApolloReactCommon.MutationResult<CreateOrUpdateTerminalMutation>;
 export type CreateOrUpdateTerminalMutationOptions = ApolloReactCommon.BaseMutationOptions<CreateOrUpdateTerminalMutation, CreateOrUpdateTerminalMutationVariables>;
@@ -6250,9 +6259,9 @@ export type UpdateTerminalMutationFn = ApolloReactCommon.MutationFunction<Update
  * });
  */
 export function useUpdateTerminalMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateTerminalMutation, UpdateTerminalMutationVariables>) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useMutation<UpdateTerminalMutation, UpdateTerminalMutationVariables>(UpdateTerminalDocument, options);
-}
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<UpdateTerminalMutation, UpdateTerminalMutationVariables>(UpdateTerminalDocument, options);
+      }
 export type UpdateTerminalMutationHookResult = ReturnType<typeof useUpdateTerminalMutation>;
 export type UpdateTerminalMutationResult = ApolloReactCommon.MutationResult<UpdateTerminalMutation>;
 export type UpdateTerminalMutationOptions = ApolloReactCommon.BaseMutationOptions<UpdateTerminalMutation, UpdateTerminalMutationVariables>;
@@ -6283,9 +6292,9 @@ export type DeleteTerminalMutationFn = ApolloReactCommon.MutationFunction<Delete
  * });
  */
 export function useDeleteTerminalMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeleteTerminalMutation, DeleteTerminalMutationVariables>) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return ApolloReactHooks.useMutation<DeleteTerminalMutation, DeleteTerminalMutationVariables>(DeleteTerminalDocument, options);
-}
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<DeleteTerminalMutation, DeleteTerminalMutationVariables>(DeleteTerminalDocument, options);
+      }
 export type DeleteTerminalMutationHookResult = ReturnType<typeof useDeleteTerminalMutation>;
 export type DeleteTerminalMutationResult = ApolloReactCommon.MutationResult<DeleteTerminalMutation>;
 export type DeleteTerminalMutationOptions = ApolloReactCommon.BaseMutationOptions<DeleteTerminalMutation, DeleteTerminalMutationVariables>;
