@@ -6,6 +6,7 @@ import {
   Image,
   Modal,
   Platform,
+  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
@@ -435,7 +436,7 @@ const ProductDetailScreen: React.FC = () => {
   }
 
   return (
-    <>
+    <SafeAreaView style={styles.safeArea}>
       <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
         <View style={styles.imageSection}>
           {mediaItems.length > 0 ? (
@@ -632,11 +633,15 @@ const ProductDetailScreen: React.FC = () => {
           </View>
         </View>
       </Modal>
-    </>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
   container: {
     flex: 1,
     backgroundColor: '#fff',
@@ -680,7 +685,7 @@ const styles = StyleSheet.create({
   productImage: {
     width: '100%',
     height: '100%',
-    zIndex: 1, // 确保在模糊背景之上
+    zIndex: 1, // 确保在覆盖层之下
   },
   image: {
     width: '100%',
@@ -742,6 +747,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.5)', // 增加不透明度，让按钮更突出
     justifyContent: 'center',
     alignItems: 'center',
+    zIndex: 10, // 确保覆盖层在最上层
+    elevation: 10, // Android 层级
   },
   playButton: {
     width: 80,
