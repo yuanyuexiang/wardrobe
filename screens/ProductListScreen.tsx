@@ -12,7 +12,7 @@ import { useBoutiqueInfo } from '../hooks/useBoutiqueInfo';
 import { logger } from '../utils/logger';
 import { LAYOUT, getCardWidth, getBottomPadding } from '../utils/constants';
 import { imageCache } from '../utils/imageCache';
-import { getDirectusThumbnailUrl } from '../utils/directus';
+import { getDirectusThumbnailUrl, getDirectusImageUrl } from '../utils/directus';
 import { configManager } from '../utils/configManager';
 import { deviceStartupManager } from '../utils/deviceStartupManager';
 
@@ -264,11 +264,19 @@ const ProductListScreen: React.FC = () => {
       <View style={styles.header}>
         <View style={styles.brandSection}>
           <View style={styles.brandLogo}>
-            <Image
-              source={require('../assets/images/favicon.png')}
-              style={styles.logoImage}
-              resizeMode="contain"
-            />
+            {boutique?.logo ? (
+              <Image
+                source={{ uri: getDirectusThumbnailUrl(boutique.logo, 100) }}
+                style={styles.logoImage}
+                resizeMode="contain"
+              />
+            ) : (
+              <Image
+                source={require('../assets/images/favicon.png')}
+                style={styles.logoImage}
+                resizeMode="contain"
+              />
+            )}
           </View>
           <View style={styles.brandInfo}>
             <Text style={styles.brandName}>
