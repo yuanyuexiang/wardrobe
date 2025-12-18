@@ -18,35 +18,37 @@ export const getDirectusImageUrl = (
   fileId: string,
   width?: number,
   height?: number,
-  quality?: number
+  quality?: number,
+  fit?: 'cover' | 'contain' | 'inside' | 'outside'
 ): string => {
   if (!fileId) return '';
-  
+
   // 检查是否已经是完整的URL
   if (fileId.startsWith('http://') || fileId.startsWith('https://')) {
     console.warn('⚠️ getDirectusImageUrl 收到完整URL而非文件ID:', fileId);
     return fileId; // 如果已经是完整URL，直接返回
   }
-  
+
   // 检查是否包含重复的域名前缀
   if (fileId.includes('forge.kcbaotech.com')) {
     console.warn('⚠️ 检测到重复域名的文件ID:', fileId);
     return fileId; // 直接返回，避免再次拼接
   }
-  
+
   let url = `${DIRECTUS_BASE_URL}/assets/${fileId}`;
-  
+
   // 添加查询参数进行图片优化
   const params: string[] = [];
-  
+
   if (width) params.push(`width=${width}`);
   if (height) params.push(`height=${height}`);
   if (quality) params.push(`quality=${quality}`);
-  
+  if (fit) params.push(`fit=${fit}`);
+
   if (params.length > 0) {
     url += `?${params.join('&')}`;
   }
-  
+
   return url;
 };
 
@@ -76,17 +78,17 @@ export const getDirectusOriginalUrl = (fileId: string): string => {
  */
 export const getDirectusVideoUrl = (fileId: string): string => {
   if (!fileId) return '';
-  
+
   // 检查是否已经是完整的URL
   if (fileId.startsWith('http://') || fileId.startsWith('https://')) {
     return fileId;
   }
-  
+
   // 检查是否包含重复的域名前缀
   if (fileId.includes('forge.kcbaotech.com')) {
     return fileId;
   }
-  
+
   // 构建 Directus 视频 URL
   return `${DIRECTUS_BASE_URL}/assets/${fileId}`;
 };

@@ -5,6 +5,7 @@ import {
   Dimensions,
   Image,
   Modal,
+  Platform,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -16,6 +17,7 @@ import { useQuery } from '@apollo/client';
 import { GetProductsByBoutiqueDocument } from '../generated/graphql';
 import { getDirectusImageUrl } from '../utils/directus';
 import { logger } from '../utils/logger';
+import { LAYOUT } from '../utils/constants';
 
 interface CarouselModalProps {
   visible: boolean;
@@ -25,7 +27,7 @@ interface CarouselModalProps {
   carouselInterval?: number; // 轮播间隔时间（秒）
 }
 
-const { width: screenWidth, height: screenHeight } = Dimensions.get('screen'); // 使用 'screen' 而不是 'window' 来获取包含状态栏的完整屏幕尺寸
+const { screenWidth, screenHeight } = LAYOUT;
 
 const CarouselModal: React.FC<CarouselModalProps> = ({ visible, onClose, products, boutiqueId, carouselInterval }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -220,9 +222,10 @@ const CarouselModal: React.FC<CarouselModalProps> = ({ visible, onClose, product
   const imageUrl = currentItem?.imageId
     ? getDirectusImageUrl(
       currentItem.imageId,
-      Math.round(screenWidth),
-      Math.round(screenHeight),
-      90 // 高质量
+      Math.round(LAYOUT.screenWidth),
+      Math.round(LAYOUT.screenHeight),
+      90, // 高质量
+      'inside' // 保持比例完整显示，不裁剪
     )
     : null;
 
@@ -264,13 +267,34 @@ const CarouselModal: React.FC<CarouselModalProps> = ({ visible, onClose, product
             )}
 
             {imageUrl ? (
-              <Image
-                source={{ uri: imageUrl }}
-                style={styles.mainImage}
-                resizeMode="cover" // 改为cover，填充整个容器
-                onLoad={handleImageLoad}
-                onError={handleImageError}
-              />
+              Platform.OS === 'web' ? (
+                <img
+                  src={imageUrl}
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'contain' as any,
+                    display: 'block',
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                  }}
+                  alt={currentItem?.productName || '商品图片'}
+                  onLoad={handleImageLoad}
+                  onError={(e) => {
+                    console.error('图片加载失败:', imageUrl);
+                    handleImageError();
+                  }}
+                />
+              ) : (
+                <Image
+                  source={{ uri: imageUrl }}
+                  style={styles.mainImage}
+                  resizeMode="contain" // 改为contain，完整显示图片
+                  onLoad={handleImageLoad}
+                  onError={handleImageError}
+                />
+              )
             ) : (
               <View style={styles.noImageContainer}>
                 <Text style={styles.noImageText}>暂无图片</Text>
@@ -368,8 +392,8 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     flex: 1,
-    width: screenWidth,
-    height: screenHeight,
+    width: '100%',
+    height: '100%',
     justifyContent: 'center',
     alignItems: 'center',
     position: 'relative',
@@ -382,8 +406,8 @@ const styles = StyleSheet.create({
     zIndex: 999,
   },
   mainImage: {
-    width: screenWidth,
-    height: screenHeight,
+    width: '100%',
+    height: '100%',
     position: 'absolute',
     top: 0,
     left: 0,
@@ -469,8 +493,8 @@ const styles = StyleSheet.create({
     marginLeft: 4,
   },
   noImageContainer: {
-    width: screenWidth,
-    height: screenHeight,
+    width: '100%',
+    height: '100%',
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#333',
