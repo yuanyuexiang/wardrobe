@@ -248,6 +248,7 @@ org.gradle.caching=true
 
 # 4. 使用 prebuild 后的本地构建
 eas build --platform android --local
+eas build --profile production --platform android --local
 
 # 方法3: 云端构建 (如果网络允许)
 eas build --profile production --platform android
