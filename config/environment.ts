@@ -44,7 +44,7 @@ const getEnvVar = (key: string, defaultValue: string = ''): string => {
 
 // 环境配置函数 - 兼容多种部署方式
 const getEnvironment = (): Environment => {
-  const baseUrl = getEnvVar('EXPO_PUBLIC_API_BASE_URL', 'https://directus.kcbaotech.com');
+  const baseUrl = getEnvVar('EXPO_PUBLIC_API_BASE_URL', 'https://carture.kcbaotech.com');
   
   return {
     NODE_ENV: (getEnvVar('NODE_ENV', 'development') as Environment['NODE_ENV']),

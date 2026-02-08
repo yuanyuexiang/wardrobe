@@ -1,5 +1,5 @@
 // API配置文件 - 从环境变量读取配置
-const BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL || 'https://directus.kcbaotech.com';
+const BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL || 'https://carture.kcbaotech.com';
 
 export const API_CONFIG = {
   // 主API地址
@@ -19,7 +19,7 @@ export const API_CONFIG = {
   PROXY: {
     HOST: process.env.EXPO_PUBLIC_PROXY_HOST || 'localhost',
     PORT: parseInt(process.env.EXPO_PUBLIC_PROXY_PORT || '3001'),
-    TARGET_HOST: process.env.EXPO_PUBLIC_PROXY_TARGET_HOST || 'directus.kcbaotech.com',
+    TARGET_HOST: process.env.EXPO_PUBLIC_PROXY_TARGET_HOST || 'carture.kcbaotech.com',
     TARGET_PORT: parseInt(process.env.EXPO_PUBLIC_PROXY_TARGET_PORT || '443'),
   },
   

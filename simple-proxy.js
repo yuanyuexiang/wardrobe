@@ -10,8 +10,8 @@ require('dotenv').config();
 // 配置设置 - 从环境变量读取
 const config = {
   PORT: parseInt(process.env.EXPO_PUBLIC_PROXY_PORT) || 3001,
-  BASE_URL: process.env.EXPO_PUBLIC_API_BASE_URL || 'https://directus.kcbaotech.com',
-  TARGET_HOST: process.env.EXPO_PUBLIC_PROXY_TARGET_HOST || 'directus.kcbaotech.com',
+  BASE_URL: process.env.EXPO_PUBLIC_API_BASE_URL || 'https://carture.kcbaotech.com',
+  TARGET_HOST: process.env.EXPO_PUBLIC_PROXY_TARGET_HOST || 'carture.kcbaotech.com',
   TARGET_PORT: parseInt(process.env.EXPO_PUBLIC_PROXY_TARGET_PORT) || 443,
 };
 
@@ -95,9 +95,6 @@ const server = http.createServer((req, res) => {
 server.listen(PORT, () => {
   console.log(`🚀 代理服务器启动成功！`);
   console.log(`📡 监听端口: http://localhost:${PORT}`);
-  console.log(`🔗 GraphQL端点: http://localhost:${PORT}/api/graphql`);
-  console.log(`💊 健康检查: http://localhost:${PORT}/health`);
-  console.log(`🎯 目标服务器: https://${TARGET_HOST}`);
   console.log(`\n使用方法:`);
   console.log(`1. 启动此代理服务器`);
   console.log(`2. 应用会自动检测并使用代理`);
