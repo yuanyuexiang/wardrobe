@@ -288,7 +288,7 @@ const ProductListScreen: React.FC = () => {
                   <Ionicons key={star} name="star" size={12} color="#ff6b35" />
                 ))}
               </View>
-              <Text style={styles.ratingText}>11.5高分</Text>
+              <Text style={styles.ratingText}>分</Text>
             </View>
           </View>
         </View>
