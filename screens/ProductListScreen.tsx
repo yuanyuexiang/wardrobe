@@ -256,6 +256,12 @@ const ProductListScreen: React.FC = () => {
     setCurrentIndex(index);
   };
 
+  const rawStars = Number(boutique?.stars);
+  const hasRating = Number.isFinite(rawStars) && rawStars > 0;
+  const normalizedStars = hasRating ? Math.min(5, Math.max(0, rawStars)) : 0;
+  const filledStars = Math.floor(normalizedStars);
+  const displayRating = hasRating ? normalizedStars.toFixed(1) : '暂无评分';
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="#fff" />
@@ -285,10 +291,17 @@ const ProductListScreen: React.FC = () => {
             <View style={styles.ratingSection}>
               <View style={styles.stars}>
                 {[1, 2, 3, 4, 5].map((star) => (
-                  <Ionicons key={star} name="star" size={12} color="#ff6b35" />
+                  <Ionicons
+                    key={star}
+                    name={star <= filledStars ? 'star' : 'star-outline'}
+                    size={12}
+                    color="#ff6b35"
+                  />
                 ))}
               </View>
-              <Text style={styles.ratingText}>分</Text>
+              <Text style={styles.ratingText}>
+                {hasRating ? `${displayRating}分` : displayRating}
+              </Text>
             </View>
           </View>
         </View>
